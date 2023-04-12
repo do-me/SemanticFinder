@@ -2,6 +2,8 @@
 
 ## [Try the demo](https://geo.rocks/semanticfinder/) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
 
+![](/SemanticFinder.gif)
+
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
 ## Goal 
@@ -18,3 +20,4 @@ PRs welcome!
 - add possible use cases
 - package as much as possible in one binary
 - create a demo without CDNs
+- possible integration as example in [transformers.js homepage](https://xenova.github.io/transformers.js/)
