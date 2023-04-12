@@ -13,6 +13,8 @@ Keep it as simple as possible. One HTML-file only that can run anywhere.
 PRs welcome!
 
 ## To Dos
+- similarity score cutoff/threshold 
+- integrate different color scales (quantile, precentile etc.)
 - polish code 
     - jQuery/vanilla JS mixed
     - clean up functions 
@@ -20,4 +22,4 @@ PRs welcome!
 - add possible use cases
 - package as much as possible in one binary
 - create a demo without CDNs
-- possible integration as example in [transformers.js homepage](https://xenova.github.io/transformers.js/)
+- possible integration as example in [transformers.js homepage](https://xenova.github.io/transformers.js/)?
