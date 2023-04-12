@@ -20,6 +20,7 @@ PRs welcome!
 
 ## To Dos
 - similarity score cutoff/threshold 
+- MaterialUI for input fields or proper labels
 - integrate different color scales (quantile, precentile etc.)
 - polish code 
     - jQuery/vanilla JS mixed
