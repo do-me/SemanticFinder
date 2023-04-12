@@ -9,6 +9,12 @@ Semantic search right in your browser! Calculates the embeddings and cosine simi
 ## Goal 
 Keep it as simple as possible. One HTML-file only that can run anywhere.
 
+## Speed 
+Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
+Initial embedding generation takes **1-2 mins** on my old i7-8550U CPU with 1000 characters as segment size. Following queries take only 20-30 seconds! 
+
+
+
 ## Collaboration 
 PRs welcome!
 
