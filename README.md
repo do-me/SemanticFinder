@@ -75,4 +75,4 @@ PRs welcome!
 - add possible use cases
 - package as much as possible in one binary
 - create a demo without CDNs
-- possible integration as example in [transformers.js homepage](https://xenova.github.io/transformers.js/)?
+- possible integration as example in [transformers.js homepage](https://github.com/xenova/transformers.js/issues/84)
