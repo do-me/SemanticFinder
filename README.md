@@ -45,6 +45,7 @@ You can customize everything!
     - if the latter is being toggled, the client loads the model (all-MiniLM-L6-v2 has ~30mb) 
     - like in SemanticFinder, the embedding is created client-side and the cosine similarity calculated 
     - the high-scored results are returned just like with lunr.js so the user shouldn't even notice a differenc ein the UI
+- Integration in chat apps
 
 ## Logic 
 
