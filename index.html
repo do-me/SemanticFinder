@@ -11,6 +11,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/javascript/javascript.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.56.0/addon/search/searchcursor.min.js"></script>
+        <script data-goatcounter="https://georocks.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
         <style>
 
             #input-text {
@@ -111,15 +112,15 @@
         <div class="text-center">
             <p>
             Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using a <a href="https://github.com/xenova/transformers.js/issues/36#issuecomment-1476842324">quantized version</a> of <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.<br>
-			Demo for <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search/">this tutorial</a>, building two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. <a href="#" onclick="downloadPage()">Download this page.</a>
-            <br>For a more refined search, enter a low character count; for a coarser search, enter a high one.</p>
+			Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog post</a>, building on two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. <a href="#" onclick="downloadPage()">Download this page.</a>
+            <br>For a more refined search, enter a low character count; for a coarser search, enter a high one. Simply copy and paste any text and hit Submit.</p>
         </div>
-        <p class="text-center">Demo by Dominik Weckmüller <a href="https://twitter.com/DomeGIS" target="_blank">@DomeGIS</a> | <a href="https://geo.rocks" target="_blank">geo.rocks</a> | <a href="https://www.linkedin.com/in/dominik-weckm%C3%BCller/">LinkedIn</a> | <a href="https://github.com/do-me">GitHub</a></p>
+        <p class="text-center">Demo by Dominik Weckmüller <a href="https://twitter.com/DomeGIS" target="_blank">@DomeGIS</a> | <a href="https://geo.rocks" target="_blank">geo.rocks</a> | <a href="https://www.linkedin.com/in/dominik-weckm%C3%BCller/">LinkedIn</a> | <a href="https://github.com/do-me/SemanticFinder">GitHub</a></p>
 
         <div class="container mt-5">
             <div class="row justify-content-center">
                 
-                    <form class="form-floating" onsubmit="semanticHighlight(); return false;">
+                    <form class="form-floating" onsubmit="semanticHighlight(finishCallback); return false;">
                         <div class="form-group " id="formGroupCenter">
                             <div class="form-inline justify-content-between">
                             <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
@@ -140,6 +141,9 @@ Not very long after that there was again great scarcity in those parts, and the 
                         <button type="submit" id="submit_button" class="btn btn-primary mb-2" disabled>
                             <div id="loading"></div>
                             Loading model...
+                        </button>
+                        <button id="scroll_results" class="btn btn-primary mb-2" disabled>
+                            Scroll results
                         </button>
                         </div>
                     </form>
@@ -203,7 +207,8 @@ Not very long after that there was again great scarcity in those parts, and the 
 
             let inputTextsEmbeddings = {};
 
-            async function semanticHighlight() {
+            async function semanticHighlight(callback) {
+                deactivateScrollResultsButton();
                 resetHighlightsProgress();
 
                 // query input embedding 
@@ -216,6 +221,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                 let interval = setInterval(async () => {
                     if (i >= max) {
                         clearInterval(interval);
+                        callback();
                         return;
                     }
                     let inputText = inputTexts[i];
@@ -233,6 +239,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                     result.sort((a, b) => b[1] - a[1]);
                     if (result.length >= 3) {
                         highlightTopResults(result);
+                        editor.scrollIntoView(markers[0].find())
                     }
 
                     // update progress bar
@@ -328,11 +335,47 @@ Not very long after that there was again great scarcity in those parts, and the 
                 }
             }
 
+            function activateScrollResultsButton() {
+                // get references to the loading element and submit button
+                const ScrollResults = document.getElementById("scroll_results");
+
+                if (ScrollResults) {
+                    ScrollResults.removeAttribute("disabled");
+                }
+            }
+
+            function deactivateScrollResultsButton() {
+                // get references to the loading element and submit button
+                const ScrollResults = document.getElementById("scroll_results");
+
+                if (ScrollResults) {
+                    ScrollResults.setAttribute("disabled","");
+                }
+            }
+
             async function main() {
                 pipe = await pipeline("embeddings", "sentence-transformers/all-MiniLM-L6-v2");
                 activateSubmitButton();
             }
             main();
+
+            var toggleVar = 1 ;
+
+            function toggleMarkers() {
+                editor.scrollIntoView(markers[toggleVar].find());
+                toggleVar = (toggleVar + 1) % markers.length;
+            }
+
+            $('#scroll_results').click(function(event){
+                event.preventDefault();
+                toggleMarkers();
+                // add your custom functionality here
+            });
+
+            function finishCallback() {
+                console.log("Finished")
+                activateScrollResultsButton()
+            }
 
         </script> 
         
