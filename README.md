@@ -35,9 +35,6 @@ You can customize everything!
 ## Future ideas
 
 - One could package everything nicely and use it e.g. instead of JavaScript search engines such as [Lunr.js](https://lunrjs.com/) (also being used in [mkdocs-material](https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/)).
-- Electron- or browser-based apps could be augmented with semantic search, e.g. VS Code, Atom or mobile apps. 
-- Integration in personal wikis such as Obsidian, tiddlywiki etc. would save you the tedious tagging/keywords/categorisation work or could at least improve your structure further
-- Search your own browser history (thanks [@Snapdeus](https://twitter.com/snapdeus/status/1646233904691413006))
 - Integration in mkdocs (mkdocs-material) **experimental**:
     - when building the docs, slice all `.md`-files in chunks (length defined in `mkdocs.yaml`). Should be fairly large (>800 characters) for lower response time. It's also possible to build n indices with first a coarse index (mabye per document/ `.md`-file if the used model supports the length) and then a rfined one for the document chunks
     - build the index by calculating the embeddings for all docs/chunks 
@@ -45,6 +42,9 @@ You can customize everything!
     - if the latter is being toggled, the client loads the model (all-MiniLM-L6-v2 has ~30mb) 
     - like in SemanticFinder, the embedding is created client-side and the cosine similarity calculated 
     - the high-scored results are returned just like with lunr.js so the user shouldn't even notice a differenc ein the UI
+- Electron- or browser-based apps could be augmented with semantic search, e.g. VS Code, Atom or mobile apps. 
+- Integration in personal wikis such as Obsidian, tiddlywiki etc. would save you the tedious tagging/keywords/categorisation work or could at least improve your structure further
+- Search your own browser history (thanks [@Snapdeus](https://twitter.com/snapdeus/status/1646233904691413006))
 - Integration in chat apps
 - Allow PDF-uploads (conversion from PDF to text) 
 
