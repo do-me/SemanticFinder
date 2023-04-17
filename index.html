@@ -213,7 +213,7 @@ Not very long after that there was again great scarcity in those parts, and the 
 
                 // query input embedding 
                 let queryEmbedding = await computeQueryEmbedding();
-                let inputTexts = splitOverlappingSubstrings($("#token-length").val());
+                let inputTexts = splitSubstrings(editor.getValue(""),$("#token-length").val());
                 let result = [];
                 let max = inputTexts.length;
                 //console.log("Embeddings Computation...")
@@ -258,29 +258,20 @@ Not very long after that there was again great scarcity in those parts, and the 
                 //console.log(output["data"]);
             }
 
-            function splitOverlappingSubstrings(len, overlap, respectWords=true) {
-                let str = editor.getValue("")//.replace(/\s{2,}/g, ' ');
-                let result = [];
-                if (respectWords) {
-                    let words = str.split(' ');
-                    let currentSubstring = '';
-                    for (let i = 0; i < words.length; i++) {
-                        if (currentSubstring.length + words[i].length + 1 <= len) {
-                            currentSubstring += (currentSubstring.length > 0 ? ' ' : '') + words[i];
-                        } else {
-                            result.push(currentSubstring);
-                            currentSubstring = words[i];
-                        }
-                    }
-                    if (currentSubstring.length > 0) {
-                        result.push(currentSubstring);
-                    }
-                } else {
-                    for (let i = 0; i <= str.length - len; i += len - overlap) {
-                        result.push(str.substr(i, len));
+            function splitSubstrings(str, length) {
+                const words = str.split(' ');
+                const chunks = [];
+
+                for (let i = 0; i < words.length; i++) {
+                    const word = words[i];
+
+                    if (chunks.length === 0 || chunks[chunks.length - 1].length + word.length + 1 > length) {
+                    chunks.push(word);
+                    } else {
+                    chunks[chunks.length - 1] += ' ' + word;
                     }
                 }
-                return result;
+                return chunks;
             }
 
             function chunkSubstr(size) {
