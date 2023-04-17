@@ -77,10 +77,11 @@ You can customize everything!
 PRs welcome!
 
 ## To Dos
-- similarity score cutoff/threshold 
+- similarity score cutoff/threshold (easy)
 - add option for more highlights (e.g. all above certain score)
 - add stop button 
-- option for loading embeddings from file 
+- option for loading embeddings from file (WIP)
+- simplify chunking function so the original text can be loaded without issues (WIP)
 - cursor for jumping to highlighted sections (important for long texts), tbd with [scroll into view function in CodeMirror](https://codemirror.net/doc/manual.html#scrollIntoView)
 - MaterialUI for input fields or proper labels
 - integrate different color scales (quantile, precentile etc.)
