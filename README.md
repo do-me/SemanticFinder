@@ -73,6 +73,43 @@ You can customize everything!
 7. The embeddings are cached in the dictionary so that subsequent queries are quite fast. The calculation of the cosine similarity is fairly speedy in comparison to the embedding generation. 
 8. **Only if the user changes the segment length**, the embeddings must be recalculated.  
 
+## Pre-index files for rapid search
+For larger documents that many people might be interested in it's worth considering pre-indexing.
+
+You can run the indexing (= embedding calculation) once and override the `inputTextsEmbeddings` variable to the source code. Then, either copy the original text **exactly** as you pasted it before in the textarea input field or use a function to restore the original text from the `inputTextsEmbeddings` variable. Pay attention that you use the same segment length (700 chars in the IPCC examples).
+
+![image](https://user-images.githubusercontent.com/47481567/232425929-c439db22-664a-4b0d-8fd6-cf7b440cb481.png)
+
+You can also host the embeddings somewhere else, e.g. on GitHub and load it on runtime. See the example source code in the IPCC exapmles:
+
+- 𝗟𝗼𝗻𝗴𝗲𝗿 𝗥𝗲𝗽𝗼𝗿𝘁: https://geo.rocks/semanticfinder/ipcc/
+- 𝗦𝘂𝗺𝗺𝗮𝗿𝘆 𝗳𝗼𝗿 𝗣𝗼𝗹𝗶𝗰𝘆𝗺𝗮𝗸𝗲𝗿𝘀: https://geo.rocks/semanticfinder/ipcc-summary/
+
+Function example loading an external embeddings file, overriding the `inputTextsEmbeddings` variable, setting the textarea value and updating CodeMirror:
+
+```JS
+var inputTextsEmbeddings;
+var url = "https://raw.githubusercontent.com/do-me/SemanticFinder-IPCC/main/ipcc-embeddings.json";
+$.ajax({
+    url: url,
+    dataType: 'json',
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.log('failed to load embeddings');
+    },
+    success:function(results) { 
+        inputTextsEmbeddings = results
+        const textarea = document.getElementById('input-text');
+        textarea.value = Object.keys(inputTextsEmbeddings).join(' ')
+        editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
+                lineNumbers: true,
+                mode: 'text/plain',
+                matchBrackets: true,
+                lineWrapping: true,
+            });
+    }
+});
+```
+
 ## Collaboration 
 PRs welcome!
 
