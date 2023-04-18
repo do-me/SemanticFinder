@@ -49,6 +49,7 @@ You can customize everything!
 - Search your own browser history (thanks [@Snapdeus](https://twitter.com/snapdeus/status/1646233904691413006))
 - Integration in chat apps
 - Allow PDF-uploads (conversion from PDF to text) 
+- Integrate with Speech-to-Text whisper model from transformers.js to allow audio uploads. 
 
 ## Logic 
 
