@@ -196,8 +196,6 @@ Not very long after that there was again great scarcity in those parts, and the 
     let markers = [];
     let progressBar = $("#progressBar");
     let progressBarProgress = $("#progressBarProgress");
-    let selectedIndex = -1;
-    let selectedClassName = "highlight-third";
 
     function calculateCosineSimilarity(queryEmbedding, embedding) {
         let dotProduct = 0;
@@ -234,20 +232,38 @@ Not very long after that there was again great scarcity in those parts, and the 
         }
     }
 
-    function highlightSelected(newIndex) {
+    let selectedIndex = -1;
+    let selectedClassName;
+
+    function highlightSelected(index) {
+        highlightCard(index);
         if (selectedIndex !== -1) {
             let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: selectedClassName});
             markers[selectedIndex].clear();
             markers[selectedIndex] = marker0;
         }
 
-        selectedIndex = newIndex;
+        selectedIndex = index;
         selectedClassName = markers[selectedIndex].className;
 
         let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: "highlight-select"});
         markers[selectedIndex].clear();
         markers[selectedIndex] = marker1;
     }
+
+    let prevCard;
+    function highlightCard(index) {
+        let resultsDiv = document.getElementById('results-list');
+        let cards = resultsDiv.getElementsByClassName('card');
+
+        // Ensure the index is within the range of the cards.
+        if (prevCard) {
+            prevCard.style.backgroundColor = '';
+        }
+            prevCard = cards[index];
+        cards[index].style.backgroundColor = '#ccb8b3';
+    }
+
 
     function resetHighlightsProgress(){
         // clear any highlights
@@ -444,18 +460,25 @@ Not very long after that there was again great scarcity in those parts, and the 
     }
     main();
 
-    var toggleVar = 1 ;
 
     function nextMarker() {
-        editor.scrollIntoView(markers[toggleVar].find());
-        highlightSelected(toggleVar);
-        toggleVar = (toggleVar + 1) % markers.length;
+        if (selectedIndex === -1) {
+            highlightSelected(0);
+
+        } else {
+            highlightSelected((selectedIndex + 1) % markers.length);
+            editor.scrollIntoView(markers[selectedIndex].find());
+        }
     }
 
     function prevMarker() {
-        toggleVar = (toggleVar - 1 + markers.length) % markers.length;
-        editor.scrollIntoView(markers[toggleVar].find());
-        highlightSelected(toggleVar);
+        if (selectedIndex === -1) {
+            highlightSelected(0);
+
+        } else {
+            highlightSelected((selectedIndex - 1) % markers.length);
+            editor.scrollIntoView(markers[selectedIndex].find());
+        }
     }
 
     $('#next').click(function(event){
@@ -468,18 +491,6 @@ Not very long after that there was again great scarcity in those parts, and the 
         prevMarker();
     });
 
-    function toggleMarkers() {
-        // todo replace with 'next' and 'prev'
-        editor.scrollIntoView(markers[toggleVar].find());
-        toggleVar = (toggleVar + 1) % markers.length;
-        highlightSelected(toggleVar);
-    }
-
-    $('#scroll_results').click(function(event){
-        event.preventDefault();
-        toggleMarkers();
-        // add your custom functionality here
-    });
 
     function finishCallback() {
         console.log("Finished");
