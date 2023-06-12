@@ -1,134 +1,154 @@
+
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>SemanticFinder - Frontend-only Semantic Search with transformers.js</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/transformers.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/javascript/javascript.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.56.0/addon/search/searchcursor.min.js"></script>
-        <script data-goatcounter="https://georocks.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-        <style>
+<head>
+    <title>SemanticFinder - Frontend-only Semantic Search with transformers.js</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@1.4.3/dist/transformers.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/javascript/javascript.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.56.0/addon/search/searchcursor.min.js"></script>
+<!--    <script data-goatcounter="https://georocks.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>-->
+    <style>
 
-            #input-text {
-                height:50vh;
-                width:80vw;
-                min-width: 80vw;
-                text-align: left !important;
+        #input-text {
+            height:50vh;
+            width:80vw;
+            min-width: 80vw;
+            text-align: left !important;
+        }
+        .CodeMirror{
+            height: 55vh;
+        }
+
+        table {
+            table-layout: auto;
+            margin: 0 auto;
+        }
+        th,
+        td {
+            word-wrap: break-word;
+            max-width: 50%;
+            text-align: center;
+        }
+
+        .table-bordered {
+            border: none;
+        }
+
+        #output-table > tbody > tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table .table {
+            background-color: transparent;
+        }
+
+        .highlight-first {
+            background-color: rgb(0, 255, 81);
+        }
+
+        .highlight-second {
+            background-color: rgb(135, 255, 153);
+        }
+
+        .highlight-third {
+            background-color: rgb(190, 253, 190);
+        }
+
+        .highlight-select {
+            background-color: orange;
+        }
+
+
+        #loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            -webkit-animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                -webkit-transform: rotate(360deg);
             }
-            .CodeMirror{
-                height: 55vh;
+        }
+        @-webkit-keyframes spin {
+            to {
+                -webkit-transform: rotate(360deg);
             }
+        }
 
-            table {
-                table-layout: auto;
-                margin: 0 auto;
-            }
-            th,
-            td {
-                word-wrap: break-word;
-                max-width: 50%;
-                text-align: center;
-            }
+        #progressBar{
+            height: 25px;
+            width: 80%;
+            margin-left: 5px;
+        }
 
-			.table-bordered {
-				border: none;
-			}
+        #progressBarProgress{
+            margin-left: 5px;
+        }
 
-			#output-table > tbody > tr:nth-of-type(odd) {
-			background-color: #f9f9f9;
-			}
+        #query-text{
+            min-width: 80%;
+        }
 
-			.table .table {
-				background-color: transparent;
-			}
+        #formGroupCenter{
+            width: 100%;
+        }
 
-            .highlight-first {
-                background-color: rgb(0, 255, 81);
-            }
+        .CodeMirror {
+            font-size: 15px;
+        }
 
-            .highlight-second {
-                background-color: rgb(135, 255, 153);
-            }
+        #results {
+            height: 100vh;
+            overflow-y: auto;
+        }
 
-            .highlight-third {
-                background-color: rgb(190, 253, 190);
-            }
+        .card {
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
 
-            #loading {
-                display: inline-block;
-                width: 1rem;
-                height: 1rem;
-                border: 3px solid rgba(255, 255, 255, 0.3);
-                border-radius: 50%;
-                border-top-color: #fff;
-                animation: spin 1s ease-in-out infinite;
-                -webkit-animation: spin 1s ease-in-out infinite;
-            }
+        .card:hover {
+            background-color: #f8f9fa;
+        }
 
-            @keyframes spin {
-                to {
-                    -webkit-transform: rotate(360deg);
-                }
-            }
-            @-webkit-keyframes spin {
-                to {
-                    -webkit-transform: rotate(360deg);
-                }
-            }
+    </style>
+</head>
+<body>
+<br />
+<h1 class="text-center"><span class="highlight-first" >SemanticFinder</span></h1>
+<h2 class="text-center">Frontend-only live semantic search with <a href="https://xenova.github.io/transformers.js/" target="_blank">transformers.js</a></h2>
+<div class="text-center">
+    <p>
+        Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using a <a href="https://github.com/xenova/transformers.js/issues/36#issuecomment-1476842324">quantized version</a> of <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.<br>
+        Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog post</a>, building on two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. <a href="#" onclick="downloadPage()">Download this page</a>.
+        See other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc" >IPCC Report 2023 (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary" >IPCC Summary 2023 (35 pages)</a>.
+        <br>For a more refined search, enter a low character count; for a coarser search, enter a high one. Simply copy and paste any text and hit Submit.</p>
+</div>
+<p class="text-center">Demo by Dominik Weckmüller <a href="https://twitter.com/DomeGIS" target="_blank">@DomeGIS</a> | <a href="https://geo.rocks" target="_blank">geo.rocks</a> | <a href="https://www.linkedin.com/in/dominik-weckm%C3%BCller/">LinkedIn</a> | <a href="https://github.com/do-me/SemanticFinder">GitHub</a></p>
 
-            #progressBar{
-                height: 25px;
-                width: 80vw;
-                margin-left: 5px;
-            }
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-sm-9"> <!-- 80% column -->
 
-            #progressBarProgress{
-                margin-left: 5px;
-            }
-
-            #query-text{
-                min-width: 70vw;
-            }
-
-            #formGroupCenter{
-                min-width: 90vw;
-            }
-
-            .CodeMirror {
-                font-size: 15px;
-            }
-            
-        </style>
-    </head>
-    <body>
-        <br />
-        <h1 class="text-center"><span class="highlight-first" >SemanticFinder</span></h1>
-        <h2 class="text-center">Frontend-only live semantic search with <a href="https://xenova.github.io/transformers.js/" target="_blank">transformers.js</a></h2>
-        <div class="text-center">
-            <p>
-            Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using a <a href="https://github.com/xenova/transformers.js/issues/36#issuecomment-1476842324">quantized version</a> of <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.<br>
-			Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog post</a>, building on two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. <a href="#" onclick="downloadPage()">Download this page</a>.  
-            See other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc" >IPCC Report 2023 (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary" >IPCC Summary 2023 (35 pages)</a>.
-            <br>For a more refined search, enter a low character count; for a coarser search, enter a high one. Simply copy and paste any text and hit Submit.</p>
-        </div>
-        <p class="text-center">Demo by Dominik Weckmüller <a href="https://twitter.com/DomeGIS" target="_blank">@DomeGIS</a> | <a href="https://geo.rocks" target="_blank">geo.rocks</a> | <a href="https://www.linkedin.com/in/dominik-weckm%C3%BCller/">LinkedIn</a> | <a href="https://github.com/do-me/SemanticFinder">GitHub</a></p>
-
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                
-                    <form class="form-floating" onsubmit="semanticHighlight(finishCallback); return false;">
-                        <div class="form-group " id="formGroupCenter">
-                            <div class="form-inline justify-content-between">
-                            <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
-                            <input type="number" id="token-length" class="form-control" placeholder="Enter no. of chars" value="50" />
-                            </div><br>
-                            <textarea id="input-text" class="form-control" placeholder="Enter notes here" >
-Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
+            <form class="form-floating" onsubmit="semanticHighlight(finishCallback); return false;">
+                <div class="form-group " id="formGroupCenter">
+                    <div class="form-inline justify-content-between">
+                        <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
+                        <input type="number" id="token-length" class="form-control" placeholder="Enter no. of chars" value="50" />
+                    </div><br>
+                    <textarea id="input-text" class="form-control" placeholder="Enter notes here" > Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
 "I will tell you what, husband," answered the wife; "we will take the children early in the morning into the forest, where it is thickest; we will make them a fire, and we will give each of them a piece of bread, then we will go to our work and leave them alone; they will never find the way home again, and we shall be quit of them."
 "No, wife," said the man, "I cannot do that; I cannot find in my heart to take my children into the forest and to leave them there alone; the wild animals would soon come and devour them." - "O you fool," said she, "then we will all four starve; you had better get the coffins ready," and she left him no peace until he consented. "But I really pity the poor children," said the man.
 The two children had not been able to sleep for hunger, and had heard what their step-mother had said to their father. Grethel wept bitterly, and said to Hansel, "It is all over with us."
@@ -137,239 +157,336 @@ The two children had not been able to sleep for hunger, and had heard what their
 So Hansel and Grethel sat by the fire, and at noon they each ate their pieces of bread. They thought their father was in the wood all the time, as they seemed to hear the strokes of the axe: but really it was only a dry branch hanging to a withered tree that the wind moved to and fro. So when they had stayed there a long time their eyelids closed with weariness, and they fell fast asleep.
 When at last they woke it was night, and Grethel began to cry, and said, "How shall we ever get out of this wood? "But Hansel comforted her, saying, "Wait a little while longer, until the moon rises, and then we can easily find the way home." And when the full moon got up Hansel took his little sister by the hand, and followed the way where the flint stones shone like silver, and showed them the road. They walked on the whole night through, and at the break of day they came to their father's house. They knocked at the door, and when the wife opened it and saw that it was Hansel and Grethel she said, "You naughty children, why did you sleep so long in the wood? we thought you were never coming home again!" But the father was glad, for it had gone to his heart to leave them both in the woods alone.
 Not very long after that there was again great scarcity in those parts, and the children heard their mother say at night in bed to their father, "Everything is finished up; we have only half a loaf, and after that the tale comes to an end. The children must be off; we will take them farther into the wood this time, so that they shall not be able to find the way back again; there is no other way to manage." The man felt sad at heart, and he thought, "It would better to share one's last morsel with one's children." But the wife would listen to nothing that he said, but scolded and reproached him. He who says A must say B too, and when a man has given in once he has to do it a second time.</textarea>
-                        </div>
-                        <div class="text-center">
-                        <button type="submit" id="submit_button" class="btn btn-primary mb-2" disabled>
-                            <div id="loading"></div>
-                            Loading model...
-                        </button>
-                        <button id="scroll_results" class="btn btn-primary mb-2" disabled>
-                            Scroll results
-                        </button>
-                        </div>
-                    </form>
-                <label id="progressBarLabel" for="progressBar">Progress:</label><p id="progressBarProgress">0</p>% 
-                <progress id="progressBar" value="0" max="100" role="progressbar"></progress>
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="submit_button" class="btn btn-primary mb-2" disabled>
+                        <div id="loading"></div>
+                        Loading model...
+                    </button>
+                    <button id="prev" class="btn btn-primary mb-2" disabled>
+                        prev
+                    </button>
+                    <button id="next" class="btn btn-primary mb-2" disabled>
+                        next
+                    </button>
+                </div>
+            </form>
+            <label id="progressBarLabel" for="progressBar">Progress:</label><p id="progressBarProgress">0</p>%
+            <progress id="progressBar" value="0" max="100" role="progressbar"></progress>
 
+        </div>
+
+        <div class="col-sm-3"> <!-- 20% column -->
+            <div id="results">
+                <ul id="results-list">
+                    <!-- List items will be added here dynamically by the JavaScript code -->
+                </ul>
             </div>
         </div>
 
-        <script>
-            var pipe;
-            var embeddingDict;
-            var scoredTextsDict;
-            let markers = [];
-            let progressBar = $("#progressBar");
-            let progressBarProgress = $("#progressBarProgress");
 
-            function calculateCosineSimilarity(queryEmbedding, embedding) {
-                let dotProduct = 0;
-                let queryMagnitude = 0;
-                let embeddingMagnitude = 0;
-                let queryEmbeddingLength = queryEmbedding.length
-                for (let i = 0; i < queryEmbeddingLength; i++) {
-                    dotProduct += queryEmbedding[i] * embedding[i];
-                    queryMagnitude += queryEmbedding[i] ** 2;
-                    embeddingMagnitude += embedding[i] ** 2;
-                }
-                return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
+    </div>
+</div>
+
+
+<script>
+    var pipe;
+    var embeddingDict;
+    var scoredTextsDict;
+    let markers = [];
+    let progressBar = $("#progressBar");
+    let progressBarProgress = $("#progressBarProgress");
+    let selectedIndex = -1;
+    let selectedClassName = "highlight-third";
+
+    function calculateCosineSimilarity(queryEmbedding, embedding) {
+        let dotProduct = 0;
+        let queryMagnitude = 0;
+        let embeddingMagnitude = 0;
+        let queryEmbeddingLength = queryEmbedding.length
+        for (let i = 0; i < queryEmbeddingLength; i++) {
+            dotProduct += queryEmbedding[i] * embedding[i];
+            queryMagnitude += queryEmbedding[i] ** 2;
+            embeddingMagnitude += embedding[i] ** 2;
+        }
+        return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
+    }
+
+    function removeHighlights() {
+        for (let marker of markers) {
+            marker.clear();
+        }
+        markers = [];
+    }
+
+
+
+    function highlightTopResults(result) {
+        removeHighlights();
+        highlightText(result[0][0], "highlight-first");
+        highlightText(result[1][0], "highlight-second");
+        for (let i = 2; i < result.length; i++) {
+            if (result[i][1] > 0.3) {
+                highlightText(result[i][0], "highlight-third");
+            } else {
+                break;
             }
-            
-            function removeHighlights() {
-                for (let marker of markers) {
-                    marker.clear();
-                }
-                markers = [];
+        }
+    }
+
+    function highlightSelected(newIndex) {
+        if (selectedIndex !== -1) {
+            let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: selectedClassName});
+            markers[selectedIndex].clear();
+            markers[selectedIndex] = marker0;
+        }
+
+        selectedIndex = newIndex;
+        selectedClassName = markers[selectedIndex].className;
+
+        let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: "highlight-select"});
+        markers[selectedIndex].clear();
+        markers[selectedIndex] = marker1;
+    }
+
+    function resetHighlightsProgress(){
+        // clear any highlights
+        removeHighlights();
+        progressBar.attr("value", 0);
+        progressBarProgress.text(`${0}`);
+
+    }
+
+    async function computeQueryEmbedding(){
+        let inputQuery = $("#query-text").val()
+        let queryEmbedding = await pipe(inputQuery);
+        // let queryEmbeddingDict = {inputQuery: queryEmbedding}
+        //console.log(queryEmbedding)
+        return queryEmbedding["data"]
+    }
+    // $("#token-length").val()
+
+    let inputTextsEmbeddings = {};
+
+    async function semanticHighlight(callback) {
+        deactivateScrollButtons();
+        resetHighlightsProgress();
+
+        // query input embedding
+        let queryEmbedding = await computeQueryEmbedding();
+        let inputTexts = splitSubstrings(editor.getValue(""),$("#token-length").val());
+        let result = [];
+        let max = inputTexts.length;
+        //console.log("Embeddings Computation...")
+        let i = 0;
+        let interval = setInterval(async () => {
+            if (i >= max) {
+                clearInterval(interval);
+                callback();
+                return;
             }
-
-            function highlightTopResults(result) {
-                removeHighlights();
-                highlightText(result[0][0], "highlight-first");
-                highlightText(result[1][0], "highlight-second");
-                highlightText(result[2][0], "highlight-third");
-            }
-
-            function resetHighlightsProgress(){
-                // clear any highlights 
-                removeHighlights();
-                progressBar.attr("value", 0);
-                progressBarProgress.text(`${0}`);
-
-            }
-
-            async function computeQueryEmbedding(){
-                let inputQuery = $("#query-text").val()
-                let queryEmbedding = await pipe(inputQuery);
-                // let queryEmbeddingDict = {inputQuery: queryEmbedding}
-                //console.log(queryEmbedding)
-                return queryEmbedding["data"]
-            }
-            // $("#token-length").val()
-
-            let inputTextsEmbeddings = {};
-
-            async function semanticHighlight(callback) {
-                deactivateScrollResultsButton();
-                resetHighlightsProgress();
-
-                // query input embedding 
-                let queryEmbedding = await computeQueryEmbedding();
-                let inputTexts = splitSubstrings(editor.getValue(""),$("#token-length").val());
-                let result = [];
-                let max = inputTexts.length;
-                //console.log("Embeddings Computation...")
-                let i = 0;
-                let interval = setInterval(async () => {
-                    if (i >= max) {
-                        clearInterval(interval);
-                        callback();
-                        return;
-                    }
-                    let inputText = inputTexts[i];
-                    let output;
-                    if (inputText in inputTextsEmbeddings) {
-                        output = inputTextsEmbeddings[inputText];
-                    } else {
-                        output = await pipe(inputText);
-                        inputTextsEmbeddings[inputText] = output;
-                    }
-
-                    // calculate cosine similarity and sort results
-                    let cosineSimilarity = calculateCosineSimilarity(queryEmbedding, output["data"]);
-                    result.push([inputText, cosineSimilarity]);
-                    result.sort((a, b) => b[1] - a[1]);
-                    if (result.length >= 3) {
-                        highlightTopResults(result);
-                        editor.scrollIntoView(markers[0].find())
-                    }
-
-                    // update progress bar
-                    let progress = Math.round((i + 1)*100 / max);
-                    progressBar.attr("value", progress);
-                    progressBarProgress.text(`${progress}`);
-                    //console.log(progress);
-
-                    i++;
-                }, 0);
-            }
-
-            async function computeEmbedding() {
-                var inputText = editor.getValue("") //document.getElementById("input-text").value.trim();
-                let output = await pipe(inputText);
-                //console.log(output["data"]);
-            }
-
-            function splitSubstrings(str, length) {
-                const words = str.split(' ');
-                const chunks = [];
-
-                for (let i = 0; i < words.length; i++) {
-                    const word = words[i];
-
-                    if (chunks.length === 0 || chunks[chunks.length - 1].length + word.length + 1 > length) {
-                    chunks.push(word);
-                    } else {
-                    chunks[chunks.length - 1] += ' ' + word;
-                    }
-                }
-                return chunks;
+            let inputText = inputTexts[i];
+            let output;
+            if (inputText in inputTextsEmbeddings) {
+                output = inputTextsEmbeddings[inputText];
+            } else {
+                output = await pipe(inputText);
+                inputTextsEmbeddings[inputText] = output;
             }
 
-            function chunkSubstr(size) {
-                var inputText = editor.getValue(" ").replace(/\s{2,}/g, ' ');
+            // calculate cosine similarity and sort results
+            let cosineSimilarity = calculateCosineSimilarity(queryEmbedding, output["data"]);
 
-                const numChunks = Math.ceil(inputText.length / size)
-                const chunks = new Array(numChunks)
+            result.push([inputText, cosineSimilarity]);
+            result.sort((a, b) => b[1] - a[1]);
+            if (result.length >= 3) {
+                highlightTopResults(result);
+                editor.scrollIntoView(markers[0].find())
+            }
 
-                for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-                    chunks[i] = inputText.substr(o, size)
-                }
+            // display results to the right -- we may want to move this to after the computation occurs
+            let resultsDiv = document.getElementById('results-list');
+            resultsDiv.innerHTML = '';
+            for (let resultItem of result) {
+                if (resultItem[1] > 0.3) {
+                    let listItem = document.createElement('div');
+                    listItem.classList.add('card');
+                    listItem.innerHTML = `<div class="card-body">
+                                                <h5 class="card-title" style="font-size: 0.9em;">${resultItem[0]}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted" style="font-size: 0.8em;">similarity: ${resultItem[1].toFixed(2)}</h6>
+                                            </div>`;
+                    resultsDiv.appendChild(listItem);
 
-                return chunks
-                }
 
-            var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
-                lineNumbers: true,
-                mode: 'text/plain',
-                matchBrackets: true,
-                lineWrapping: true,
-            });
+                    listItem.addEventListener('click', function() {
+                        const index = result.indexOf(resultItem);
+                        editor.scrollIntoView(markers[index].find());
+                        highlightSelected(index);
+                    });
 
-            function highlightText(text,className) {
-                const cursor = editor.getSearchCursor(text);
-                while (cursor.findNext()) {
-                    let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
-                    markers.push(marker);
                 }
             }
 
-            function downloadPage() {
-                var url = window.location.href;
-                var a = document.createElement('a');
-                a.download = 'download.html';
-                a.href = url;
-                a.click();
+
+
+            // update progress bar
+            let progress = Math.round((i + 1)*100 / max);
+            progressBar.attr("value", progress);
+            progressBarProgress.text(`${progress}`);
+
+            i++;
+        }, 0);
+    }
+
+    async function computeEmbedding() {
+        var inputText = editor.getValue("") //document.getElementById("input-text").value.trim();
+        let output = await pipe(inputText);
+        //console.log(output["data"]);
+    }
+
+    function splitSubstrings(str, length) {
+        const words = str.split(' ');
+        const chunks = [];
+
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+
+            if (chunks.length === 0 || chunks[chunks.length - 1].length + word.length + 1 > length) {
+                chunks.push(word);
+            } else {
+                chunks[chunks.length - 1] += ' ' + word;
             }
+        }
+        return chunks;
+    }
 
-            function activateSubmitButton() {
-                // get references to the loading element and submit button
-                const loadingElement = document.getElementById("loading");
-                const submitButton = document.getElementById("submit_button");
+    function chunkSubstr(size) {
+        var inputText = editor.getValue(" ").replace(/\s{2,}/g, ' ');
 
-                // remove the loading element and enable the submit button
-                if (loadingElement) {
-                    loadingElement.remove();
-                }
+        const numChunks = Math.ceil(inputText.length / size)
+        const chunks = new Array(numChunks)
 
-                if (submitButton) {
-                    submitButton.removeAttribute("disabled");
-                    submitButton.textContent = "Submit";
-                }
-            }
+        for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+            chunks[i] = inputText.substr(o, size)
+        }
 
-            function activateScrollResultsButton() {
-                // get references to the loading element and submit button
-                const ScrollResults = document.getElementById("scroll_results");
+        return chunks
+    }
 
-                if (ScrollResults) {
-                    ScrollResults.removeAttribute("disabled");
-                }
-            }
+    var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
+        lineNumbers: true,
+        mode: 'text/plain',
+        matchBrackets: true,
+        lineWrapping: true,
+    });
 
-            function deactivateScrollResultsButton() {
-                // get references to the loading element and submit button
-                const ScrollResults = document.getElementById("scroll_results");
+    function highlightText(text,className) {
+        const cursor = editor.getSearchCursor(text);
+        while (cursor.findNext()) {
+            let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
+            markers.push(marker);
+        }
+    }
 
-                if (ScrollResults) {
-                    ScrollResults.setAttribute("disabled","");
-                }
-            }
+    function downloadPage() {
+        var url = window.location.href;
+        var a = document.createElement('a');
+        a.download = 'download.html';
+        a.href = url;
+        a.click();
+    }
 
-            async function main() {
-                pipe = await pipeline("embeddings", "sentence-transformers/all-MiniLM-L6-v2");
-                activateSubmitButton();
-            }
-            main();
+    function activateSubmitButton() {
+        // get references to the loading element and submit button
+        const loadingElement = document.getElementById("loading");
+        const submitButton = document.getElementById("submit_button");
 
-            var toggleVar = 1 ;
+        // remove the loading element and enable the submit button
+        if (loadingElement) {
+            loadingElement.remove();
+        }
 
-            function toggleMarkers() {
-                editor.scrollIntoView(markers[toggleVar].find());
-                toggleVar = (toggleVar + 1) % markers.length;
-            }
+        if (submitButton) {
+            submitButton.removeAttribute("disabled");
+            submitButton.textContent = "Submit";
+        }
+    }
 
-            $('#scroll_results').click(function(event){
-                event.preventDefault();
-                toggleMarkers();
-                // add your custom functionality here
-            });
+    let nextButton = document.getElementById("next");
+    let prevButton = document.getElementById("prev");
 
-            function finishCallback() {
-                console.log("Finished")
-                activateScrollResultsButton()
-            }
+    function activateScrollButtons() {
+        // Enable the next and prev buttons
+        if (nextButton) {
+            nextButton.removeAttribute("disabled");
+        }
 
-        </script> 
-        
-    </body>
+        if (prevButton) {
+            prevButton.removeAttribute("disabled");
+        }
+    }
+
+    function deactivateScrollButtons() {
+        // Disable the next and prev buttons
+        if (nextButton) {
+            nextButton.setAttribute("disabled", "");
+        }
+
+        if (prevButton) {
+            prevButton.setAttribute("disabled", "");
+        }
+    }
+
+
+    async function main() {
+        pipe = await pipeline("embeddings", "sentence-transformers/all-MiniLM-L6-v2");
+        activateSubmitButton();
+    }
+    main();
+
+    var toggleVar = 1 ;
+
+    function nextMarker() {
+        editor.scrollIntoView(markers[toggleVar].find());
+        highlightSelected(toggleVar);
+        toggleVar = (toggleVar + 1) % markers.length;
+    }
+
+    function prevMarker() {
+        toggleVar = (toggleVar - 1 + markers.length) % markers.length;
+        editor.scrollIntoView(markers[toggleVar].find());
+        highlightSelected(toggleVar);
+    }
+
+    $('#next').click(function(event){
+        event.preventDefault();
+        nextMarker();
+    });
+
+    $('#prev').click(function(event){
+        event.preventDefault();
+        prevMarker();
+    });
+
+    function toggleMarkers() {
+        // todo replace with 'next' and 'prev'
+        editor.scrollIntoView(markers[toggleVar].find());
+        toggleVar = (toggleVar + 1) % markers.length;
+        highlightSelected(toggleVar);
+    }
+
+    $('#scroll_results').click(function(event){
+        event.preventDefault();
+        toggleMarkers();
+        // add your custom functionality here
+    });
+
+    function finishCallback() {
+        console.log("Finished");
+        activateScrollButtons();
+    }
+
+</script>
+
+</body>
 </html>
