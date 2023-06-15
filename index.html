@@ -142,12 +142,14 @@
     <div class="row justify-content-center">
         <div class="col-sm-9"> <!-- 80% column -->
 
-            <form class="form-floating" onsubmit="semanticHighlight(finishCallback); return false;">
+            <form class="form-floating" onsubmit="onSubmit(); return false;">
                 <div class="form-group " id="formGroupCenter">
-                    <div class="form-inline justify-content-between">
+                    <div class="form-inline ">
                         <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
                         <input type="number" id="token-length" class="form-control" placeholder="Enter no. of chars" value="50" />
-                    </div><br>
+                        <input type="number" id="threshold" class="form-control" placeholder="similarity threshold" value="0.3" />
+                    </div>
+                    <br>
                     <textarea id="input-text" class="form-control" placeholder="Enter notes here" > Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
 "I will tell you what, husband," answered the wife; "we will take the children early in the morning into the forest, where it is thickest; we will make them a fire, and we will give each of them a piece of bread, then we will go to our work and leave them alone; they will never find the way home again, and we shall be quit of them."
 "No, wife," said the man, "I cannot do that; I cannot find in my heart to take my children into the forest and to leave them there alone; the wild animals would soon come and devour them." - "O you fool," said she, "then we will all four starve; you had better get the coffins ready," and she left him no peace until he consented. "But I really pity the poor children," said the man.
@@ -217,14 +219,46 @@ Not very long after that there was again great scarcity in those parts, and the 
         markers = [];
     }
 
+    const submitButton = document.getElementById("submit_button");
 
+    function activateSubmitButton() {
+        // get references to the loading element and submit button
+        const loadingElement = document.getElementById("loading");
+
+        // remove the loading element and enable the submit button
+        if (loadingElement) {
+            loadingElement.remove();
+        }
+
+        if (submitButton) {
+            submitButton.removeAttribute("disabled");
+            submitButton.textContent = "Submit";
+        }
+    }
+
+    let isProcessing = false;
+
+    async function onSubmit() {
+        if (!isProcessing) {
+
+            isProcessing = true;
+            submitButton.textContent = "Stop";
+
+            document.getElementById('results-list').innerHTML = '';
+            selectedIndex = -1;
+            await semanticHighlight(finishCallback);
+        } else {
+            submitButton.textContent = "Submit"
+            isProcessing = false;
+        }
+    }
 
     function highlightTopResults(result) {
         removeHighlights();
         highlightText(result[0][0], "highlight-first");
         highlightText(result[1][0], "highlight-second");
         for (let i = 2; i < result.length; i++) {
-            if (result[i][1] > 0.3) {
+            if (result[i][1] > $("#threshold").val()) {
                 highlightText(result[i][0], "highlight-third");
             } else {
                 break;
@@ -261,9 +295,8 @@ Not very long after that there was again great scarcity in those parts, and the 
             prevCard.style.backgroundColor = '';
         }
             prevCard = cards[index];
-        cards[index].style.backgroundColor = '#ccb8b3';
+        cards[index].style.backgroundColor = '#f4ac90';
     }
-
 
     function resetHighlightsProgress(){
         // clear any highlights
@@ -295,12 +328,14 @@ Not very long after that there was again great scarcity in those parts, and the 
         let max = inputTexts.length;
         //console.log("Embeddings Computation...")
         let i = 0;
+
         let interval = setInterval(async () => {
-            if (i >= max) {
+            if (i >= max || !isProcessing) {
                 clearInterval(interval);
                 callback();
                 return;
             }
+
             let inputText = inputTexts[i];
             let output;
             if (inputText in inputTextsEmbeddings) {
@@ -324,7 +359,7 @@ Not very long after that there was again great scarcity in those parts, and the 
             let resultsDiv = document.getElementById('results-list');
             resultsDiv.innerHTML = '';
             for (let resultItem of result) {
-                if (resultItem[1] > 0.3) {
+                if (resultItem[1] > $("#threshold").val()) {
                     let listItem = document.createElement('div');
                     listItem.classList.add('card');
                     listItem.innerHTML = `<div class="card-body">
@@ -342,8 +377,6 @@ Not very long after that there was again great scarcity in those parts, and the 
 
                 }
             }
-
-
 
             // update progress bar
             let progress = Math.round((i + 1)*100 / max);
@@ -412,21 +445,6 @@ Not very long after that there was again great scarcity in those parts, and the 
         a.click();
     }
 
-    function activateSubmitButton() {
-        // get references to the loading element and submit button
-        const loadingElement = document.getElementById("loading");
-        const submitButton = document.getElementById("submit_button");
-
-        // remove the loading element and enable the submit button
-        if (loadingElement) {
-            loadingElement.remove();
-        }
-
-        if (submitButton) {
-            submitButton.removeAttribute("disabled");
-            submitButton.textContent = "Submit";
-        }
-    }
 
     let nextButton = document.getElementById("next");
     let prevButton = document.getElementById("prev");
@@ -454,6 +472,8 @@ Not very long after that there was again great scarcity in those parts, and the 
     }
 
 
+
+
     async function main() {
         pipe = await pipeline("embeddings", "sentence-transformers/all-MiniLM-L6-v2");
         activateSubmitButton();
@@ -476,7 +496,7 @@ Not very long after that there was again great scarcity in those parts, and the 
             highlightSelected(0);
 
         } else {
-            highlightSelected((selectedIndex - 1) % markers.length);
+            highlightSelected((selectedIndex - 1 + markers.length) % markers.length);
             editor.scrollIntoView(markers[selectedIndex].find());
         }
     }
@@ -494,6 +514,9 @@ Not very long after that there was again great scarcity in those parts, and the 
 
     function finishCallback() {
         console.log("Finished");
+        submitButton.textContent = "Submit";
+        isProcessing = false;
+
         activateScrollButtons();
     }
 
