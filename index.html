@@ -6,12 +6,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@1.4.3/dist/transformers.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/javascript/javascript.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.56.0/addon/search/searchcursor.min.js"></script>
+
 <!--    <script data-goatcounter="https://georocks.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>-->
     <style>
 
@@ -180,9 +180,7 @@ Not very long after that there was again great scarcity in those parts, and the 
 
         <div class="col-sm-3"> <!-- 20% column -->
             <div id="results">
-                <ul id="results-list">
-                    <!-- List items will be added here dynamically by the JavaScript code -->
-                </ul>
+                <ul id="results-list"> </ul>
             </div>
         </div>
 
@@ -191,8 +189,10 @@ Not very long after that there was again great scarcity in those parts, and the 
 </div>
 
 
-<script>
-    var pipe;
+
+<script type="module">
+    import { pipeline, AutoTokenizer } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.2.0/dist/transformers.min.js';
+
     var embeddingDict;
     var scoredTextsDict;
     let markers = [];
@@ -252,6 +252,8 @@ Not very long after that there was again great scarcity in those parts, and the 
             isProcessing = false;
         }
     }
+    window.onSubmit = onSubmit;
+
 
     function highlightTopResults(result) {
         removeHighlights();
@@ -306,9 +308,13 @@ Not very long after that there was again great scarcity in those parts, and the 
 
     }
 
+    async function embed(text) {
+        return await embedder(text, { pooling: 'mean', normalize: true });
+    }
+
     async function computeQueryEmbedding(){
         let inputQuery = $("#query-text").val()
-        let queryEmbedding = await pipe(inputQuery);
+        let queryEmbedding = await embed(inputQuery);
         // let queryEmbeddingDict = {inputQuery: queryEmbedding}
         //console.log(queryEmbedding)
         return queryEmbedding["data"]
@@ -317,18 +323,28 @@ Not very long after that there was again great scarcity in those parts, and the 
 
     let inputTextsEmbeddings = {};
 
+    async function embedPsuedosentences(text) {
+
+    }
+
     async function semanticHighlight(callback) {
         deactivateScrollButtons();
         resetHighlightsProgress();
+        // await embedPsuedosentences(editor.getValue(""));
 
         // query input embedding
         let queryEmbedding = await computeQueryEmbedding();
-        let inputTexts = splitSubstrings(editor.getValue(""),$("#token-length").val());
+        const text = editor.getValue("");
+        let inputTexts = splitSubstrings(text,$("#token-length").val());
+        console.time("parsing");
+        await splitSubstrings2(text);
+        console.timeEnd("parsing");
         let result = [];
         let max = inputTexts.length;
         //console.log("Embeddings Computation...")
         let i = 0;
 
+        // all are set into play async then function continues
         let interval = setInterval(async () => {
             if (i >= max || !isProcessing) {
                 clearInterval(interval);
@@ -341,7 +357,7 @@ Not very long after that there was again great scarcity in those parts, and the 
             if (inputText in inputTextsEmbeddings) {
                 output = inputTextsEmbeddings[inputText];
             } else {
-                output = await pipe(inputText);
+                output = await embed(inputText);
                 inputTextsEmbeddings[inputText] = output;
             }
 
@@ -355,28 +371,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                 editor.scrollIntoView(markers[0].find())
             }
 
-            // display results to the right -- we may want to move this to after the computation occurs
-            let resultsDiv = document.getElementById('results-list');
-            resultsDiv.innerHTML = '';
-            for (let resultItem of result) {
-                if (resultItem[1] > $("#threshold").val()) {
-                    let listItem = document.createElement('div');
-                    listItem.classList.add('card');
-                    listItem.innerHTML = `<div class="card-body">
-                                                <h5 class="card-title" style="font-size: 0.9em;">${resultItem[0]}</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted" style="font-size: 0.8em;">similarity: ${resultItem[1].toFixed(2)}</h6>
-                                            </div>`;
-                    resultsDiv.appendChild(listItem);
-
-
-                    listItem.addEventListener('click', function() {
-                        const index = result.indexOf(resultItem);
-                        editor.scrollIntoView(markers[index].find());
-                        highlightSelected(index);
-                    });
-
-                }
-            }
+            updateCards(result);
 
             // update progress bar
             let progress = Math.round((i + 1)*100 / max);
@@ -387,10 +382,29 @@ Not very long after that there was again great scarcity in those parts, and the 
         }, 0);
     }
 
-    async function computeEmbedding() {
-        var inputText = editor.getValue("") //document.getElementById("input-text").value.trim();
-        let output = await pipe(inputText);
-        //console.log(output["data"]);
+    function updateCards(result) {
+        // display results to the right -- we may want to move this to after the computation occurs
+        let resultsDiv = document.getElementById('results-list');
+        resultsDiv.innerHTML = '';
+        for (let resultItem of result) {
+            if (resultItem[1] > $("#threshold").val()) {
+                let listItem = document.createElement('div');
+                listItem.classList.add('card');
+                listItem.innerHTML = `<div class="card-body">
+                                                <h5 class="card-title" style="font-size: 0.9em;">${resultItem[0]}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted" style="font-size: 0.8em;">similarity: ${resultItem[1].toFixed(2)}</h6>
+                                            </div>`;
+                resultsDiv.appendChild(listItem);
+
+
+                listItem.addEventListener('click', function() {
+                    const index = result.indexOf(resultItem);
+                    editor.scrollIntoView(markers[index].find());
+                    highlightSelected(index);
+                });
+
+            }
+        }
     }
 
     function splitSubstrings(str, length) {
@@ -409,18 +423,46 @@ Not very long after that there was again great scarcity in those parts, and the 
         return chunks;
     }
 
-    function chunkSubstr(size) {
-        var inputText = editor.getValue(" ").replace(/\s{2,}/g, ' ');
+    function splitIntoSentences(paragraph) {
+        return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
+    }
 
-        const numChunks = Math.ceil(inputText.length / size)
-        const chunks = new Array(numChunks)
+    async function getTokens(text) {
+        return await tokenizer(text);
+    }
 
-        for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-            chunks[i] = inputText.substr(o, size)
+    async function splitSubstrings2(text) {
+        const MAX_TOKENS = 128;
+        const sentences = splitIntoSentences(text);
+        const chunks = [];
+        let chunk = [];
+
+        for (let sentence of sentences) {
+            const tokens = await getTokens(sentence);
+
+            if (chunk.reduce((sum, {length}) => sum + length, 0) + tokens.length <= MAX_TOKENS) {
+                // If the tokens of current sentence and the current chunk combined are less than 128, add the sentence to the chunk
+                chunk.push(tokens);
+            } else if (tokens.length > MAX_TOKENS) {
+                // If a single sentence is longer than 128 tokens, break it up into multiple chunks
+                for (let i = 0; i < tokens.length; i += MAX_TOKENS) {
+                    chunks.push(tokens.slice(i, i + MAX_TOKENS));
+                }
+            } else {
+                // Start a new chunk starting with the current sentence
+                chunks.push(chunk);
+                chunk = [tokens];
+            }
         }
 
-        return chunks
+        // Don't forget to push the last chunk
+        if (chunk.length > 0) {
+            chunks.push(chunk);
+        }
+
+        return chunks;
     }
+
 
     var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
         lineNumbers: true,
@@ -473,9 +515,11 @@ Not very long after that there was again great scarcity in those parts, and the 
 
 
 
-
+    let embedder;
+    let tokenizer;
     async function main() {
-        pipe = await pipeline("embeddings", "sentence-transformers/all-MiniLM-L6-v2");
+        embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2');
+        tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
         activateSubmitButton();
     }
     main();
