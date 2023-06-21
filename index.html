@@ -352,9 +352,7 @@ Not very long after that there was again great scarcity in those parts, and the 
         let queryEmbedding = await computeQueryEmbedding();
         const text = editor.getValue("");
         let inputTexts = splitSubstrings(text,$("#token-length").val());
-        console.time("parsing");
-        await splitSubstrings2(text);
-        console.timeEnd("parsing");
+
         let result = [];
         let max = inputTexts.length;
         //console.log("Embeddings Computation...")
@@ -446,39 +444,6 @@ Not very long after that there was again great scarcity in those parts, and the 
     async function getTokens(text) {
         return await tokenizer(text);
     }
-
-    async function splitSubstrings2(text) {
-        const MAX_TOKENS = 128;
-        const sentences = splitIntoSentences(text);
-        const chunks = [];
-        let chunk = [];
-
-        for (let sentence of sentences) {
-            const tokens = await getTokens(sentence);
-
-            if (chunk.reduce((sum, {length}) => sum + length, 0) + tokens.length <= MAX_TOKENS) {
-                // If the tokens of current sentence and the current chunk combined are less than 128, add the sentence to the chunk
-                chunk.push(tokens);
-            } else if (tokens.length > MAX_TOKENS) {
-                // If a single sentence is longer than 128 tokens, break it up into multiple chunks
-                for (let i = 0; i < tokens.length; i += MAX_TOKENS) {
-                    chunks.push(tokens.slice(i, i + MAX_TOKENS));
-                }
-            } else {
-                // Start a new chunk starting with the current sentence
-                chunks.push(chunk);
-                chunk = [tokens];
-            }
-        }
-
-        // Don't forget to push the last chunk
-        if (chunk.length > 0) {
-            chunks.push(chunk);
-        }
-
-        return chunks;
-    }
-
 
     var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
         lineNumbers: true,
