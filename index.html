@@ -5,7 +5,8 @@
     <title>SemanticFinder - Frontend-only Semantic Search with transformers.js</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -143,14 +144,27 @@
         <div class="col-sm-9"> <!-- 80% column -->
 
             <form class="form-floating" onsubmit="onSubmit(); return false;">
-                <div class="form-group " id="formGroupCenter">
-                    <div class="form-inline ">
+                <div class="form-group" id="formGroupCenter">
+                    <div class="form-floating mb-3">
                         <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
-                        <input type="number" id="token-length" class="form-control" placeholder="Enter no. of chars" value="50" />
-                        <input type="number" id="threshold" class="form-control" placeholder="similarity threshold" value="0.3" />
+                        <label for="query-text">query</label>
                     </div>
-                    <br>
-                    <textarea id="input-text" class="form-control" placeholder="Enter notes here" > Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
+                    <div class="row"> <!-- Add a row div -->
+                        <div class="col-md-6"> <!-- Split the row in half (6 out of 12 grids) -->
+                            <div class="form-floating mb-3">
+                                <input type="number" id="token-length" class="form-control w-100" placeholder="Enter no. of chars" value="50" />
+                                <label for="token-length"># chars</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6"> <!-- The other half of the row -->
+                            <div class="form-floating mb-3">
+                                <input type="number" id="threshold" class="form-control w-100" placeholder="Similarity threshold" value="0.3" step="0.01" />
+                                <label for="threshold">threshold</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating">
+                        <textarea id="input-text" class="form-control" placeholder="Enter notes here">Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
 "I will tell you what, husband," answered the wife; "we will take the children early in the morning into the forest, where it is thickest; we will make them a fire, and we will give each of them a piece of bread, then we will go to our work and leave them alone; they will never find the way home again, and we shall be quit of them."
 "No, wife," said the man, "I cannot do that; I cannot find in my heart to take my children into the forest and to leave them there alone; the wild animals would soon come and devour them." - "O you fool," said she, "then we will all four starve; you had better get the coffins ready," and she left him no peace until he consented. "But I really pity the poor children," said the man.
 The two children had not been able to sleep for hunger, and had heard what their step-mother had said to their father. Grethel wept bitterly, and said to Hansel, "It is all over with us."
@@ -159,6 +173,8 @@ The two children had not been able to sleep for hunger, and had heard what their
 So Hansel and Grethel sat by the fire, and at noon they each ate their pieces of bread. They thought their father was in the wood all the time, as they seemed to hear the strokes of the axe: but really it was only a dry branch hanging to a withered tree that the wind moved to and fro. So when they had stayed there a long time their eyelids closed with weariness, and they fell fast asleep.
 When at last they woke it was night, and Grethel began to cry, and said, "How shall we ever get out of this wood? "But Hansel comforted her, saying, "Wait a little while longer, until the moon rises, and then we can easily find the way home." And when the full moon got up Hansel took his little sister by the hand, and followed the way where the flint stones shone like silver, and showed them the road. They walked on the whole night through, and at the break of day they came to their father's house. They knocked at the door, and when the wife opened it and saw that it was Hansel and Grethel she said, "You naughty children, why did you sleep so long in the wood? we thought you were never coming home again!" But the father was glad, for it had gone to his heart to leave them both in the woods alone.
 Not very long after that there was again great scarcity in those parts, and the children heard their mother say at night in bed to their father, "Everything is finished up; we have only half a loaf, and after that the tale comes to an end. The children must be off; we will take them farther into the wood this time, so that they shall not be able to find the way back again; there is no other way to manage." The man felt sad at heart, and he thought, "It would better to share one's last morsel with one's children." But the wife would listen to nothing that he said, but scolded and reproached him. He who says A must say B too, and when a man has given in once he has to do it a second time.</textarea>
+
+                    </div>
                 </div>
                 <div class="text-center">
                     <button type="submit" id="submit_button" class="btn btn-primary mb-2" disabled>
