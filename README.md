@@ -2,7 +2,7 @@
 
 Update: just improved the UI - automatically scroll through the results!
 
-## [Try the demo](https://geo.rocks/semanticfinder/) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
+## [Try the demo](https://do-me.github.io/SemanticFinder/) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
 
 ![](/SemanticFinder.gif)
 
