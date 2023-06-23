@@ -26,6 +26,10 @@
             height: 55vh;
         }
 
+        p {
+            margin: 10px;
+        }
+
         table {
             table-layout: auto;
             margin: 0 auto;
@@ -148,7 +152,7 @@
 <div class="text-center">
     <p>
         Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using a <a href="https://github.com/xenova/transformers.js/issues/36#issuecomment-1476842324">quantized version</a> of <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.<br>
-        Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog post</a>, building on two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. <a href="#" onclick="downloadPage()">Download this page</a>.
+        Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog post</a>, building on two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search.
         See other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc" >IPCC Report 2023 (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary" >IPCC Summary 2023 (35 pages)</a>.
         <br>For a more refined search, enter a low character count; for a coarser search, enter a high one. Simply copy and paste any text and hit Submit.</p>
 </div>
@@ -480,15 +484,6 @@ Not very long after that there was again great scarcity in those parts, and the 
             markers.push(marker);
         }
     }
-
-    function downloadPage() {
-        var url = window.location.href;
-        var a = document.createElement('a');
-        a.download = 'download.html';
-        a.href = url;
-        a.click();
-    }
-
 
     let nextButton = document.getElementById("next");
     let prevButton = document.getElementById("prev");
