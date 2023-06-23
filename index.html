@@ -124,6 +124,16 @@
             background-color: #f8f9fa;
         }
 
+        .submit-button {
+            width: 80px; /* adjust this to the size you want */
+            margin-right: 1px; /* adds space between buttons */
+        }
+
+        .nav-button {
+            width: 60px; /* adjust this to the size you want */
+            margin-right: 1px; /* adds space between buttons */
+        }
+
         #submitGroup {
             margin-top: 2vh; /* adjust this value as needed */
         }
@@ -181,14 +191,14 @@ Not very long after that there was again great scarcity in those parts, and the 
                 </div>
 
                 <div class="text-center" id="submitGroup">
-                    <button type="submit" id="submit_button" class="btn btn-primary mb-2" disabled>
+                    <button type="submit" id="submit_button" class="btn btn-primary mb-2 submit-button" disabled>
                         <div id="loading"></div>
                         Loading model...
                     </button>
-                    <button id="prev" class="btn btn-secondary mb-2" disabled>
+                    <button id="prev" class="btn btn-secondary mb-2 nav-button" disabled>
                         prev
                     </button>
-                    <button id="next" class="btn btn-secondary mb-2" disabled>
+                    <button id="next" class="btn btn-secondary mb-2 nav-button" disabled>
                         next
                     </button>
                 </div>
