@@ -90,7 +90,7 @@
 
         #progressBar{
             height: 25px;
-            width: 80%;
+            width: 100%;
             margin-left: 5px;
         }
 
@@ -124,6 +124,21 @@
             background-color: #f8f9fa;
         }
 
+        .submit-button {
+            width: 80px; /* adjust this to the size you want */
+            margin-right: 1px; /* adds space between buttons */
+        }
+
+        .nav-button {
+            width: 60px; /* adjust this to the size you want */
+            margin-right: 1px; /* adds space between buttons */
+        }
+
+        #submitGroup {
+            margin-top: 2vh; /* adjust this value as needed */
+        }
+
+
     </style>
 </head>
 <body>
@@ -140,22 +155,21 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-sm-9"> <!-- 80% column -->
-
+        <div class="col-sm-9"> <!-- 80% column for text region-->
             <form class="form-floating" onsubmit="onSubmit(); return false;">
                 <div class="form-group" id="formGroupCenter">
                     <div class="form-floating mb-3">
                         <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
                         <label for="query-text">query</label>
                     </div>
-                    <div class="row"> <!-- Add a row div -->
-                        <div class="col-md-6"> <!-- Split the row in half (6 out of 12 grids) -->
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input type="number" id="token-length" class="form-control w-100" placeholder="Enter no. of chars" value="50" />
                                 <label for="token-length"># chars</label>
                             </div>
                         </div>
-                        <div class="col-md-6"> <!-- The other half of the row -->
+                        <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input type="number" id="threshold" class="form-control w-100" placeholder="Similarity threshold" value="0.3" step="0.01" />
                                 <label for="threshold">threshold</label>
@@ -175,21 +189,29 @@ Not very long after that there was again great scarcity in those parts, and the 
 
                     </div>
                 </div>
-                <div class="text-center">
-                    <button type="submit" id="submit_button" class="btn btn-primary mb-2" disabled>
+
+                <div class="text-center" id="submitGroup">
+                    <button type="submit" id="submit_button" class="btn btn-primary mb-2 submit-button" disabled>
                         <div id="loading"></div>
                         Loading model...
                     </button>
-                    <button id="prev" class="btn btn-primary mb-2" disabled>
+                    <button id="prev" class="btn btn-secondary mb-2 nav-button" disabled>
                         prev
                     </button>
-                    <button id="next" class="btn btn-primary mb-2" disabled>
+                    <button id="next" class="btn btn-secondary mb-2 nav-button" disabled>
                         next
                     </button>
                 </div>
+
             </form>
-            <label id="progressBarLabel" for="progressBar">Progress:</label><p id="progressBarProgress">0</p>%
-            <progress id="progressBar" value="0" max="100" role="progressbar"></progress>
+            <div>
+                <label id="progressBarLabel" for="progressBar">Progress:</label>
+                <div style="display: flex; align-items: center;">
+                    <p id="progressBarProgress" style="margin: 0 5px 0 0; position: relative; top: 3px;">0%</p>
+                    <progress id="progressBar" value="0" max="100" role="progressbar"></progress>
+                </div>
+            </div>
+
 
         </div>
 
