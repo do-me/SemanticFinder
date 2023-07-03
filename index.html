@@ -22,6 +22,9 @@
             min-width: 80vw;
             text-align: left !important;
         }
+
+
+
         .CodeMirror{
             height: 55vh;
         }
@@ -125,7 +128,7 @@
         }
 
         .submit-button {
-            width: 80px; /* adjust this to the size you want */
+            width: 100px; /* adjust this to the size you want */
             margin-right: 1px; /* adds space between buttons */
         }
 
@@ -137,6 +140,13 @@
         #submitGroup {
             margin-top: 2vh; /* adjust this value as needed */
         }
+        .card-title {
+            font-size: 0.9em;
+        }
+        .card-subtitle {
+            font-size: 0.8em;
+        }
+
 
 
     </style>
@@ -145,12 +155,17 @@
 <br />
 <h1 class="text-center"><span class="highlight-first" >SemanticFinder</span></h1>
 <h2 class="text-center">Frontend-only live semantic search with <a href="https://xenova.github.io/transformers.js/" target="_blank">transformers.js</a>. <a href="https://github.com/do-me/SemanticFinder">GitHub</a></h2>
-<div class="text-center">
-    <p>
-        Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using a <a href="https://github.com/xenova/transformers.js/issues/36#issuecomment-1476842324">quantized version</a> of <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.<br>
-        Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog post</a>, building on two former ones <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. <a href="#" onclick="downloadPage()">Download this page</a>.
-        See other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc" >IPCC Report 2023 (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary" >IPCC Summary 2023 (35 pages)</a>.
-        <br>For a more refined search, enter a low character count; for a coarser search, enter a high one. Simply copy and paste any text and hit Submit.</p>
+<div class="text-center" style="margin: 0 auto; max-width: 65%;">
+    <p>Semantic Search right in your browser! This tool calculates embeddings and cosine similarity client-side, without the need for server-side inferencing. Built on a <a href="https://github.com/xenova/transformers.js/issues/36#issuecomment-1476842324">quantized version</a> of the <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.
+
+        This is a demo for a <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">related blog post</a>. It builds on two previous posts about vector search, which you can find here: <a href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a>.
+
+        All code self-contained in a single HTML file. You can <a href="#" onclick="downloadPage()">download this page</a>.
+
+        For further exploration, check out these pre-indexed examples: <a href="https://geo.rocks/semanticfinder/ipcc" >IPCC Report 2023 (85 pages)</a> and the <a href="https://geo.rocks/semanticfinder/ipcc-summary" >IPCC Summary 2023 (35 pages)</a>.
+
+        To use Semantic Search, simply copy and paste any text and hit Submit. For a more refined search, enter a lower character count. For a broader search, enter a higher one.</p>
+
 </div>
 
 <div class="container mt-5">
@@ -158,6 +173,8 @@
         <div class="col-sm-9"> <!-- 80% column for text region-->
             <form class="form-floating" onsubmit="onSubmit(); return false;">
                 <div class="form-group" id="formGroupCenter">
+                    <!-- advanced features-->
+
                     <div class="form-floating mb-3">
                         <input type="text" id="query-text" class="form-control" placeholder="Enter query here" value="food" />
                         <label for="query-text">query</label>
@@ -169,13 +186,16 @@
                                 <label for="token-length"># chars</label>
                             </div>
                         </div>
+<!--                        put button here "Advanced"-->
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input type="number" id="threshold" class="form-control w-100" placeholder="Similarity threshold" value="0.3" step="0.01" />
                                 <label for="threshold">threshold</label>
                             </div>
                         </div>
+
                     </div>
+                    <!-- text-->
                     <div class="form-floating">
                         <textarea id="input-text" class="form-control" placeholder="Enter notes here">Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
 "I will tell you what, husband," answered the wife; "we will take the children early in the morning into the forest, where it is thickest; we will make them a fire, and we will give each of them a piece of bread, then we will go to our work and leave them alone; they will never find the way home again, and we shall be quit of them."
@@ -185,11 +205,12 @@ The two children had not been able to sleep for hunger, and had heard what their
 "O father," said Hansel, "lam looking at my little white kitten, who is sitting up on the roof to bid me good-bye." - "You young fool," said the woman, "that is not your kitten, but the sunshine on the chimney-pot." Of course Hansel had not been looking at his kitten, but had been taking every now and then a flint from his pocket and dropping it on the road. When they reached the middle of the forest the father told the children to collect wood to make a fire to keep them, warm; and Hansel and Grethel gathered brushwood enough for a little mountain j and it was set on fire, and when the flame was burning quite high the wife said, "Now lie down by the fire and rest yourselves, you children, and we will go and cut wood; and when we are ready we will come and fetch you."
 So Hansel and Grethel sat by the fire, and at noon they each ate their pieces of bread. They thought their father was in the wood all the time, as they seemed to hear the strokes of the axe: but really it was only a dry branch hanging to a withered tree that the wind moved to and fro. So when they had stayed there a long time their eyelids closed with weariness, and they fell fast asleep.
 When at last they woke it was night, and Grethel began to cry, and said, "How shall we ever get out of this wood? "But Hansel comforted her, saying, "Wait a little while longer, until the moon rises, and then we can easily find the way home." And when the full moon got up Hansel took his little sister by the hand, and followed the way where the flint stones shone like silver, and showed them the road. They walked on the whole night through, and at the break of day they came to their father's house. They knocked at the door, and when the wife opened it and saw that it was Hansel and Grethel she said, "You naughty children, why did you sleep so long in the wood? we thought you were never coming home again!" But the father was glad, for it had gone to his heart to leave them both in the woods alone.
-Not very long after that there was again great scarcity in those parts, and the children heard their mother say at night in bed to their father, "Everything is finished up; we have only half a loaf, and after that the tale comes to an end. The children must be off; we will take them farther into the wood this time, so that they shall not be able to find the way back again; there is no other way to manage." The man felt sad at heart, and he thought, "It would better to share one's last morsel with one's children." But the wife would listen to nothing that he said, but scolded and reproached him. He who says A must say B too, and when a man has given in once he has to do it a second time.</textarea>
-
+Not very long after that there was again great scarcity in those parts, and the children heard their mother say at night in bed to their father, "Everything is finished up; we have only half a loaf, and after that the tale comes to an end. The children must be off; we will take them farther into the wood this time, so that they shall not be able to find the way back again; there is no other way to manage." The man felt sad at heart, and he thought, "It would better to share one's last morsel with one's children." But the wife would listen to nothing that he said, but scolded and reproached him. He who says A must say B too, and when a man has given in once he has to do it a second time.
+ </textarea>
                     </div>
                 </div>
 
+                <!-- submit group-->
                 <div class="text-center" id="submitGroup">
                     <button type="submit" id="submit_button" class="btn btn-primary mb-2 submit-button" disabled>
                         <div id="loading"></div>
@@ -207,7 +228,7 @@ Not very long after that there was again great scarcity in those parts, and the 
             <div>
                 <label id="progressBarLabel" for="progressBar">Progress:</label>
                 <div style="display: flex; align-items: center;">
-                    <p id="progressBarProgress" style="margin: 0 5px 0 0; position: relative; top: 3px;">0%</p>
+                    <p id="progressBarProgress" style="margin: 0 2px 0 0; position: relative; top: 2px;">0%</p>
                     <progress id="progressBar" value="0" max="100" role="progressbar"></progress>
                 </div>
             </div>
@@ -230,24 +251,10 @@ Not very long after that there was again great scarcity in those parts, and the 
 <script type="module">
     import { pipeline, AutoTokenizer } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.2.0/dist/transformers.min.js';
 
-    var embeddingDict;
-    var scoredTextsDict;
+    let embeddingsDict = {};
     let markers = [];
     let progressBar = $("#progressBar");
     let progressBarProgress = $("#progressBarProgress");
-
-    function calculateCosineSimilarity(queryEmbedding, embedding) {
-        let dotProduct = 0;
-        let queryMagnitude = 0;
-        let embeddingMagnitude = 0;
-        let queryEmbeddingLength = queryEmbedding.length
-        for (let i = 0; i < queryEmbeddingLength; i++) {
-            dotProduct += queryEmbedding[i] * embedding[i];
-            queryMagnitude += queryEmbedding[i] ** 2;
-            embeddingMagnitude += embedding[i] ** 2;
-        }
-        return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
-    }
 
     function removeHighlights() {
         for (let marker of markers) {
@@ -277,7 +284,6 @@ Not very long after that there was again great scarcity in those parts, and the 
 
     async function onSubmit() {
         if (!isProcessing) {
-
             isProcessing = true;
             submitButton.textContent = "Stop";
 
@@ -292,18 +298,62 @@ Not very long after that there was again great scarcity in those parts, and the 
     window.onSubmit = onSubmit;
 
 
-    function highlightTopResults(result) {
-        removeHighlights();
-        highlightText(result[0][0], "highlight-first");
-        highlightText(result[1][0], "highlight-second");
-        for (let i = 2; i < result.length; i++) {
-            if (result[i][1] > $("#threshold").val()) {
-                highlightText(result[i][0], "highlight-third");
-            } else {
-                break;
-            }
+    function createHighlight(text, className, similarity) {
+        let resultsDiv = document.getElementById('results-list');
+        const cursor = editor.getSearchCursor(text);
+
+        while (cursor.findNext()) {
+            let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
+            markers.push(marker);
+
+            // create card
+            let listItem = document.createElement('div');
+            listItem.classList.add('card');
+            listItem.innerHTML = createCardHTML(text, similarity);
+
+            resultsDiv.appendChild(listItem);
+
+            let index = resultsDiv.childElementCount - 1;
+
+            // Add click listener for card
+            listItem.addEventListener('click', function() {
+                editor.scrollIntoView(markers[index].find());
+                highlightSelected(index);
+            });
         }
     }
+
+    function updateResults(results) {
+        // Remove previous highlights
+        removeHighlights();
+
+        // Get results list element
+        let resultsDiv = document.getElementById('results-list');
+        resultsDiv.innerHTML = '';
+
+        for (let i = 0; i < results.length; i++) {
+            let resultItem = results[i];
+            if (resultItem[1] < $("#threshold").val()) { break; } // redundant
+
+            let highlightClass;
+            if (i === 0) highlightClass = "highlight-first";
+            else if (i === 1) highlightClass = "highlight-second";
+            else highlightClass = "highlight-third";
+
+            createHighlight(resultItem[0], highlightClass, resultItem[1]);
+
+        }
+    }
+
+    function createCardHTML(title, similarity) {
+        return `
+        <div class="card-body">
+            <h5 class="card-title">${title}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">similarity: ${similarity.toFixed(2)}</h6>
+        </div>
+    `;
+    }
+
 
     let selectedIndex = -1;
     let selectedClassName;
@@ -329,11 +379,10 @@ Not very long after that there was again great scarcity in those parts, and the 
         let resultsDiv = document.getElementById('results-list');
         let cards = resultsDiv.getElementsByClassName('card');
 
-        // Ensure the index is within the range of the cards.
         if (prevCard) {
             prevCard.style.backgroundColor = '';
         }
-            prevCard = cards[index];
+        prevCard = cards[index];
         cards[index].style.backgroundColor = '#f4ac90';
     }
 
@@ -346,101 +395,91 @@ Not very long after that there was again great scarcity in those parts, and the 
     }
 
     async function embed(text) {
-        return await embedder(text, { pooling: 'mean', normalize: true });
+        if (text in embeddingsDict) {
+            return embeddingsDict[text];
+        }
+
+        let e0 = await embedder(text, { pooling: 'mean', normalize: true });
+        embeddingsDict[text] = e0["data"];
+        return e0["data"];
     }
 
-    async function computeQueryEmbedding(){
-        let inputQuery = $("#query-text").val()
-        let queryEmbedding = await embed(inputQuery);
-        // let queryEmbeddingDict = {inputQuery: queryEmbedding}
-        //console.log(queryEmbedding)
-        return queryEmbedding["data"]
+    function calculateCosineSimilarity(queryEmbedding, embedding) {
+        let dotProduct = 0;
+        let queryMagnitude = 0;
+        let embeddingMagnitude = 0;
+        let queryEmbeddingLength = queryEmbedding.length
+        for (let i = 0; i < queryEmbeddingLength; i++) {
+            dotProduct += queryEmbedding[i] * embedding[i];
+            queryMagnitude += queryEmbedding[i] ** 2;
+            embeddingMagnitude += embedding[i] ** 2;
+        }
+        return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
     }
-    // $("#token-length").val()
 
-    let inputTextsEmbeddings = {};
+    async function similarity(text) {
+        let inputQuery = $("#query-text").val();
+        let inputEmbedding = await embed(inputQuery);
 
-    async function embedPsuedosentences(text) {
-
+        if (Array.isArray(text)) {
+            // if text is array embed each item individually
+            let similarities = [];
+            for (let i = 0; i < text.length; i++) {
+                let textEmbedding = await embed(text[i]);
+                similarities.push(calculateCosineSimilarity(inputEmbedding, textEmbedding));
+            }
+            return similarities;
+        }
+        let textEmbedding = await embed(text);
+        return calculateCosineSimilarity(inputEmbedding, textEmbedding);
     }
+
+
 
     async function semanticHighlight(callback) {
         deactivateScrollButtons();
         resetHighlightsProgress();
-        // await embedPsuedosentences(editor.getValue(""));
 
         // query input embedding
-        let queryEmbedding = await computeQueryEmbedding();
         const text = editor.getValue("");
         let inputTexts = splitSubstrings(text,$("#token-length").val());
 
-        let result = [];
+        let results = [];
         let max = inputTexts.length;
-        //console.log("Embeddings Computation...")
+
         let i = 0;
 
         // all are set into play async then function continues
         let interval = setInterval(async () => {
+            let inputText = inputTexts[i];
             if (i >= max || !isProcessing) {
                 clearInterval(interval);
                 callback();
                 return;
             }
+            i++;
 
-            let inputText = inputTexts[i];
-            let output;
-            if (inputText in inputTextsEmbeddings) {
-                output = inputTextsEmbeddings[inputText];
-            } else {
-                output = await embed(inputText);
-                inputTextsEmbeddings[inputText] = output;
+
+            let cosineSimilarity = await similarity(inputText);
+
+            results.push([inputText, cosineSimilarity]);
+            results.sort((a, b) => b[1] - a[1]);
+
+            updateResults(results);
+            if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+                editor.scrollIntoView(markers[0].find());
             }
-
-            // calculate cosine similarity and sort results
-            let cosineSimilarity = calculateCosineSimilarity(queryEmbedding, output["data"]);
-
-            result.push([inputText, cosineSimilarity]);
-            result.sort((a, b) => b[1] - a[1]);
-            if (result.length >= 3) {
-                highlightTopResults(result);
-                editor.scrollIntoView(markers[0].find())
-            }
-
-            updateCards(result);
 
             // update progress bar
-            let progress = Math.round((i + 1)*100 / max);
+            let progress = Math.round((i*100) / max);
             progressBar.attr("value", progress);
             progressBarProgress.text(`${progress}`);
 
-            i++;
         }, 0);
     }
 
-    function updateCards(result) {
-        // display results to the right -- we may want to move this to after the computation occurs
-        let resultsDiv = document.getElementById('results-list');
-        resultsDiv.innerHTML = '';
-        for (let resultItem of result) {
-            if (resultItem[1] > $("#threshold").val()) {
-                let listItem = document.createElement('div');
-                listItem.classList.add('card');
-                listItem.innerHTML = `<div class="card-body">
-                                                <h5 class="card-title" style="font-size: 0.9em;">${resultItem[0]}</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted" style="font-size: 0.8em;">similarity: ${resultItem[1].toFixed(2)}</h6>
-                                            </div>`;
-                resultsDiv.appendChild(listItem);
 
 
-                listItem.addEventListener('click', function() {
-                    const index = result.indexOf(resultItem);
-                    editor.scrollIntoView(markers[index].find());
-                    highlightSelected(index);
-                });
-
-            }
-        }
-    }
 
     function splitSubstrings(str, length) {
         const words = str.split(' ');
@@ -458,12 +497,8 @@ Not very long after that there was again great scarcity in those parts, and the 
         return chunks;
     }
 
-    function splitIntoSentences(paragraph) {
-        return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
-    }
-
     async function getTokens(text) {
-        return await tokenizer(text);
+        return await tokenizer(text)["input_ids"]["data"];
     }
 
     var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
@@ -473,13 +508,6 @@ Not very long after that there was again great scarcity in those parts, and the 
         lineWrapping: true,
     });
 
-    function highlightText(text,className) {
-        const cursor = editor.getSearchCursor(text);
-        while (cursor.findNext()) {
-            let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
-            markers.push(marker);
-        }
-    }
 
     function downloadPage() {
         var url = window.location.href;
@@ -520,8 +548,8 @@ Not very long after that there was again great scarcity in those parts, and the 
     let embedder;
     let tokenizer;
     async function main() {
-        embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2');
-        tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
+        embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2'); // crops to 512 tokens
+        // tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
         activateSubmitButton();
     }
     main();
@@ -530,7 +558,6 @@ Not very long after that there was again great scarcity in those parts, and the 
     function nextMarker() {
         if (selectedIndex === -1) {
             highlightSelected(0);
-
         } else {
             highlightSelected((selectedIndex + 1) % markers.length);
             editor.scrollIntoView(markers[selectedIndex].find());
@@ -540,7 +567,6 @@ Not very long after that there was again great scarcity in those parts, and the 
     function prevMarker() {
         if (selectedIndex === -1) {
             highlightSelected(0);
-
         } else {
             highlightSelected((selectedIndex - 1 + markers.length) % markers.length);
             editor.scrollIntoView(markers[selectedIndex].find());
@@ -559,7 +585,7 @@ Not very long after that there was again great scarcity in those parts, and the 
 
 
     function finishCallback() {
-        console.log("Finished");
+        ("Finished");
         submitButton.textContent = "Submit";
         isProcessing = false;
 
