@@ -1,5 +1,7 @@
 import $ from 'jquery';
-import { pipeline, AutoTokenizer } from '@xenova/transformers';
+import { env, pipeline, AutoTokenizer } from '@xenova/transformers';
+
+env.allowLocalModels = false;
 
 let embedder;
 let tokenizer;
