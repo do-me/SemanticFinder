@@ -9,7 +9,15 @@ Update: just improved the UI - automatically scroll through the results!
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
 ## Goal 
-Keep it as simple as possible. One HTML-file only that can run anywhere.
+Keep it as simple as possible. 
+
+Install deps with 
+
+`npm install` 
+
+Then run with
+
+`npm run start`
 
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
