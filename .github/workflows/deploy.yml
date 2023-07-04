@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   deploy:
@@ -27,6 +27,8 @@ jobs:
         run: npm install
 
       - name: Build and deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm run build
-          npx gh-pages --dist dist
+          npx gh-pages --dist dist --repo https://github.com/${{ github.repository }} --branch gh-pages --dotfiles --add
