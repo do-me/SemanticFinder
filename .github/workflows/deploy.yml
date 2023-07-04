@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   deploy:
@@ -21,7 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and deploy
-        run: |
-          npm run build
-          npx gh-pages --dist dist --git false
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build  # Specify the directory where the built files are located
