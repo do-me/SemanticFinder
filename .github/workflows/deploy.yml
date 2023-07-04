@@ -24,4 +24,4 @@ jobs:
       - name: Build and deploy
         run: |
           npm run build
-          npx gh-pages --dist dist
+          npx gh-pages --dist dist --git false
