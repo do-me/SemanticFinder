@@ -8,12 +8,11 @@ Update: just improved the UI - automatically scroll through the results!
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
-## Goal 
-Keep it as simple as possible. 
+## Installation 
 
-Install deps with 
+Clone the repository and install dependencies with 
 
-`npm install` 
+`npm install`
 
 Then run with
 
@@ -30,9 +29,8 @@ You can customize everything!
 
 - Input text & search term(s)
 - Segment length (the bigger the faster, the smaller the slower)
-- Highlight colors 
-- Number of highlights
-- Thanks to [CodeMirror](https://codemirror.net/) you can even use syntax highlighting for programming languages such as Python, JavaScript etc. 
+- Highlight colors (currently hard-coded)
+- Number of highlights are based on the threshold value. The lower, the more results.
 - Live updates
 - Easy integration of other ML-models thanks to [transformers.js](https://xenova.github.io/transformers.js/)
 - Data privacy-friendly - your input text data is not sent to a server, it stays in your browser!
@@ -57,28 +55,31 @@ You can customize everything!
 - Search your own browser history (thanks [@Snapdeus](https://twitter.com/snapdeus/status/1646233904691413006))
 - Integration in chat apps
 - Allow PDF-uploads (conversion from PDF to text) 
-- Integrate with Speech-to-Text whisper model from transformers.js to allow audio uploads. 
+- Integrate with Speech-to-Text whisper model from transformers.js to allow audio uploads.
+- Thanks to [CodeMirror](https://codemirror.net/) one could even use syntax highlighting for programming languages such as Python, JavaScript etc. 
 
 ## Logic 
 
 [Transformers.js](https://xenova.github.io/transformers.js/) is doing all the heavy lifting of tokenizing the input and running the model. Without it, this demo would have been impossible. 
 
 **Input**
-- Text, as much as your browser can handle! The demo uses a part of "Hänsel & Gretel" 
+- Text, as much as your browser can handle! The demo uses a part of "Hänsel & Gretel" but it can handle hundreds of PDF pages
 - A search term or phrase
+- The number of characters the text should be segmented in
+- A similarity threshold value. Results with lower similarity score won't be displayed.
 
 **Output**
 - <span style="background-color: rgb(0, 255, 81);">Three highlighted string segments</span>, the darker the higher the similarity score.
 
 **Pipeline**
 
-0. All scripts and the model are loaded from CDNs/HuggingFace.
+0. All scripts are loaded. The model is loaded once from HuggingFace, after cached in the browser.
 1. A user inputs some text and a search term or phrase.
 2. Depending on the approximate length to consider (unit=characters), the text is split into **segments**. Words themselves are never split, that's why it's approximative.
 3. The search term embedding is created.
 4. For each **segment** of the text, the embedding is created. 
 5. Meanwhile, the cosine similarity is calculated between every **segment** embedding and the search term embedding. It's written to a dictionary with the segment as key and the score as value.
-6. For every iteration, the progress bar and the highlighted sections are updated in real-time depending on the current highest **three** scores in the array (could easily be modified in the source code, just like the colors).
+6. For every iteration, the progress bar and the highlighted sections are updated in real-time depending on the highest scores in the array.
 7. The embeddings are cached in the dictionary so that subsequent queries are quite fast. The calculation of the cosine similarity is fairly speedy in comparison to the embedding generation. 
 8. **Only if the user changes the segment length**, the embeddings must be recalculated.  
 
@@ -122,20 +123,23 @@ $.ajax({
 ## Collaboration 
 PRs welcome!
 
-## To Dos
-- similarity score cutoff/threshold (easy)
-- add option for more highlights (e.g. all above certain score)
-- add stop button 
-- option for loading embeddings from file (WIP)
-- simplify chunking function so the original text can be loaded without issues (WIP)
-- cursor for jumping to highlighted sections (important for long texts), tbd with [scroll into view function in CodeMirror](https://codemirror.net/doc/manual.html#scrollIntoView)
-- MaterialUI for input fields or proper labels
-- integrate different color scales (quantile, precentile etc.)
-- polish code 
-    - jQuery/vanilla JS mixed
-    - clean up functions 
-    - add more comments
-- add possible use cases
-- package as much as possible in one binary
-- create a demo without CDNs
-- possible integration as example in [transformers.js homepage](https://github.com/xenova/transformers.js/issues/84)
+## To Dos (no priorization)
+- [x] similarity score cutoff/threshold
+- [x] add option for more highlights (e.g. all above certain score)
+- [x] add stop button 
+- [x] MaterialUI for input fields or proper labels
+- [x] create a demo without CDNs
+- [x] separate one html properly in html, js, css
+- [x] add npm installation 
+- [ ] option for loading embeddings from file or generally allow sharing embeddings in some way
+- [ ] simplify chunking function so the original text can be loaded without issues
+- [ ] improve the color range
+- [ ] rewrite the cosine similarity function in Rust, port to WASM and load as a module for possible speedup (experimental)
+- [ ] UI overhaul
+- [ ] polish code 
+- [ ]   - jQuery/vanilla JS mixed
+- [ ]   - clean up functions 
+- [ ]   - add more comments
+- [ ] add possible use cases
+- [ ] package as a standalone application (maybe with custom model choice; to be downloaded once from HF hub, then saved locally)
+- [ ] possible integration as example in [transformers.js homepage](https://github.com/xenova/transformers.js/issues/84)
