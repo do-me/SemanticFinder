@@ -6,7 +6,7 @@ import 'codemirror/addon/search/searchcursor.js';
 
 import { loadSemantic, calculateCosineSimilarity, computeQueryEmbedding, embed } from './semantic.js';
 
-import './styles.css';
+import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
