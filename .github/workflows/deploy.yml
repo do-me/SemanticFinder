@@ -18,19 +18,10 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Configure Git user
-        env:
-          EMAIL: ${{ secrets.GIT_EMAIL }}
-        run: |
-          git config user.email "${EMAIL}"
-          git config user.name "GitHub Actions"
-
       - name: Install dependencies
         run: npm install
 
       - name: Build and deploy
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm run build
           npx gh-pages --dist dist --repo git@github.com:${{ github.repository }} --branch gh-pages --dotfiles --add
