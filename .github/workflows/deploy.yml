@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
@@ -19,8 +19,10 @@ jobs:
           node-version: '14'
 
       - name: Configure Git user
+        env:
+          EMAIL: ${{ secrets.GIT_EMAIL }}
         run: |
-          git config user.email "actions@github.com"
+          git config user.email "${EMAIL}"
           git config user.name "GitHub Actions"
 
       - name: Install dependencies
@@ -31,4 +33,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm run build
-          npx gh-pages --dist dist --repo https://github.com/${{ github.repository }} --branch gh-pages --dotfiles --add
+          npx gh-pages --dist dist --repo git@github.com:${{ github.repository }} --branch gh-pages --dotfiles --add
