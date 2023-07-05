@@ -1,0 +1,124 @@
+#input-text {
+  height: 50vh;
+  width: 80vw;
+  min-width: 80vw;
+  text-align: left !important;
+}
+.CodeMirror {
+  height: 55vh !important;
+}
+
+p {
+  margin: 10px;
+}
+
+table {
+  table-layout: auto;
+  margin: 0 auto;
+}
+th,
+td {
+  word-wrap: break-word;
+  max-width: 50%;
+  text-align: center;
+}
+
+.table-bordered {
+  border: none;
+}
+
+#output-table > tbody > tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+
+.table .table {
+  background-color: transparent;
+}
+
+.highlight-first {
+  background-color: rgb(0, 255, 81);
+}
+
+.highlight-second {
+  background-color: rgb(135, 255, 153);
+}
+
+.highlight-third {
+  background-color: rgb(190, 253, 190);
+}
+
+.highlight-select {
+  background-color: orange;
+}
+
+#loading {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+#progressBar {
+  height: 25px;
+  width: 100%;
+  margin-left: 5px;
+}
+
+#progressBarProgress {
+  margin-left: 5px;
+}
+
+#query-text {
+  min-width: 80%;
+}
+
+#formGroupCenter {
+  width: 100%;
+}
+
+.CodeMirror {
+  font-size: 15px;
+}
+
+#results {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.card {
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.card:hover {
+  background-color: #f8f9fa;
+}
+
+.submit-button {
+  width: 80px; /* adjust this to the size you want */
+  margin-right: 1px; /* adds space between buttons */
+}
+
+.nav-button {
+  width: 60px; /* adjust this to the size you want */
+  margin-right: 1px; /* adds space between buttons */
+}
+
+#submitGroup {
+  margin-top: 2vh; /* adjust this value as needed */
+}
