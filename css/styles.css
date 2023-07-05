@@ -122,3 +122,17 @@ td {
 #submitGroup {
   margin-top: 2vh; /* adjust this value as needed */
 }
+
+
+.submit-button {
+  width: 100px; /* adjust this to the size you want */
+  margin-right: 1px; /* adds space between buttons */
+}
+
+
+.card-title {
+  font-size: 0.9em;
+}
+.card-subtitle {
+  font-size: 0.8em;
+}
