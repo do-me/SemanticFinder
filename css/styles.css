@@ -5,7 +5,7 @@
   text-align: left !important;
 }
 .CodeMirror {
-  height: 55vh;
+  height: 55vh !important;
 }
 
 p {
