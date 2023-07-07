@@ -11,6 +11,26 @@ export async function loadSemantic() {
     tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
 }
 
+export async function similarity(text) {
+    let inputQuery = $("#query-text").val();
+    let inputEmbedding = await embed(inputQuery);
+
+    if (Array.isArray(text)) {
+        // if text is array embed each item individually
+        let similarities = [];
+        for (let i = 0; i < text.length; i++) {
+            let textEmbedding = await embed(text[i]);
+            similarities.push(calculateCosineSimilarity(inputEmbedding, textEmbedding));
+        }
+        return similarities;
+    }
+    let textEmbedding = await embed(text);
+    return calculateCosineSimilarity(inputEmbedding, textEmbedding);
+}
+
+
+
+
 export function calculateCosineSimilarity(queryEmbedding, embedding) {
     let dotProduct = 0;
     let queryMagnitude = 0;
@@ -24,10 +44,18 @@ export function calculateCosineSimilarity(queryEmbedding, embedding) {
     return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
 }
 
+let embeddingsDict = {};
 
 export async function embed(text) {
-    return await embedder(text, { pooling: 'mean', normalize: true });
+    if (text in embeddingsDict) {
+        return embeddingsDict[text];
+    }
+
+    let e0 = await embedder(text, { pooling: 'mean', normalize: true });
+    embeddingsDict[text] = e0["data"];
+    return e0["data"];
 }
+
 
 export async function computeQueryEmbedding(){
     let inputQuery = $("#query-text").val()

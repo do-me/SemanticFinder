@@ -4,7 +4,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, calculateCosineSimilarity, computeQueryEmbedding, embed } from './semantic.js';
+import { loadSemantic, similarity, calculateCosineSimilarity, computeQueryEmbedding, embed } from './semantic.js';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -45,7 +45,6 @@ function activateSubmitButton() {
 
 async function onSubmit() {
     if (!isProcessing) {
-
         isProcessing = true;
         submitButton.textContent = "Stop";
 
@@ -59,18 +58,64 @@ async function onSubmit() {
 }
 window.onSubmit = onSubmit;
 
-function highlightTopResults(result) {
+
+function updateResults(results) {
+    // Remove previous highlights
     removeHighlights();
-    highlightText(result[0][0], "highlight-first");
-    highlightText(result[1][0], "highlight-second");
-    for (let i = 2; i < result.length; i++) {
-        if (result[i][1] > $("#threshold").val()) {
-            highlightText(result[i][0], "highlight-third");
-        } else {
-            break;
-        }
+
+    // Get results list element
+    let resultsDiv = document.getElementById('results-list');
+    resultsDiv.innerHTML = '';
+
+    for (let i = 0; i < results.length; i++) {
+        let resultItem = results[i];
+        if (resultItem[1] < $("#threshold").val()) { break; } // redundant
+
+        let highlightClass;
+        if (i === 0) highlightClass = "highlight-first";
+        else if (i === 1) highlightClass = "highlight-second";
+        else highlightClass = "highlight-third";
+
+        createHighlight(resultItem[0], highlightClass, resultItem[1]);
+
     }
 }
+
+function createHighlight(text, className, similarity) {
+    let resultsDiv = document.getElementById('results-list');
+    const cursor = editor.getSearchCursor(text);
+
+    while (cursor.findNext()) {
+        let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
+        markers.push(marker);
+
+        // create card
+        let listItem = document.createElement('div');
+        listItem.classList.add('card');
+        listItem.innerHTML = createCardHTML(text, similarity);
+
+        resultsDiv.appendChild(listItem);
+
+        let index = resultsDiv.childElementCount - 1;
+
+        // Add click listener for card
+        listItem.addEventListener('click', function() {
+            editor.scrollIntoView(markers[index].find());
+            highlightSelected(index);
+        });
+    }
+}
+
+
+function createCardHTML(title, similarity) {
+    return `
+        <div class="card-body">
+            <h5 class="card-title">${title}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">similarity: ${similarity.toFixed(2)}</h6>
+        </div>
+    `;
+}
+
 
 function highlightSelected(index) {
     highlightCard(index);
@@ -107,91 +152,51 @@ function resetHighlightsProgress(){
     progressBarProgress.text(`${0}`);
 
 }
-// $("#token-length").val()
 
-let inputTextsEmbeddings = {};
-
-async function embedPsuedosentences(text) {
-
-}
 
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
     resetHighlightsProgress();
-    // await embedPsuedosentences(editor.getValue(""));
 
     // query input embedding
-    let queryEmbedding = await computeQueryEmbedding();
     const text = editor.getValue("");
     let inputTexts = splitSubstrings(text,$("#token-length").val());
 
-    let result = [];
+    let results = [];
     let max = inputTexts.length;
-    //console.log("Embeddings Computation...")
+
     let i = 0;
 
     // all are set into play async then function continues
     let interval = setInterval(async () => {
+        let inputText = inputTexts[i];
         if (i >= max || !isProcessing) {
             clearInterval(interval);
             callback();
             return;
         }
+        i++;
 
-        let inputText = inputTexts[i];
-        let output;
-        if (inputText in inputTextsEmbeddings) {
-            output = inputTextsEmbeddings[inputText];
-        } else {
-            output = await embed(inputText);
-            inputTextsEmbeddings[inputText] = output;
+
+        let cosineSimilarity = await similarity(inputText);
+
+        results.push([inputText, cosineSimilarity]);
+        results.sort((a, b) => b[1] - a[1]);
+
+        updateResults(results);
+        if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+            editor.scrollIntoView(markers[0].find());
         }
-
-        // calculate cosine similarity and sort results
-        let cosineSimilarity = calculateCosineSimilarity(queryEmbedding, output["data"]);
-
-        result.push([inputText, cosineSimilarity]);
-        result.sort((a, b) => b[1] - a[1]);
-        if (result.length >= 3) {
-            highlightTopResults(result);
-            editor.scrollIntoView(markers[0].find())
-        }
-
-        updateCards(result);
 
         // update progress bar
-        let progress = Math.round((i + 1)*100 / max);
+        let progress = Math.round((i*100) / max);
         progressBar.attr("value", progress);
         progressBarProgress.text(`${progress}`);
 
-        i++;
     }, 0);
 }
 
-function updateCards(result) {
-    // display results to the right -- we may want to move this to after the computation occurs
-    let resultsDiv = document.getElementById('results-list');
-    resultsDiv.innerHTML = '';
-    for (let resultItem of result) {
-        if (resultItem[1] > $("#threshold").val()) {
-            let listItem = document.createElement('div');
-            listItem.classList.add('card');
-            listItem.innerHTML = `<div class="card-body">
-                                            <h5 class="card-title" style="font-size: 0.9em;">${resultItem[0]}</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 0.8em;">similarity: ${resultItem[1].toFixed(2)}</h6>
-                                        </div>`;
-            resultsDiv.appendChild(listItem);
 
-
-            listItem.addEventListener('click', function() {
-                const index = result.indexOf(resultItem);
-                editor.scrollIntoView(markers[index].find());
-                highlightSelected(index);
-            });
-
-        }
-    }
-}
 
 function splitSubstrings(str, length) {
     const words = str.split(' ');
@@ -220,13 +225,6 @@ var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
     lineWrapping: true,
 });
 
-function highlightText(text,className) {
-    const cursor = editor.getSearchCursor(text);
-    while (cursor.findNext()) {
-        let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
-        markers.push(marker);
-    }
-}
 
 
 function activateScrollButtons() {
