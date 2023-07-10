@@ -16,6 +16,12 @@ Then run with
 
 `npm run start`
 
+If you want to build instead, run 
+
+`npm run build`
+
+Afterwards, you'll find the `index.html` and `bundle.js` in `/dist` (CSS is included in `bundle.js`).
+
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
 Initial embedding generation takes **1-2 mins** on my old i7-8550U CPU with 1000 characters as segment size. Following queries take only 20-30 seconds! 
