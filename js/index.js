@@ -3,7 +3,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity } from './semantic.js';
+import { loadSemantic, similarity } from './semantic';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,6 +42,14 @@ function activateSubmitButton() {
     }
 }
 
+function finishCallback() {
+    console.log("Finished");
+    submitButton.textContent = "Submit";
+    isProcessing = false;
+
+    activateScrollButtons();
+}
+
 async function onSubmit() {
     if (!isProcessing) {
         isProcessing = true;
@@ -55,8 +63,6 @@ async function onSubmit() {
         isProcessing = false;
     }
 }
-window.onSubmit = onSubmit;
-
 
 function updateResults(results) {
     const threshold = document.getElementById("threshold").value;
@@ -106,7 +112,6 @@ function createHighlight(text, className, similarity) {
     }
 }
 
-
 function createCardHTML(title, similarity) {
     return `
         <div class="card-body">
@@ -115,7 +120,6 @@ function createCardHTML(title, similarity) {
         </div>
     `;
 }
-
 
 function highlightSelected(index) {
     highlightCard(index);
@@ -152,7 +156,6 @@ function resetHighlightsProgress() {
     progressBarProgress.textContent = 0;
 
 }
-
 
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
@@ -196,8 +199,6 @@ async function semanticHighlight(callback) {
     }, 0);
 }
 
-
-
 function splitSubstrings(str, length) {
     const words = str.split(' ');
     const chunks = [];
@@ -225,8 +226,6 @@ var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
     lineWrapping: true,
 });
 
-
-
 function activateScrollButtons() {
     // Enable the next and prev buttons
     if (nextButton) {
@@ -249,12 +248,6 @@ function deactivateScrollButtons() {
     }
 }
 
-async function main() {
-    await loadSemantic();
-    activateSubmitButton();
-}
-main();
-
 function nextMarker() {
     if (selectedIndex === -1) {
         highlightSelected(0);
@@ -275,7 +268,15 @@ function prevMarker() {
     }
 }
 
-window.onload = function () {
+/**
+ * Setup the application when the page loads.
+ */
+window.onload = async function () {
+    window.onSubmit = onSubmit;
+
+    await loadSemantic();
+    activateSubmitButton();
+
     document.getElementById('next').addEventListener('click', function (event) {
         event.preventDefault();
         nextMarker();
@@ -287,11 +288,3 @@ window.onload = function () {
     });
 };
 
-
-function finishCallback() {
-    console.log("Finished");
-    submitButton.textContent = "Submit";
-    isProcessing = false;
-
-    activateScrollButtons();
-}
