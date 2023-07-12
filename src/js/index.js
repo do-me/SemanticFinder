@@ -3,7 +3,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity } from './semantic.js';
+import { loadSemantic, similarity } from './semantic';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';

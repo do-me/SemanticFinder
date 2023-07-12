@@ -1,16 +1,19 @@
 import { env, pipeline, AutoTokenizer } from '@xenova/transformers';
+import type { Pipeline, PreTrainedTokenizer } from "@xenova/transformers";
 
+// @ts-ignore
 env.allowLocalModels = false;
 
-let embedder;
-let tokenizer;
+let embedder: Pipeline;
+let tokenizer: PreTrainedTokenizer;
+let embeddingsDict: Record<string, Array<number>> = {};
 
 export async function loadSemantic() {
     embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2');
     tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
 }
 
-export async function similarity(text, inputQuery) {
+export async function similarity(text: string, inputQuery: string) {
     let inputEmbedding = await embed(inputQuery);
 
     if (Array.isArray(text)) {
@@ -26,7 +29,7 @@ export async function similarity(text, inputQuery) {
     return calculateCosineSimilarity(inputEmbedding, textEmbedding);
 }
 
-export function calculateCosineSimilarity(queryEmbedding, embedding) {
+function calculateCosineSimilarity(queryEmbedding: Array<number>, embedding: Array<number>) {
     let dotProduct = 0;
     let queryMagnitude = 0;
     let embeddingMagnitude = 0;
@@ -39,9 +42,8 @@ export function calculateCosineSimilarity(queryEmbedding, embedding) {
     return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
 }
 
-let embeddingsDict = {};
 
-export async function embed(text) {
+async function embed(text: string) {
     if (text in embeddingsDict) {
         return embeddingsDict[text];
     }
@@ -51,11 +53,11 @@ export async function embed(text) {
     return e0["data"];
 }
 
-export async function computeQueryEmbedding(inputQuery){
+async function computeQueryEmbedding(inputQuery: string){
     let queryEmbedding = await embed(inputQuery);
     return queryEmbedding["data"]
 }
 
-async function getTokens(text) {
+async function getTokens(text: string) {
     return await tokenizer(text);
 }
