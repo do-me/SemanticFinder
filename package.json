@@ -13,8 +13,7 @@
   "dependencies": {
     "@xenova/transformers": "^2.2.0",
     "bootstrap": "^5.0.2",
-    "codemirror": "^5.52.2",
-    "jquery": "^3.6.3"
+    "codemirror": "^5.52.2"
   },
   "devDependencies": {
     "css-loader": "^6.8.1",
