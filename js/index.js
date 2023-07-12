@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
 let markers = [];
+let editor;
+let submitTime = 0;
 let isProcessing = false;
 let selectedIndex = -1;
 let selectedClassName;
@@ -43,15 +45,17 @@ function activateSubmitButton() {
 }
 
 function finishCallback() {
-    console.log("Finished");
     submitButton.textContent = "Submit";
     isProcessing = false;
+    const processTime = new Date().getTime() - submitTime;
+    console.log(`Finished ${processTime}ms`);
 
     activateScrollButtons();
 }
 
 async function onSubmit() {
     if (!isProcessing) {
+        submitTime = new Date().getTime();
         isProcessing = true;
         submitButton.textContent = "Stop";
 
@@ -219,13 +223,6 @@ function splitIntoSentences(paragraph) {
     return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
 }
 
-var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
-    lineNumbers: true,
-    mode: 'text/plain',
-    matchBrackets: true,
-    lineWrapping: true,
-});
-
 function activateScrollButtons() {
     // Enable the next and prev buttons
     if (nextButton) {
@@ -273,6 +270,13 @@ function prevMarker() {
  */
 window.onload = async function () {
     window.onSubmit = onSubmit;
+
+    editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
+        lineNumbers: true,
+        mode: 'text/plain',
+        matchBrackets: true,
+        lineWrapping: true,
+    });
 
     await loadSemantic();
     activateSubmitButton();
