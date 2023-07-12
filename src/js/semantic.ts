@@ -8,9 +8,9 @@ let embedder: Pipeline;
 let tokenizer: PreTrainedTokenizer;
 let embeddingsDict: Record<string, Array<number>> = {};
 
-export async function loadSemantic() {
-    embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2');
-    tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
+export async function loadSemantic(modelName = 'Xenova/all-MiniLM-L6-v2') {
+    embedder = await pipeline("embeddings", modelName);
+    tokenizer = await AutoTokenizer.from_pretrained(modelName);
 }
 
 export async function similarity(text: string, inputQuery: string) {
@@ -42,7 +42,6 @@ function calculateCosineSimilarity(queryEmbedding: Array<number>, embedding: Arr
     return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
 }
 
-
 async function embed(text: string) {
     if (text in embeddingsDict) {
         return embeddingsDict[text];
@@ -51,11 +50,6 @@ async function embed(text: string) {
     let e0 = await embedder(text, { pooling: 'mean', normalize: true });
     embeddingsDict[text] = e0["data"];
     return e0["data"];
-}
-
-async function computeQueryEmbedding(inputQuery: string){
-    let queryEmbedding = await embed(inputQuery);
-    return queryEmbedding["data"]
 }
 
 async function getTokens(text: string) {

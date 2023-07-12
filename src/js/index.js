@@ -4,6 +4,7 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
 import { loadSemantic, similarity } from './semantic';
+import { splitSubstrings } from './utils';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -197,26 +198,6 @@ async function semanticHighlight(callback) {
         progressBarProgress.textContent = progress;
 
     }, 0);
-}
-
-function splitSubstrings(str, length) {
-    const words = str.split(' ');
-    const chunks = [];
-
-    for (let i = 0; i < words.length; i++) {
-        const word = words[i];
-
-        if (chunks.length === 0 || chunks[chunks.length - 1].length + word.length + 1 > length) {
-            chunks.push(word);
-        } else {
-            chunks[chunks.length - 1] += ' ' + word;
-        }
-    }
-    return chunks;
-}
-
-function splitIntoSentences(paragraph) {
-    return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
 }
 
 var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
