@@ -352,9 +352,8 @@ window.onload = async function () {
         nextMarker();
     });
 
-    window.addEventListener('prev', function (event) {
+    document.getElementById('prev').addEventListener('click', function (event) {
         event.preventDefault();
         prevMarker();
     });
-
 };
