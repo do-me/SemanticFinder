@@ -129,11 +129,12 @@ td {
 
 
 #advancedFeaturesHeader .accordion-button:hover {
-  /*background-color: #007BFF;  !* Change to your preferred color *!*/
-  /*color: white;  !* Change to your preferred color *!*/
   text-decoration: underline;
 }
 
+.accordion-button::after {
+  display: none;
+}
 
 .card-title {
   font-size: 0.9em;

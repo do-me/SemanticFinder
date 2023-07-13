@@ -357,6 +357,4 @@ window.onload = async function () {
         prevMarker();
     });
 
-
-
 };
