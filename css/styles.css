@@ -84,8 +84,17 @@ td {
 }
 
 #query-text {
+  height: 75%;
   min-width: 80%;
 }
+
+
+.submit-button {
+  height: 75%;
+  white-space:normal;
+  text-align: center; /* this seems to break when page size is too small */
+}
+
 
 #formGroupCenter {
   width: 100%;
@@ -109,24 +118,20 @@ td {
   background-color: #f8f9fa;
 }
 
-.submit-button {
-  width: 80px; /* adjust this to the size you want */
-  margin-right: 1px; /* adds space between buttons */
-}
-
-.nav-button {
-  width: 60px; /* adjust this to the size you want */
-  margin-right: 1px; /* adds space between buttons */
-}
+/*.nav-button {*/
+/*  width: 60px; !* adjust this to the size you want *!*/
+/*  margin-right: 1px; !* adds space between buttons *!*/
+/*}*/
 
 #submitGroup {
   margin-top: 2vh; /* adjust this value as needed */
 }
 
 
-.submit-button {
-  width: 100px; /* adjust this to the size you want */
-  margin-right: 1px; /* adds space between buttons */
+#advancedFeaturesHeader .accordion-button:hover {
+  /*background-color: #007BFF;  !* Change to your preferred color *!*/
+  /*color: white;  !* Change to your preferred color *!*/
+  text-decoration: underline;
 }
 
 

@@ -4,9 +4,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
-import { splitSubstrings } from './utils.js';
 
-import { loadSemantic, similarity } from './semantic';
+import { loadSemantic, similarity, getTokens } from './semantic.js';
+import { splitText } from './utils.js';
+
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -40,13 +41,6 @@ function removeHighlights() {
 
 function activateSubmitButton() {
     // get references to the loading element and submit button
-    const loadingElement = document.getElementById("loading");
-
-    // remove the loading element and enable the submit button
-    if (loadingElement) {
-        loadingElement.remove();
-    }
-
     if (submitButton) {
         submitButton.removeAttribute("disabled");
         submitButton.textContent = "Submit";
@@ -78,8 +72,8 @@ async function onSubmit() {
 }
 
 /**
- * 
- * @param {*} results 
+ *
+ * @param {*} results
  */
 function updateResults(results) {
     const threshold = document.getElementById("threshold").value;
@@ -105,9 +99,9 @@ function updateResults(results) {
 }
 
 /**
- * @param {string} text 
- * @param {string} className 
- * @param {number} similarity 
+ * @param {string} text
+ * @param {string} className
+ * @param {number} similarity
  */
 function createHighlight(text, className, similarity) {
     let resultsDiv = document.getElementById('results-list');
@@ -135,9 +129,9 @@ function createHighlight(text, className, similarity) {
 }
 
 /**
- * @param {string} title 
- * @param {number} similarity 
- * @returns 
+ * @param {string} title
+ * @param {number} similarity
+ * @returns
  */
 function createCardHTML(title, similarity) {
     return `
@@ -149,8 +143,8 @@ function createCardHTML(title, similarity) {
 }
 
 /**
- * 
- * @param {number} index 
+ *
+ * @param {number} index
  */
 function highlightSelected(index) {
     highlightCard(index);
@@ -188,17 +182,19 @@ function resetHighlightsProgress() {
 
 }
 
+
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
     resetHighlightsProgress();
 
     // query input embedding
     const text = editor.getValue("");
-    const tokenLen = document.getElementById("token-length").value;
     const inputQuery = document.getElementById("query-text").value;
-    const inputTexts = splitSubstrings(text, tokenLen);
-    const results = [];
-    const max = inputTexts.length;
+
+    let inputTexts = await splitText(text);
+
+    let results = [];
+    let max = inputTexts.length;
 
     let i = 0;
 
@@ -230,6 +226,8 @@ async function semanticHighlight(callback) {
     }, 0);
 }
 
+
+
 function activateScrollButtons() {
     // Enable the next and prev buttons
     if (nextButton) {
@@ -251,6 +249,8 @@ function deactivateScrollButtons() {
         prevButton.setAttribute("disabled", "");
     }
 }
+
+
 
 function nextMarker() {
     if (selectedIndex === -1) {
@@ -285,6 +285,65 @@ window.onload = async function () {
         lineWrapping: true,
     });
 
+
+    document.getElementById('split-type').addEventListener('change', function() {
+        // Get the selected option value
+        var selectedValue = this.value;
+        const split_param = document.getElementById('split-param')
+
+        switch (selectedValue) {
+            case "Words":
+                split_param.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = "# Words";
+                split_param.type = 'number';
+                split_param.value = 7;
+                split_param.min = 1;
+                break;
+            case "Tokens":
+                split_param.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = "# Tokens";
+                split_param.type = 'number';
+                split_param.value = 15;
+                split_param.min = 1;
+                split_param.max = 512;
+                console.groupEnd();
+                break;
+            case "Chars":
+                split_param.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = "# Chars";
+                split_param.type = 'number';
+                split_param.value = 40;
+                split_param.min = 1;
+                break;
+            case "Regex":
+                split_param.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = "Regex";
+                split_param.type = 'text';
+                split_param.value = "[.,]\\s";
+                break;
+            default:
+                split_param.value = null;
+                split_param.disabled = true;
+                document.querySelector("label[for='split-param']").textContent = "";
+                split_param.placeholder = "";
+        }
+    });
+
+
+    var accordionButton = document.querySelector('.accordion-button');
+
+    accordionButton.addEventListener('click', function() {
+        var isExpanded = accordionButton.getAttribute('aria-expanded') === 'true';
+
+        if(isExpanded) {
+            accordionButton.textContent = 'Settings ↡';
+            console.dir(accordionButton);
+        } else {
+            accordionButton.textContent = 'Settings ↠';
+        }
+    });
+
+
     await loadSemantic();
     activateSubmitButton();
 
@@ -297,5 +356,7 @@ window.onload = async function () {
         event.preventDefault();
         prevMarker();
     });
-};
 
+
+
+};
