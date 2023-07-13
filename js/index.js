@@ -1,7 +1,10 @@
+// @ts-nocheck
+
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
+import { splitSubstrings } from './utils.js';
 
 import { loadSemantic, similarity } from './semantic';
 
@@ -9,12 +12,18 @@ import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
+/**
+ * @type {Array<CodeMirror.TextMarker>}
+ */
 let markers = [];
+/**
+ * @type {CodeMirror.EditorFromTextArea}
+ */
 let editor;
 let submitTime = 0;
 let isProcessing = false;
 let selectedIndex = -1;
-let selectedClassName;
+let selectedClassName = "";
 let prevCard;
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
@@ -68,6 +77,10 @@ async function onSubmit() {
     }
 }
 
+/**
+ * 
+ * @param {*} results 
+ */
 function updateResults(results) {
     const threshold = document.getElementById("threshold").value;
     // Remove previous highlights
@@ -91,6 +104,11 @@ function updateResults(results) {
     }
 }
 
+/**
+ * @param {string} text 
+ * @param {string} className 
+ * @param {number} similarity 
+ */
 function createHighlight(text, className, similarity) {
     let resultsDiv = document.getElementById('results-list');
     const cursor = editor.getSearchCursor(text);
@@ -116,6 +134,11 @@ function createHighlight(text, className, similarity) {
     }
 }
 
+/**
+ * @param {string} title 
+ * @param {number} similarity 
+ * @returns 
+ */
 function createCardHTML(title, similarity) {
     return `
         <div class="card-body">
@@ -125,6 +148,10 @@ function createCardHTML(title, similarity) {
     `;
 }
 
+/**
+ * 
+ * @param {number} index 
+ */
 function highlightSelected(index) {
     highlightCard(index);
     if (selectedIndex !== -1) {
@@ -157,7 +184,7 @@ function resetHighlightsProgress() {
     // clear any highlights
     removeHighlights();
     progressBar.value = 0;
-    progressBarProgress.textContent = 0;
+    progressBarProgress.textContent = "0";
 
 }
 
@@ -198,29 +225,9 @@ async function semanticHighlight(callback) {
         // update progress bar
         let progress = Math.round((i * 100) / max);
         progressBar.value = progress;
-        progressBarProgress.textContent = progress;
+        progressBarProgress.textContent = progress.toString();
 
     }, 0);
-}
-
-function splitSubstrings(str, length) {
-    const words = str.split(' ');
-    const chunks = [];
-
-    for (let i = 0; i < words.length; i++) {
-        const word = words[i];
-
-        if (chunks.length === 0 || chunks[chunks.length - 1].length + word.length + 1 > length) {
-            chunks.push(word);
-        } else {
-            chunks[chunks.length - 1] += ' ' + word;
-        }
-    }
-    return chunks;
-}
-
-function splitIntoSentences(paragraph) {
-    return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
 }
 
 function activateScrollButtons() {
