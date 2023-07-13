@@ -1,24 +1,25 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import $ from 'jquery';
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, calculateCosineSimilarity, computeQueryEmbedding, embed } from './semantic.js';
+import { loadSemantic, similarity } from './semantic';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
 let markers = [];
+let editor;
+let submitTime = 0;
 let isProcessing = false;
 let selectedIndex = -1;
 let selectedClassName;
 let prevCard;
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
-const progressBar = $("#progressBar");
-const progressBarProgress = $("#progressBarProgress");
+const progressBar = document.getElementById("progressBar");
+const progressBarProgress = document.getElementById("progressBarProgress");
 const submitButton = document.getElementById("submit_button");
 
 function removeHighlights() {
@@ -43,8 +44,18 @@ function activateSubmitButton() {
     }
 }
 
+function finishCallback() {
+    submitButton.textContent = "Submit";
+    isProcessing = false;
+    const processTime = new Date().getTime() - submitTime;
+    console.log(`Finished ${processTime}ms`);
+
+    activateScrollButtons();
+}
+
 async function onSubmit() {
     if (!isProcessing) {
+        submitTime = new Date().getTime();
         isProcessing = true;
         submitButton.textContent = "Stop";
 
@@ -56,10 +67,9 @@ async function onSubmit() {
         isProcessing = false;
     }
 }
-window.onSubmit = onSubmit;
-
 
 function updateResults(results) {
+    const threshold = document.getElementById("threshold").value;
     // Remove previous highlights
     removeHighlights();
 
@@ -69,7 +79,7 @@ function updateResults(results) {
 
     for (let i = 0; i < results.length; i++) {
         let resultItem = results[i];
-        if (resultItem[1] < $("#threshold").val()) { break; } // redundant
+        if (resultItem[1] < threshold) { break; } // redundant
 
         let highlightClass;
         if (i === 0) highlightClass = "highlight-first";
@@ -86,7 +96,7 @@ function createHighlight(text, className, similarity) {
     const cursor = editor.getSearchCursor(text);
 
     while (cursor.findNext()) {
-        let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
+        let marker = editor.markText(cursor.from(), cursor.to(), { className: className });
         markers.push(marker);
 
         // create card
@@ -99,13 +109,12 @@ function createHighlight(text, className, similarity) {
         let index = resultsDiv.childElementCount - 1;
 
         // Add click listener for card
-        listItem.addEventListener('click', function() {
+        listItem.addEventListener('click', function () {
             editor.scrollIntoView(markers[index].find());
             highlightSelected(index);
         });
     }
 }
-
 
 function createCardHTML(title, similarity) {
     return `
@@ -116,11 +125,10 @@ function createCardHTML(title, similarity) {
     `;
 }
 
-
 function highlightSelected(index) {
     highlightCard(index);
     if (selectedIndex !== -1) {
-        let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: selectedClassName});
+        let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, { className: selectedClassName });
         markers[selectedIndex].clear();
         markers[selectedIndex] = marker0;
     }
@@ -128,7 +136,7 @@ function highlightSelected(index) {
     selectedIndex = index;
     selectedClassName = markers[selectedIndex].className;
 
-    let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: "highlight-select"});
+    let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, { className: "highlight-select" });
     markers[selectedIndex].clear();
     markers[selectedIndex] = marker1;
 }
@@ -141,18 +149,17 @@ function highlightCard(index) {
     if (prevCard) {
         prevCard.style.backgroundColor = '';
     }
-        prevCard = cards[index];
+    prevCard = cards[index];
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-function resetHighlightsProgress(){
+function resetHighlightsProgress() {
     // clear any highlights
     removeHighlights();
-    progressBar.attr("value", 0);
-    progressBarProgress.text(`${0}`);
+    progressBar.value = 0;
+    progressBarProgress.textContent = 0;
 
 }
-
 
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
@@ -160,10 +167,11 @@ async function semanticHighlight(callback) {
 
     // query input embedding
     const text = editor.getValue("");
-    let inputTexts = splitSubstrings(text,$("#token-length").val());
-
-    let results = [];
-    let max = inputTexts.length;
+    const tokenLen = document.getElementById("token-length").value;
+    const inputQuery = document.getElementById("query-text").value;
+    const inputTexts = splitSubstrings(text, tokenLen);
+    const results = [];
+    const max = inputTexts.length;
 
     let i = 0;
 
@@ -177,8 +185,7 @@ async function semanticHighlight(callback) {
         }
         i++;
 
-
-        let cosineSimilarity = await similarity(inputText);
+        const cosineSimilarity = await similarity(inputText, inputQuery);
 
         results.push([inputText, cosineSimilarity]);
         results.sort((a, b) => b[1] - a[1]);
@@ -189,14 +196,12 @@ async function semanticHighlight(callback) {
         }
 
         // update progress bar
-        let progress = Math.round((i*100) / max);
-        progressBar.attr("value", progress);
-        progressBarProgress.text(`${progress}`);
+        let progress = Math.round((i * 100) / max);
+        progressBar.value = progress;
+        progressBarProgress.textContent = progress;
 
     }, 0);
 }
-
-
 
 function splitSubstrings(str, length) {
     const words = str.split(' ');
@@ -217,15 +222,6 @@ function splitSubstrings(str, length) {
 function splitIntoSentences(paragraph) {
     return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
 }
-
-var editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
-    lineNumbers: true,
-    mode: 'text/plain',
-    matchBrackets: true,
-    lineWrapping: true,
-});
-
-
 
 function activateScrollButtons() {
     // Enable the next and prev buttons
@@ -249,12 +245,6 @@ function deactivateScrollButtons() {
     }
 }
 
-async function main() {
-    await loadSemantic();
-    activateSubmitButton();
-}
-main();
-
 function nextMarker() {
     if (selectedIndex === -1) {
         highlightSelected(0);
@@ -275,21 +265,30 @@ function prevMarker() {
     }
 }
 
-$('#next').click(function(event){
-    event.preventDefault();
-    nextMarker();
-});
+/**
+ * Setup the application when the page loads.
+ */
+window.onload = async function () {
+    window.onSubmit = onSubmit;
 
-$('#prev').click(function(event){
-    event.preventDefault();
-    prevMarker();
-});
+    editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
+        lineNumbers: true,
+        mode: 'text/plain',
+        matchBrackets: true,
+        lineWrapping: true,
+    });
 
+    await loadSemantic();
+    activateSubmitButton();
 
-function finishCallback() {
-    console.log("Finished");
-    submitButton.textContent = "Submit";
-    isProcessing = false;
+    document.getElementById('next').addEventListener('click', function (event) {
+        event.preventDefault();
+        nextMarker();
+    });
 
-    activateScrollButtons();
-}
+    window.addEventListener('prev', function (event) {
+        event.preventDefault();
+        prevMarker();
+    });
+};
+

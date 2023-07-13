@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import { env, pipeline, AutoTokenizer } from '@xenova/transformers';
 
 env.allowLocalModels = false;
@@ -11,8 +10,7 @@ export async function loadSemantic() {
     tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
 }
 
-export async function similarity(text) {
-    let inputQuery = $("#query-text").val();
+export async function similarity(text, inputQuery) {
     let inputEmbedding = await embed(inputQuery);
 
     if (Array.isArray(text)) {
@@ -27,9 +25,6 @@ export async function similarity(text) {
     let textEmbedding = await embed(text);
     return calculateCosineSimilarity(inputEmbedding, textEmbedding);
 }
-
-
-
 
 export function calculateCosineSimilarity(queryEmbedding, embedding) {
     let dotProduct = 0;
@@ -56,12 +51,8 @@ export async function embed(text) {
     return e0["data"];
 }
 
-
-export async function computeQueryEmbedding(){
-    let inputQuery = $("#query-text").val()
+export async function computeQueryEmbedding(inputQuery){
     let queryEmbedding = await embed(inputQuery);
-    // let queryEmbeddingDict = {inputQuery: queryEmbedding}
-    //console.log(queryEmbedding)
     return queryEmbedding["data"]
 }
 
