@@ -1,15 +1,32 @@
 import { env, pipeline, AutoTokenizer } from '@xenova/transformers';
+import { Pipeline, PreTrainedTokenizer } from '@xenova/transformers';
 
+// @ts-ignore
 env.allowLocalModels = false;
 
+/**
+ * @type {Pipeline}
+ */
 let embedder;
+/**
+ * @type {PreTrainedTokenizer}
+ */
 let tokenizer;
+/**
+ * @type {Object<string, EmbeddingVector>}
+ */
+let embeddingsDict = {};
 
 export async function loadSemantic() {
     embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2');
     tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
 }
 
+/**
+ * @param {string} text 
+ * @param {string} inputQuery
+ * @returns {Promise<number | number[]>}
+ */
 export async function similarity(text, inputQuery) {
     let inputEmbedding = await embed(inputQuery);
 
@@ -26,6 +43,12 @@ export async function similarity(text, inputQuery) {
     return calculateCosineSimilarity(inputEmbedding, textEmbedding);
 }
 
+/**
+ * @typedef {Array<number>} EmbeddingVector
+ * @param {EmbeddingVector} queryEmbedding 
+ * @param {EmbeddingVector} embedding
+ * @returns {number}
+ */
 export function calculateCosineSimilarity(queryEmbedding, embedding) {
     let dotProduct = 0;
     let queryMagnitude = 0;
@@ -39,8 +62,11 @@ export function calculateCosineSimilarity(queryEmbedding, embedding) {
     return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
 }
 
-let embeddingsDict = {};
 
+/**
+ * @param {string} text 
+ * @returns {Promise<EmbeddingVector>}
+ */
 export async function embed(text) {
     if (text in embeddingsDict) {
         return embeddingsDict[text];
@@ -49,13 +75,4 @@ export async function embed(text) {
     let e0 = await embedder(text, { pooling: 'mean', normalize: true });
     embeddingsDict[text] = e0["data"];
     return e0["data"];
-}
-
-export async function computeQueryEmbedding(inputQuery){
-    let queryEmbedding = await embed(inputQuery);
-    return queryEmbedding["data"]
-}
-
-async function getTokens(text) {
-    return await tokenizer(text);
 }
