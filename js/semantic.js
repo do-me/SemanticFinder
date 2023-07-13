@@ -76,3 +76,13 @@ export async function embed(text) {
     embeddingsDict[text] = e0["data"];
     return e0["data"];
 }
+
+
+export async function computeQueryEmbedding(inputQuery){
+    let queryEmbedding = await embed(inputQuery);
+    return queryEmbedding["data"]
+}
+
+export async function getTokens(text) {
+    return await tokenizer(text)["input_ids"]["data"];
+}
