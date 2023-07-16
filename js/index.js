@@ -190,8 +190,9 @@ async function semanticHighlight(callback) {
     // query input embedding
     const text = editor.getValue("");
     const inputQuery = document.getElementById("query-text").value;
-
-    let inputTexts = await splitText(text);
+    const splitType = document.getElementById('split-type').value;
+    const splitParam = document.getElementById('split-param').value;
+    let inputTexts = await splitText(text, splitType, splitParam);
 
     let results = [];
     let max = inputTexts.length;
