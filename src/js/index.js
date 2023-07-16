@@ -5,8 +5,9 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, getTokens } from './semantic.js';
 import { splitText } from './utils.js';
+import { init, embedContent, search } from '@lizozom/semanticjs';
+
 
 
 import '../css/styles.css';
@@ -28,8 +29,6 @@ let selectedClassName = "";
 let prevCard;
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
-const progressBar = document.getElementById("progressBar");
-const progressBarProgress = document.getElementById("progressBarProgress");
 const submitButton = document.getElementById("submit_button");
 
 function removeHighlights() {
@@ -174,18 +173,9 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-function resetHighlightsProgress() {
-    // clear any highlights
-    removeHighlights();
-    progressBar.value = 0;
-    progressBarProgress.textContent = "0";
-
-}
-
-
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
-    resetHighlightsProgress();
+    removeHighlights();
 
     // query input embedding
     const text = editor.getValue("");
@@ -194,40 +184,21 @@ async function semanticHighlight(callback) {
     const splitParam = document.getElementById('split-param').value;
     let inputTexts = await splitText(text, splitType, splitParam);
 
+    const contentEmbedding = await embedContent(inputTexts);
+    const similarResults = await search(inputQuery, contentEmbedding);
+
     let results = [];
-    let max = inputTexts.length;
 
-    let i = 0;
-
-    // all are set into play async then function continues
-    let interval = setInterval(async () => {
-        let inputText = inputTexts[i];
-        if (i >= max || !isProcessing) {
-            clearInterval(interval);
-            callback();
-            return;
-        }
-        i++;
-
-        const cosineSimilarity = await similarity(inputText, inputQuery);
-
-        results.push([inputText, cosineSimilarity]);
-        results.sort((a, b) => b[1] - a[1]);
-
-        updateResults(results);
-        if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
-            editor.scrollIntoView(markers[0].find());
-        }
-
-        // update progress bar
-        let progress = Math.round((i * 100) / max);
-        progressBar.value = progress;
-        progressBarProgress.textContent = progress.toString();
-
-    }, 0);
+    similarResults.map((result) => {
+        const { text, score } = result;
+        results.push([text, score]);
+    });
+    updateResults(results);
+    if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+        editor.scrollIntoView(markers[0].find());
+    }
+    finishCallback();
 }
-
-
 
 function activateScrollButtons() {
     // Enable the next and prev buttons
@@ -345,7 +316,7 @@ window.onload = async function () {
     });
 
 
-    await loadSemantic();
+    await init({ modelName: 'Xenova/all-MiniLM-L6-v2'});
     activateSubmitButton();
 
     document.getElementById('next').addEventListener('click', function (event) {

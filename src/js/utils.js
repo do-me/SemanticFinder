@@ -1,16 +1,6 @@
 import {getTokens} from "./semantic";
 
 /**
- * 
- * @param {string} paragraph 
- * @returns {Array<string> | null}
- */
-function splitIntoSentences(paragraph) {
-    return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
-}
-
-
-/**
  * @param {string} text 
  * @param {string} splitType 
  * @param {string} splitParam 
