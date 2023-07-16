@@ -3,5 +3,5 @@
       "checkJs": true,
       "strict": true
     },
-    "include": ["js/**/*"]
+    "include": ["src/**/*"]
   }

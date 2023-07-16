@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // FOUC-correction
 
 module.exports = {
-  entry: './js/index.js',
+  entry: './src/js/index.js',
   mode: 'development',
   output: {
     filename: 'bundle.js',
