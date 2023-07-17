@@ -52,7 +52,7 @@ self.onmessage = async (event) => {
     let embedding;
     switch (message.type) {
         case "load":
-            console.log("set to load");
+            embeddingsDict = {}; // clear dict
             tokenizer = await AutoTokenizer.from_pretrained(message.model_name); // no progress callbacks -- assume its quick
             embedder = await pipeline("feature-extraction", message.model_name,
                 {
