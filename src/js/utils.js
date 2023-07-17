@@ -45,6 +45,7 @@ async function splitByTokens(text, numTokens) {
         }
     }
     console.table(chunks);
+
     return chunks;
 }
 
@@ -75,8 +76,8 @@ function splitByWords(text, numWords) {
     if (currentChunk.length > 0) {
         chunks.push(currentChunk.join(' '));
     }
-
     console.table(chunks);
+
     return chunks;
 }
 

@@ -5,51 +5,140 @@ import { Pipeline, PreTrainedTokenizer } from '@xenova/transformers';
 env.allowLocalModels = false;
 
 /**
- * @type {Pipeline}
+ * @type {Worker}
  */
-let embedder;
-/**
- * @type {PreTrainedTokenizer}
- */
-let tokenizer;
-/**
- * @type {Object<string, EmbeddingVector>}
- */
-let embeddingsDict = {};
-
-export async function loadSemantic() {
-    embedder = await pipeline("embeddings", 'Xenova/all-MiniLM-L6-v2');
-    tokenizer = await AutoTokenizer.from_pretrained("Xenova/all-MiniLM-L6-v2");
-}
+const worker = new Worker(new URL('./worker.js', import.meta.url), {
+    type: 'module',
+});
 
 /**
- * @param {string} text 
- * @param {string} inputQuery
- * @returns {Promise<number | number[]>}
+ * @type {string}
  */
-export async function similarity(text, inputQuery) {
-    let inputEmbedding = await embed(inputQuery);
+let model_name;
 
-    if (Array.isArray(text)) {
-        // if text is array embed each item individually
-        let similarities = [];
-        for (let i = 0; i < text.length; i++) {
-            let textEmbedding = await embed(text[i]);
-            similarities.push(calculateCosineSimilarity(inputEmbedding, textEmbedding));
-        }
-        return similarities;
+/**
+ * @type {string}
+ */
+let queryEmbedding;
+
+/**
+ * @type {Object<string, Function>}
+ */
+const similarityResolveMap = {};
+
+/**
+ * @type {Object<string, Function>}
+ */
+const tokensResolveMap = {};
+
+/**
+ * @type Function
+ */
+let loadResolve;
+
+/**
+ * @type Function
+ */
+let queryResolve;
+
+worker.onmessage = function(event) {
+    const message = event.data;
+    let resolve;
+
+    switch (message.type) {
+        case "download":
+            let downloadBar = document.getElementById('loading-progress');
+            if (message.data.status === 'initiate') {
+
+            } else if (message.data.status === 'progress') {
+                let progress = message.data.progress.toFixed(2);
+                downloadBar.style.width = progress + '%';
+                downloadBar.setAttribute('aria-valuenow', progress);
+            } else if (message.data.status === 'done') {
+
+            } else if (message.data.status === 'ready') {
+                downloadBar.style.width = '100%';
+                downloadBar.setAttribute('aria-valuenow', 100);
+                downloadBar.textContent = "";
+                loadResolve();
+            }
+            break;
+        case "query":
+            queryEmbedding = message.embedding;
+            queryResolve();
+            break;
+        case "similarity":
+            resolve = similarityResolveMap[message.text];
+            resolve(calculateCosineSimilarity(message.embedding));
+            delete similarityResolveMap[message.text];
+            break;
+        case "tokens":
+            resolve = tokensResolveMap[message.text];
+            resolve(message.tokens);
+            delete tokensResolveMap[message.text];
+            break;
+        default:
+
     }
-    let textEmbedding = await embed(text);
-    return calculateCosineSimilarity(inputEmbedding, textEmbedding);
+};
+
+/**
+ * @param text
+ * @returns {Promise<number>}
+ */
+export async function similarity(text) {
+    worker.postMessage({
+        type: "similarity",
+        text: text,
+    });
+    return new Promise((resolve) => {
+        // needs to return calculateCosineSimilarity(queryEmbedding, textEmbedding);
+        similarityResolveMap[text] = resolve;
+    });
 }
+
+
+export async function embedQuery(query) {
+    worker.postMessage({
+        type: "query",
+        text: query,
+    });
+    return new Promise((resolve) => {
+        queryResolve = resolve;
+    });
+}
+
+export async function getTokens(text) {
+    worker.postMessage({
+        type: "getTokens",
+        text: text,
+    });
+    return new Promise((resolve) => {
+        tokensResolveMap[text] = resolve;
+    });
+}
+
+
+export async function loadSemantic(model_name) {
+    let downloadBar = document.getElementById('loading-progress');
+    downloadBar.style.width = '0%';
+    downloadBar.textContent = "Loading model...";
+    worker.postMessage({
+        type: "load",
+        model_name: model_name,
+    });
+    return new Promise((resolve) => {
+        loadResolve = resolve;
+    });
+}
+
 
 /**
  * @typedef {Array<number>} EmbeddingVector
- * @param {EmbeddingVector} queryEmbedding 
  * @param {EmbeddingVector} embedding
  * @returns {number}
  */
-export function calculateCosineSimilarity(queryEmbedding, embedding) {
+function calculateCosineSimilarity(embedding) {
     let dotProduct = 0;
     let queryMagnitude = 0;
     let embeddingMagnitude = 0;
@@ -62,27 +151,3 @@ export function calculateCosineSimilarity(queryEmbedding, embedding) {
     return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
 }
 
-
-/**
- * @param {string} text 
- * @returns {Promise<EmbeddingVector>}
- */
-export async function embed(text) {
-    if (text in embeddingsDict) {
-        return embeddingsDict[text];
-    }
-
-    let e0 = await embedder(text, { pooling: 'mean', normalize: true });
-    embeddingsDict[text] = e0["data"];
-    return e0["data"];
-}
-
-
-export async function computeQueryEmbedding(inputQuery){
-    let queryEmbedding = await embed(inputQuery);
-    return queryEmbedding["data"]
-}
-
-export async function getTokens(text) {
-    return await tokenizer(text)["input_ids"]["data"];
-}

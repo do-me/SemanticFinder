@@ -5,7 +5,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, getTokens } from './semantic.js';
+import { loadSemantic, similarity, embedQuery } from './semantic.js';
 import { splitText } from './utils.js';
 
 
@@ -28,8 +28,6 @@ let selectedClassName = "";
 let prevCard;
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
-const progressBar = document.getElementById("progressBar");
-const progressBarProgress = document.getElementById("progressBarProgress");
 const submitButton = document.getElementById("submit_button");
 
 function removeHighlights() {
@@ -39,8 +37,14 @@ function removeHighlights() {
     markers = [];
 }
 
+function deactivateSubmitButton() {
+    if (submitButton) {
+        submitButton.setAttribute("disabled", "");
+        submitButton.textContent = "Loading...";
+    }
+}
+
 function activateSubmitButton() {
-    // get references to the loading element and submit button
     if (submitButton) {
         submitButton.removeAttribute("disabled");
         submitButton.textContent = "Submit";
@@ -174,12 +178,29 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
+function setProgressBarValue(value) {
+    var progressBar = document.getElementById('progressBarProgress');
+    progressBar.style.width = value + '%';
+    progressBar.textContent = value + '%';
+    progressBar.parentNode.setAttribute('aria-valuenow', value);
+
+    if (value === "") {
+        progressBar.classList.add('progress-bar-animated');
+        progressBar.classList.add('progress-bar-striped');
+
+    }
+    if (value == 100) {
+        progressBar.classList.remove('progress-bar-animated');
+        progressBar.classList.remove('progress-bar-striped');
+    }
+}
+
+
+
 function resetHighlightsProgress() {
     // clear any highlights
     removeHighlights();
-    progressBar.value = 0;
-    progressBarProgress.textContent = "0";
-
+    setProgressBarValue("");
 }
 
 
@@ -190,9 +211,10 @@ async function semanticHighlight(callback) {
     // query input embedding
     const text = editor.getValue("");
     const inputQuery = document.getElementById("query-text").value;
-    const splitType = document.getElementById('split-type').value;
-    const splitParam = document.getElementById('split-param').value;
-    let inputTexts = await splitText(text, splitType, splitParam);
+
+    await embedQuery(inputQuery);
+
+    let inputTexts = await splitText(text);
 
     let results = [];
     let max = inputTexts.length;
@@ -209,7 +231,7 @@ async function semanticHighlight(callback) {
         }
         i++;
 
-        const cosineSimilarity = await similarity(inputText, inputQuery);
+        const cosineSimilarity = await similarity(inputText);
 
         results.push([inputText, cosineSimilarity]);
         results.sort((a, b) => b[1] - a[1]);
@@ -219,11 +241,8 @@ async function semanticHighlight(callback) {
             editor.scrollIntoView(markers[0].find());
         }
 
-        // update progress bar
         let progress = Math.round((i * 100) / max);
-        progressBar.value = progress;
-        progressBarProgress.textContent = progress.toString();
-
+        setProgressBarValue(progress);
     }, 0);
 }
 
@@ -286,13 +305,20 @@ window.onload = async function () {
         lineWrapping: true,
     });
 
+    document.getElementById('model-name').addEventListener('change', async function() {
+        deactivateSubmitButton();
+        var model_name = this.value;
+        await loadSemantic(model_name);
+        activateSubmitButton();
+        // todo:  [remove progress bar text]
+    });
+
 
     document.getElementById('split-type').addEventListener('change', function() {
         // Get the selected option value
-        var selectedValue = this.value;
         const split_param = document.getElementById('split-param')
 
-        switch (selectedValue) {
+        switch (this.value) {
             case "Words":
                 split_param.disabled = false;
                 document.querySelector("label[for='split-param']").textContent = "# Words";
@@ -307,7 +333,6 @@ window.onload = async function () {
                 split_param.value = 15;
                 split_param.min = 1;
                 split_param.max = 512;
-                console.groupEnd();
                 break;
             case "Chars":
                 split_param.disabled = false;
@@ -338,14 +363,13 @@ window.onload = async function () {
 
         if(isExpanded) {
             accordionButton.textContent = 'Settings ↡';
-            console.dir(accordionButton);
         } else {
             accordionButton.textContent = 'Settings ↠';
         }
     });
 
-
-    await loadSemantic();
+    let model_name = document.getElementById('model-name').value;
+    await loadSemantic(model_name);
     activateSubmitButton();
 
     document.getElementById('next').addEventListener('click', function (event) {
