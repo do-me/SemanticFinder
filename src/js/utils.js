@@ -1,19 +1,12 @@
 import {getTokens} from "./semantic";
 
 /**
- * 
- * @param {string} paragraph 
- * @returns {Array<string> | null}
+ * @param {string} text 
+ * @param {string} splitType 
+ * @param {string} splitParam 
+ * @returns {Promise<Array<string> | null>}
  */
-function splitIntoSentences(paragraph) {
-    return paragraph.match(/[^\.!\?]+[\.!\?]+/g);
-}
-
-
-export async function splitText(text) {
-    const splitType = document.getElementById('split-type').value;
-    const splitParam = document.getElementById('split-param').value;
-
+export async function splitText(text, splitType, splitParam) {
     switch(splitType) {
         case 'Regex':
             return splitByRegex(text, splitParam);
@@ -31,8 +24,13 @@ export async function splitText(text) {
     }
 }
 
-async function splitByTokens(str, numTokens) {
-    const words = str.split(' ');
+/**
+ * @param {string} text 
+ * @param {number} numTokens 
+ * @returns {Promise<Array<string> | null>}
+ */
+async function splitByTokens(text, numTokens) {
+    const words = text.split(' ');
     const chunks = [];
 
     for (let i = 0; i < words.length; i++) {
@@ -50,14 +48,18 @@ async function splitByTokens(str, numTokens) {
     return chunks;
 }
 
-
-function splitByWords(str, numWords) {
+/**
+ * @param {string} text 
+ * @param {number} numWords 
+ * @returns {Array<string> | null}
+ */
+function splitByWords(text, numWords) {
     if (isNaN(numWords) || !Number.isInteger(numWords)) {
         console.error("numWords must be an integer.");
         return null;
     }
 
-    const words = str.split(" ");
+    const words = text.split(" ");
     const chunks = [];
 
     let currentChunk = [];
@@ -78,9 +80,13 @@ function splitByWords(str, numWords) {
     return chunks;
 }
 
-
-function splitByChars(str, numChars) {
-    const words = str.split(' ');
+/**
+ * @param {string} text 
+ * @param {number} numChars 
+ * @returns {Array<string> | null}
+ */
+function splitByChars(text, numChars) {
+    const words = text.split(' ');
     const chunks = [];
 
     for (let i = 0; i < words.length; i++) {
@@ -97,12 +103,20 @@ function splitByChars(str, numChars) {
     return chunks;
 }
 
-
+/**
+ * @param {string} text 
+ * @returns {Array<string> | null}
+ */
 function splitBySentences(text) {
     return text.match(/[^\.!\?]+[\.!\?]+/g);
 }
 
-function splitByRegex(str, r) {
+/**
+ * @param {string} text 
+ * @param {string} r 
+ * @returns {Array<string> | null}
+ */
+function splitByRegex(text, r) {
     let regex = new RegExp(r, 'g');
-    return str.split(regex);
+    return text.split(regex);
 }
