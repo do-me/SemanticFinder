@@ -232,7 +232,6 @@ async function semanticHighlight(callback) {
         }
         i++;
 
-        console.log(similarity);
         const cosineSimilarity = await similarity(inputText);
 
         results.push([inputText, cosineSimilarity]);
@@ -309,10 +308,10 @@ window.onload = async function () {
 
     document.getElementById('model-name').addEventListener('change', async function() {
         deactivateSubmitButton();
+        setProgressBarValue(0);
         var model_name = this.value;
         await loadSemantic(model_name);
         activateSubmitButton();
-        // todo:  [remove progress bar text]
     });
 
 
