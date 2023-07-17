@@ -211,10 +211,11 @@ async function semanticHighlight(callback) {
     // query input embedding
     const text = editor.getValue("");
     const inputQuery = document.getElementById("query-text").value;
+    const splitType = document.getElementById('split-type').value;
+    const splitParam = document.getElementById('split-param').value;
+    let inputTexts = await splitText(text, splitType, splitParam);
 
     await embedQuery(inputQuery);
-
-    let inputTexts = await splitText(text);
 
     let results = [];
     let max = inputTexts.length;
@@ -231,6 +232,7 @@ async function semanticHighlight(callback) {
         }
         i++;
 
+        console.log(similarity);
         const cosineSimilarity = await similarity(inputText);
 
         results.push([inputText, cosineSimilarity]);
