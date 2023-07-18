@@ -1,7 +1,7 @@
 import { env, pipeline, AutoTokenizer } from '@xenova/transformers';
 import { Pipeline, PreTrainedTokenizer } from '@xenova/transformers';
 
-env.useBrowserCache = false; // for testing
+// env.useBrowserCache = false; // for testing
 
 /**
  * @type {Object<string, EmbeddingVector>}
