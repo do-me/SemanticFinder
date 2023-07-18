@@ -61,9 +61,9 @@ function splitByWords(text, numWords) {
     }
 
     const words = text.split(" ");
-    const chunks = [];
-
+    let chunks = [];
     let currentChunk = [];
+
     for (let i = 0; i < words.length; i++) {
         currentChunk.push(words[i]);
 
@@ -76,6 +76,8 @@ function splitByWords(text, numWords) {
     if (currentChunk.length > 0) {
         chunks.push(currentChunk.join(' '));
     }
+    chunks = chunks.filter(chunk => chunk.trim().length > 0);
+
     console.table(chunks);
 
     return chunks;

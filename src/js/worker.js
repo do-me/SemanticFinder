@@ -1,14 +1,7 @@
-/*
-worker will handle
-- load model [load_model[name]]
-- will call progress bar shit
-- embeddings [separate function call listen thing]
- */
-
 import { env, pipeline, AutoTokenizer } from '@xenova/transformers';
 import { Pipeline, PreTrainedTokenizer } from '@xenova/transformers';
 
-// env.useBrowserCache = false; // for testing
+env.useBrowserCache = false; // for testing
 
 /**
  * @type {Object<string, EmbeddingVector>}

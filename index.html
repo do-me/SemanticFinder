@@ -61,7 +61,7 @@
                     <div class="col-12">
                         <div class="progress" role="progressbar" aria-label="Loading model" aria-valuenow="0"
                              aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-secondary" id="loading-progress" style="width: 0">""</div>
+                            <div class="progress-bar bg-secondary" id="loading-progress" style="width: 0;">""</div>
                         </div>
                     </div>
                     <!--  settings -->
@@ -98,8 +98,8 @@
                                             <div class="col-md">
                                                 <div class="form-floating mb-3">
                                                     <input type="number" id="threshold" class="form-control w-100"
-                                                           value="0.3" step="0.01"/>
-                                                    <label for="threshold">similarity threshold</label>
+                                                           value="5" min="1" step="1"/>
+                                                    <label for="threshold"># results</label>
                                                 </div>
                                             </div>
                                             <div class="col-md">
