@@ -31,6 +31,7 @@ const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
 const submitButton = document.getElementById("submit_button");
 const downloadBar = document.getElementById("loading-progress");
+const resultsList = document.getElementById('results-list');
 
 function removeHighlights() {
     for (let marker of markers) {
@@ -68,7 +69,7 @@ async function onSubmit() {
         isProcessing = true;
         submitButton.textContent = "Stop";
 
-        document.getElementById('results-list').innerHTML = '';
+        resultsList.innerHTML = '';
         selectedIndex = -1;
         await semanticHighlight(finishCallback);
     } else {
@@ -82,8 +83,7 @@ function resetResults() {
     removeHighlights();
 
     // Get results list element
-    let resultsDiv = document.getElementById('results-list');
-    resultsDiv.innerHTML = '';
+    resultsList.innerHTML = '';
 }
 
 /**
@@ -103,7 +103,6 @@ function updateResults(results) {
         else highlightClass = "highlight-third";
 
         createHighlight(resultItem[0], highlightClass, resultItem[1]);
-
     }
 }
 
@@ -113,7 +112,6 @@ function updateResults(results) {
  * @param {number} similarity
  */
 function createHighlight(text, className, similarity) {
-    let resultsDiv = document.getElementById('results-list');
     const cursor = editor.getSearchCursor(text);
 
     while (cursor.findNext()) {
@@ -125,9 +123,8 @@ function createHighlight(text, className, similarity) {
         listItem.classList.add('card');
         listItem.innerHTML = createCardHTML(text, similarity);
 
-        resultsDiv.appendChild(listItem);
-
-        let index = resultsDiv.childElementCount - 1;
+        resultsList.appendChild(listItem);
+        let index = resultsList.childElementCount - 1;
 
         // Add click listener for card
         listItem.addEventListener('click', function () {
@@ -172,8 +169,7 @@ function highlightSelected(index) {
 }
 
 function highlightCard(index) {
-    let resultsDiv = document.getElementById('results-list');
-    let cards = resultsDiv.getElementsByClassName('card');
+    let cards = resultsList.getElementsByClassName('card');
 
     // Ensure the index is within the range of the cards.
     if (prevCard) {
@@ -203,8 +199,6 @@ function setProgressBarValue(value) {
         progressBar.classList.remove('progress-bar-striped');
     }
 }
-
-
 
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
@@ -255,26 +249,20 @@ async function semanticHighlight(callback) {
     callback();
 }
 
+/**
+ * Enable the next and prev buttons
+ */
 function activateScrollButtons() {
-    // Enable the next and prev buttons
-    if (nextButton) {
-        nextButton.removeAttribute("disabled");
-    }
-
-    if (prevButton) {
-        prevButton.removeAttribute("disabled");
-    }
+    nextButton.removeAttribute("disabled");
+    prevButton.removeAttribute("disabled");
 }
 
+/**
+ * Disable the next and prev buttons
+ */
 function deactivateScrollButtons() {
-    // Disable the next and prev buttons
-    if (nextButton) {
-        nextButton.setAttribute("disabled", "");
-    }
-
-    if (prevButton) {
-        prevButton.setAttribute("disabled", "");
-    }
+    nextButton.setAttribute("disabled", "");
+    prevButton.setAttribute("disabled", "");
 }
 
 function nextMarker() {
