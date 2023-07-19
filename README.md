@@ -20,7 +20,7 @@ If you want to build instead, run
 
 `npm run build`
 
-Afterwards, you'll find the `index.html` and `bundle.js` in `/dist` (CSS is included in `bundle.js`).
+Afterwards, you'll find the `index.html`, `main.css` and `bundle.js` in `dist`.
 
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
@@ -141,7 +141,7 @@ PRs welcome!
 - [ ] rewrite the cosine similarity function in Rust, port to WASM and load as a module for possible speedup (experimental)
 - [ ] UI overhaul
 - [ ] polish code 
-- [ ]   - jQuery/vanilla JS mixed
+- [x]   - jQuery/vanilla JS mixed
 - [ ]   - clean up functions 
 - [ ]   - add more comments
 - [ ] add possible use cases
