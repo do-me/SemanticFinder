@@ -5,8 +5,8 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, embedQuery } from './semantic.js';
-import { splitText } from './utils.js';
+import {loadSemantic, similarity, embedQuery} from './semantic.js';
+import {splitText} from './utils.js';
 
 
 import '../css/styles.css';
@@ -115,7 +115,7 @@ function createHighlight(text, className, similarity) {
     const cursor = editor.getSearchCursor(text);
 
     while (cursor.findNext()) {
-        let marker = editor.markText(cursor.from(), cursor.to(), { className: className });
+        let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
         markers.push(marker);
 
         // create card
@@ -156,7 +156,7 @@ function createCardHTML(title, similarity) {
 function highlightSelected(index) {
     highlightCard(index);
     if (selectedIndex !== -1) {
-        let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, { className: selectedClassName });
+        let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: selectedClassName});
         markers[selectedIndex].clear();
         markers[selectedIndex] = marker0;
     }
@@ -164,7 +164,7 @@ function highlightSelected(index) {
     selectedIndex = index;
     selectedClassName = markers[selectedIndex].className;
 
-    let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, { className: "highlight-select" });
+    let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: "highlight-select"});
     markers[selectedIndex].clear();
     markers[selectedIndex] = marker1;
 }
@@ -201,7 +201,6 @@ function setProgressBarValue(value) {
         progressBar.classList.remove('progress-bar-striped');
     }
 }
-
 
 
 async function semanticHighlight(callback) {
@@ -251,50 +250,6 @@ async function semanticHighlight(callback) {
     callback();
 }
 
-// async function semanticHighlight(callback) {
-//     deactivateScrollButtons();
-//     resetHighlightsProgress();
-//
-//     // query input embedding
-//     const text = editor.getValue("");
-//     const inputQuery = document.getElementById("query-text").value;
-//     const splitType = document.getElementById('split-type').value;
-//     const splitParam = document.getElementById('split-param').value;
-//     let inputTexts = await splitText(text, splitType, splitParam);
-//
-//     await embedQuery(inputQuery);
-//
-//     let results = [];
-//     let max = inputTexts.length;
-//
-//     let i = 0;
-//
-//     // all are set into play async then function continues
-//     let interval = setInterval(async () => {
-//         let inputText = inputTexts[i];
-//         if (i >= max || !isProcessing) {
-//             clearInterval(interval);
-//             callback();
-//             return;
-//         }
-//         i++;
-//
-//         const cosineSimilarity = await similarity(inputText);
-//
-//         results.push([inputText, cosineSimilarity]);
-//         results.sort((a, b) => b[1] - a[1]);
-//
-//         updateResults(results);
-//         if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
-//             editor.scrollIntoView(markers[0].find());
-//         }
-//
-//         let progress = Math.round((i * 100) / max);
-//         setProgressBarValue(progress);
-//     }, 0);
-// }
-
-
 
 function activateScrollButtons() {
     // Enable the next and prev buttons
@@ -317,7 +272,6 @@ function deactivateScrollButtons() {
         prevButton.setAttribute("disabled", "");
     }
 }
-
 
 
 function nextMarker() {
@@ -353,7 +307,7 @@ window.onload = async function () {
         lineWrapping: true,
     });
 
-    document.getElementById('model-name').addEventListener('change', async function() {
+    document.getElementById('model-name').addEventListener('change', async function () {
         deactivateSubmitButton();
         setProgressBarValue(0);
         var model_name = this.value;
@@ -362,7 +316,7 @@ window.onload = async function () {
     });
 
 
-    document.getElementById('split-type').addEventListener('change', function() {
+    document.getElementById('split-type').addEventListener('change', function () {
         // Get the selected option value
         const split_param = document.getElementById('split-param')
 
@@ -402,20 +356,7 @@ window.onload = async function () {
                 split_param.placeholder = "";
         }
     });
-
-
-    var accordionButton = document.querySelector('.accordion-button');
-
-    accordionButton.addEventListener('click', function() {
-        var isExpanded = accordionButton.getAttribute('aria-expanded') === 'true';
-
-        if(isExpanded) {
-            accordionButton.textContent = 'Settings ↡';
-        } else {
-            accordionButton.textContent = 'Settings ↠';
-        }
-    });
-
+    
     let model_name = document.getElementById('model-name').value;
     await loadSemantic(model_name);
     activateSubmitButton();

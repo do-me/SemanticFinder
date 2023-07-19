@@ -39,11 +39,19 @@
                 <div class="form-group" id="formGroupCenter">
                     <div class="row no-gutters">
                         <div class="col-md-10">
-                            <div class="form-floating mb-3">
-                                <input type="text" id="query-text" class="form-control"
-                                       placeholder="Enter query here" value="food"/>
-                                <label for="query-text">query</label>
+                            <div class="form-floating input-group mb-3">
+                                <input type="text" id="query-text" class="form-control" placeholder="Enter query here"
+                                       value="food"/>
+                                <label for="query-text" class="form-floating-placeholder">query</label>
+                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#advancedFeaturesContent" id="settingsButton">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                         class="bi bi-gear-fill" viewBox="0 0 16 16">
+                                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                                    </svg>
+                                </button>
                             </div>
+
                         </div>
 
                         <div class="col-md-2">
@@ -55,7 +63,57 @@
                     </div>
 
 
-
+                    <!-- settings -->
+                    <div class="col-12">
+                        <div id="advancedFeaturesContent" class="collapse">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <select class="form-select form-control " id="model-name">
+                                                <option value="Xenova/all-MiniLM-L6-v2" selected>
+                                                    all-MiniLM-L6-v2 (23 MB)
+                                                </option>
+                                                <option value="Xenova/e5-small-v2">e5-small-v2 (34 MB)</option>
+                                                <option value="Xenova/kobert">kobert (92 MB)</option>
+                                                <option value="Xenova/distiluse-base-multilingual-cased-v2">
+                                                    distiluse-base-multilingual-cased-v2 (135 MB)
+                                                </option>
+                                                <option value="Xenova/e5-large-v2">e5-large-v2 (335 MB)</option>
+                                            </select>
+                                            <label for="model-name">Model:</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-floating mb-3">
+                                            <input type="number" id="threshold" class="form-control w-100"
+                                                   value="5" min="1" step="1"/>
+                                            <label for="threshold"># results</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <select class="form-select form-control " id="split-type">
+                                                <option value="Sentence">Sentence</option>
+                                                <option value="Chars" selected># Chars</option>
+                                                <option value="Words"># Words</option>
+                                                <option value="Tokens"># Tokens</option>
+                                                <option value="Regex">Regex</option>
+                                            </select>
+                                            <label for="split-type">split by</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-floating mb-3">
+                                            <input id="split-param" class="form-control w-100"
+                                                   type=number min="1" value="40"/>
+                                            <label for="split-param"># Chars</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- progress bar -->
                     <div class="col-12">
@@ -64,69 +122,8 @@
                             <div class="progress-bar bg-secondary" id="loading-progress" style="width: 0;">""</div>
                         </div>
                     </div>
-                    <!--  settings -->
-                    <div class="accordion accordion-flush pb-3" id="advancedFeaturesAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="advancedFeaturesHeader">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#advancedFeaturesContent" aria-expanded="false"
-                                        aria-controls="advancedFeaturesContent">
-                                    Settings ↠
-                                </button>
-                            </h2>
 
-                            <div id="advancedFeaturesContent" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-md">
-                                                <div class="form-floating">
-                                                    <select class="form-select form-control " id="model-name">
-                                                        <option value="Xenova/all-MiniLM-L6-v2" selected>
-                                                            all-MiniLM-L6-v2 (23 MB)
-                                                        </option>
-                                                        <option value="Xenova/e5-small-v2">e5-small-v2 (34 MB)</option>
-                                                        <option value="Xenova/kobert">kobert (92 MB)</option>
-                                                        <option value="Xenova/distiluse-base-multilingual-cased-v2">
-                                                            distiluse-base-multilingual-cased-v2 (135 MB)
-                                                        </option>
-                                                        <option value="Xenova/e5-large-v2">e5-large-v2 (335 MB)</option>
-                                                    </select>
-                                                    <label for="model-name">Model:</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md">
-                                                <div class="form-floating mb-3">
-                                                    <input type="number" id="threshold" class="form-control w-100"
-                                                           value="5" min="1" step="1"/>
-                                                    <label for="threshold"># results</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md">
-                                                <div class="form-floating">
-                                                    <select class="form-select form-control " id="split-type">
-                                                        <option value="Sentence">Sentence</option>
-                                                        <option value="Chars" selected># Chars</option>
-                                                        <option value="Words"># Words</option>
-                                                        <option value="Tokens"># Tokens</option>
-                                                        <option value="Regex">Regex</option>
-                                                    </select>
-                                                    <label for="split-type">split by</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md">
-                                                <div class="form-floating mb-3">
-                                                    <input id="split-param" class="form-control w-100"
-                                                           type=number min="1" value="40"/>
-                                                    <label for="split-param"># Chars</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <!--  text box -->
                     <div class="form-floating">
                             <textarea id="input-text" class="form-control" placeholder="Enter">Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
