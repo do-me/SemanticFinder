@@ -1,10 +1,10 @@
-import {getTokens} from "./semantic";
+import { tokenize } from "@lizozom/semanticjs";
 
 /**
  * @param {string} text 
  * @param {string} splitType 
  * @param {string} splitParam 
- * @returns {Promise<Array<string> | null>}
+ * @returns {Promise<Array<string>>}
  */
 export async function splitText(text, splitType, splitParam) {
     switch(splitType) {
@@ -20,14 +20,14 @@ export async function splitText(text, splitType, splitParam) {
             return await splitByTokens(text, parseInt(splitParam));
         default:
             console.error('Invalid split type');
-            return null;
+            return [];
     }
 }
 
 /**
  * @param {string} text 
  * @param {number} numTokens 
- * @returns {Promise<Array<string> | null>}
+ * @returns {Promise<Array<string>>}
  */
 async function splitByTokens(text, numTokens) {
     const words = text.split(' ');
@@ -35,10 +35,10 @@ async function splitByTokens(text, numTokens) {
 
     for (let i = 0; i < words.length; i++) {
         const word = words[i];
-        const tokens = await getTokens(word);
+        const tokens = await tokenize(word);
 
         // Check if there's no chunk or if the last chunk + the new word would exceed numTokens
-        if (chunks.length === 0 || (await getTokens(chunks[chunks.length - 1])).length + tokens.length > numTokens) {
+        if (chunks.length === 0 || (await tokenize(chunks[chunks.length - 1])).length + tokens.length > numTokens) {
             chunks.push(word);
         } else {
             chunks[chunks.length - 1] += ' ' + word;
@@ -52,12 +52,12 @@ async function splitByTokens(text, numTokens) {
 /**
  * @param {string} text 
  * @param {number} numWords 
- * @returns {Array<string> | null}
+ * @returns {Array<string>}
  */
 function splitByWords(text, numWords) {
     if (isNaN(numWords) || !Number.isInteger(numWords)) {
         console.error("numWords must be an integer.");
-        return null;
+        return [];
     }
 
     const words = text.split(" ");
@@ -86,7 +86,7 @@ function splitByWords(text, numWords) {
 /**
  * @param {string} text 
  * @param {number} numChars 
- * @returns {Array<string> | null}
+ * @returns {Array<string>}
  */
 function splitByChars(text, numChars) {
     const words = text.split(' ');
@@ -108,16 +108,16 @@ function splitByChars(text, numChars) {
 
 /**
  * @param {string} text 
- * @returns {Array<string> | null}
+ * @returns {Array<string>}
  */
 function splitBySentences(text) {
-    return text.match(/[^\.!\?]+[\.!\?]+/g);
+    return text.match(/[^\.!\?]+[\.!\?]+/g) || [];
 }
 
 /**
  * @param {string} text 
  * @param {string} r 
- * @returns {Array<string> | null}
+ * @returns {Array<string>}
  */
 function splitByRegex(text, r) {
     let regex = new RegExp(r, 'g');
