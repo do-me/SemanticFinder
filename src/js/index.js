@@ -5,8 +5,9 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, embedQuery } from './semantic.js';
-import { splitText } from './utils.js';
+import { init, embed } from '@lizozom/semanticjs';
+import { splitText } from './split_text.js';
+import { calculateCosineSimilarity } from './similarity.js';
 
 
 import '../css/styles.css';
@@ -29,6 +30,7 @@ let prevCard;
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
 const submitButton = document.getElementById("submit_button");
+const downloadBar = document.getElementById("loading-progress");
 
 function removeHighlights() {
     for (let marker of markers) {
@@ -216,7 +218,7 @@ async function semanticHighlight(callback) {
     const splitParam = document.getElementById('split-param').value;
     const inputTexts = await splitText(text, splitType, splitParam);
 
-    await embedQuery(inputQuery);
+    const embeddedQuery = await embed(inputQuery);
 
     let results = [];
 
@@ -231,7 +233,9 @@ async function semanticHighlight(callback) {
             break;
         }
 
-        const cosineSimilarity = await similarity(inputText);
+        const embeddedText = await embed(inputText);
+
+        const cosineSimilarity = await calculateCosineSimilarity(embeddedQuery, embeddedText);
 
         results.push([inputText, cosineSimilarity]);
 
@@ -250,51 +254,6 @@ async function semanticHighlight(callback) {
 
     callback();
 }
-
-// async function semanticHighlight(callback) {
-//     deactivateScrollButtons();
-//     resetHighlightsProgress();
-//
-//     // query input embedding
-//     const text = editor.getValue("");
-//     const inputQuery = document.getElementById("query-text").value;
-//     const splitType = document.getElementById('split-type').value;
-//     const splitParam = document.getElementById('split-param').value;
-//     let inputTexts = await splitText(text, splitType, splitParam);
-//
-//     await embedQuery(inputQuery);
-//
-//     let results = [];
-//     let max = inputTexts.length;
-//
-//     let i = 0;
-//
-//     // all are set into play async then function continues
-//     let interval = setInterval(async () => {
-//         let inputText = inputTexts[i];
-//         if (i >= max || !isProcessing) {
-//             clearInterval(interval);
-//             callback();
-//             return;
-//         }
-//         i++;
-//
-//         const cosineSimilarity = await similarity(inputText);
-//
-//         results.push([inputText, cosineSimilarity]);
-//         results.sort((a, b) => b[1] - a[1]);
-//
-//         updateResults(results);
-//         if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
-//             editor.scrollIntoView(markers[0].find());
-//         }
-//
-//         let progress = Math.round((i * 100) / max);
-//         setProgressBarValue(progress);
-//     }, 0);
-// }
-
-
 
 function activateScrollButtons() {
     // Enable the next and prev buttons
@@ -318,8 +277,6 @@ function deactivateScrollButtons() {
     }
 }
 
-
-
 function nextMarker() {
     if (selectedIndex === -1) {
         highlightSelected(0);
@@ -341,6 +298,28 @@ function prevMarker() {
 }
 
 /**
+ * @param {*} progressMessage 
+ */
+const onModelLoadProgress = (progressMessage) => {
+    const { file, status, progress } = progressMessage;
+    if (file === "onnx/model_quantized.onnx") {
+        switch (status) {
+            case 'progress': 
+                const rProgress = progress.toFixed(2);
+                downloadBar.style.width = `${rProgress}%`;
+                downloadBar.textContent = `${rProgress}%`;
+                downloadBar.setAttribute('aria-valuenow', rProgress);
+                break;
+            case 'ready':
+                downloadBar.style.width = '100%';
+                downloadBar.setAttribute('aria-valuenow', '100');
+                downloadBar.textContent = "";
+                break;
+        }
+    }
+}
+
+/**
  * Setup the application when the page loads.
  */
 window.onload = async function () {
@@ -357,7 +336,7 @@ window.onload = async function () {
         deactivateSubmitButton();
         setProgressBarValue(0);
         var model_name = this.value;
-        await loadSemantic(model_name);
+        await init({ modelName: model_name}, onModelLoadProgress);
         activateSubmitButton();
     });
 
@@ -417,7 +396,7 @@ window.onload = async function () {
     });
 
     let model_name = document.getElementById('model-name').value;
-    await loadSemantic(model_name);
+    await init({ modelName: model_name}, onModelLoadProgress);
     activateSubmitButton();
 
     document.getElementById('next').addEventListener('click', function (event) {

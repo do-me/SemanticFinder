@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@lizozom/semanticjs": "^1.0.5",
     "@xenova/transformers": "^2.2.0",
     "bootstrap": "^5.0.2",
     "codemirror": "^5.52.2"
