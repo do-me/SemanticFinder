@@ -1,32 +1,32 @@
-import { tokenize } from "@lizozom/semanticjs";
+import { tokenize } from '@lizozom/semanticjs';
 
 /**
- * @param {string} text 
- * @param {string} splitType 
- * @param {string} splitParam 
+ * @param {string} text
+ * @param {string} splitType
+ * @param {string} splitParam
  * @returns {Promise<Array<string>>}
  */
 export async function splitText(text, splitType, splitParam) {
-    switch(splitType) {
-        case 'Regex':
-            return splitByRegex(text, splitParam);
-        case 'Sentence':
-            return splitBySentences(text);
-        case 'Words':
-            return splitByWords(text, parseInt(splitParam));
-        case 'Chars':
-            return splitByChars(text, parseInt(splitParam));
-        case 'Tokens':
-            return await splitByTokens(text, parseInt(splitParam));
-        default:
-            console.error('Invalid split type');
-            return [];
+    switch (splitType) {
+    case 'Regex':
+        return splitByRegex(text, splitParam);
+    case 'Sentence':
+        return splitBySentences(text);
+    case 'Words':
+        return splitByWords(text, parseInt(splitParam));
+    case 'Chars':
+        return splitByChars(text, parseInt(splitParam));
+    case 'Tokens':
+        return await splitByTokens(text, parseInt(splitParam));
+    default:
+        console.error('Invalid split type');
+        return [];
     }
 }
 
 /**
- * @param {string} text 
- * @param {number} numTokens 
+ * @param {string} text
+ * @param {number} numTokens
  * @returns {Promise<Array<string>>}
  */
 async function splitByTokens(text, numTokens) {
@@ -41,7 +41,7 @@ async function splitByTokens(text, numTokens) {
         if (chunks.length === 0 || (await tokenize(chunks[chunks.length - 1])).length + tokens.length > numTokens) {
             chunks.push(word);
         } else {
-            chunks[chunks.length - 1] += ' ' + word;
+            chunks[chunks.length - 1] += ` ${word}`;
         }
     }
     console.table(chunks);
@@ -50,17 +50,17 @@ async function splitByTokens(text, numTokens) {
 }
 
 /**
- * @param {string} text 
- * @param {number} numWords 
+ * @param {string} text
+ * @param {number} numWords
  * @returns {Array<string>}
  */
 function splitByWords(text, numWords) {
     if (isNaN(numWords) || !Number.isInteger(numWords)) {
-        console.error("numWords must be an integer.");
+        console.error('numWords must be an integer.');
         return [];
     }
 
-    const words = text.split(" ");
+    const words = text.split(' ');
     let chunks = [];
     let currentChunk = [];
 
@@ -76,7 +76,7 @@ function splitByWords(text, numWords) {
     if (currentChunk.length > 0) {
         chunks.push(currentChunk.join(' '));
     }
-    chunks = chunks.filter(chunk => chunk.trim().length > 0);
+    chunks = chunks.filter((chunk) => chunk.trim().length > 0);
 
     console.table(chunks);
 
@@ -84,8 +84,8 @@ function splitByWords(text, numWords) {
 }
 
 /**
- * @param {string} text 
- * @param {number} numChars 
+ * @param {string} text
+ * @param {number} numChars
  * @returns {Array<string>}
  */
 function splitByChars(text, numChars) {
@@ -98,7 +98,7 @@ function splitByChars(text, numChars) {
         if (chunks.length === 0 || chunks[chunks.length - 1].length + word.length + 1 > numChars) {
             chunks.push(word);
         } else {
-            chunks[chunks.length - 1] += ' ' + word;
+            chunks[chunks.length - 1] += ` ${word}`;
         }
     }
     console.table(chunks);
@@ -107,19 +107,19 @@ function splitByChars(text, numChars) {
 }
 
 /**
- * @param {string} text 
+ * @param {string} text
  * @returns {Array<string>}
  */
 function splitBySentences(text) {
-    return text.match(/[^\.!\?]+[\.!\?]+/g) || [];
+    return text.match(/[^.!?]+[.!?]+/g) || [];
 }
 
 /**
- * @param {string} text 
- * @param {string} r 
+ * @param {string} text
+ * @param {string} r
  * @returns {Array<string>}
  */
 function splitByRegex(text, r) {
-    let regex = new RegExp(r, 'g');
+    const regex = new RegExp(r, 'g');
     return text.split(regex);
 }

@@ -16,8 +16,3 @@ export function calculateCosineSimilarity(e1, e2) {
     }
     return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
 }
-
-
-
-
-
