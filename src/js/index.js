@@ -5,7 +5,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, getTokens } from './semantic.js';
+import { loadSemantic, similarity, embedQuery } from './semantic.js';
 import { splitText } from './utils.js';
 
 
@@ -28,8 +28,6 @@ let selectedClassName = "";
 let prevCard;
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
-const progressBar = document.getElementById("progressBar");
-const progressBarProgress = document.getElementById("progressBarProgress");
 const submitButton = document.getElementById("submit_button");
 
 function removeHighlights() {
@@ -39,8 +37,14 @@ function removeHighlights() {
     markers = [];
 }
 
+function deactivateSubmitButton() {
+    if (submitButton) {
+        submitButton.setAttribute("disabled", "");
+        submitButton.textContent = "Loading...";
+    }
+}
+
 function activateSubmitButton() {
-    // get references to the loading element and submit button
     if (submitButton) {
         submitButton.removeAttribute("disabled");
         submitButton.textContent = "Submit";
@@ -71,22 +75,25 @@ async function onSubmit() {
     }
 }
 
-/**
- *
- * @param {*} results
- */
-function updateResults(results) {
-    const threshold = document.getElementById("threshold").value;
+function resetResults() {
     // Remove previous highlights
     removeHighlights();
 
     // Get results list element
     let resultsDiv = document.getElementById('results-list');
     resultsDiv.innerHTML = '';
+}
 
-    for (let i = 0; i < results.length; i++) {
+/**
+ *
+ * @param {*} results
+ */
+function updateResults(results) {
+    resetResults();
+    const k = document.getElementById("threshold").value;
+
+    for (let i = 0; i < Math.min(k, results.length); i++) {
         let resultItem = results[i];
-        if (resultItem[1] < threshold) { break; } // redundant
 
         let highlightClass;
         if (i === 0) highlightClass = "highlight-first";
@@ -174,58 +181,118 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-function resetHighlightsProgress() {
-    // clear any highlights
-    removeHighlights();
-    progressBar.value = 0;
-    progressBarProgress.textContent = "0";
+function setProgressBarValue(value) {
+    var progressBar = document.getElementById('progressBarProgress');
+    if (value === "" || value == "0") {
+        progressBar.style.transition = 'width .1s ease'; // Temporarily override the transition duration
+        progressBar.classList.add('progress-bar-animated');
+        progressBar.classList.add('progress-bar-striped');
+    } else {
+        progressBar.style.transition = ''; // Restore the original transition
+    }
 
+    progressBar.style.width = value + '%';
+    progressBar.textContent = value + '%';
+    progressBar.parentNode.setAttribute('aria-valuenow', value);
+
+
+    if (value == 100) {
+        progressBar.classList.remove('progress-bar-animated');
+        progressBar.classList.remove('progress-bar-striped');
+    }
 }
+
 
 
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
-    resetHighlightsProgress();
+    resetResults();
+    setProgressBarValue(0);
 
     // query input embedding
     const text = editor.getValue("");
     const inputQuery = document.getElementById("query-text").value;
     const splitType = document.getElementById('split-type').value;
     const splitParam = document.getElementById('split-param').value;
-    let inputTexts = await splitText(text, splitType, splitParam);
+    const inputTexts = await splitText(text, splitType, splitParam);
+
+    await embedQuery(inputQuery);
 
     let results = [];
-    let max = inputTexts.length;
 
-    let i = 0;
+    // Only update results a max of num_updates times
+    let num_updates = 100;
+    let N = inputTexts.length;
+    let interval = Math.ceil(N / Math.min(num_updates, N));
 
-    // all are set into play async then function continues
-    let interval = setInterval(async () => {
+    for (let i = 0; i < N; i++) {
         let inputText = inputTexts[i];
-        if (i >= max || !isProcessing) {
-            clearInterval(interval);
-            callback();
-            return;
+        if (!isProcessing) {
+            break;
         }
-        i++;
 
-        const cosineSimilarity = await similarity(inputText, inputQuery);
+        const cosineSimilarity = await similarity(inputText);
 
         results.push([inputText, cosineSimilarity]);
-        results.sort((a, b) => b[1] - a[1]);
 
-        updateResults(results);
-        if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
-            editor.scrollIntoView(markers[0].find());
+        if (i % interval === 0 || i === N - 1) {
+            results.sort((a, b) => b[1] - a[1]);
+
+            updateResults(results);
+            if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+                editor.scrollIntoView(markers[0].find());
+            }
+
+            let progress = Math.round(((i + 1) * 100) / N);
+            setProgressBarValue(progress);
         }
+    }
 
-        // update progress bar
-        let progress = Math.round((i * 100) / max);
-        progressBar.value = progress;
-        progressBarProgress.textContent = progress.toString();
-
-    }, 0);
+    callback();
 }
+
+// async function semanticHighlight(callback) {
+//     deactivateScrollButtons();
+//     resetHighlightsProgress();
+//
+//     // query input embedding
+//     const text = editor.getValue("");
+//     const inputQuery = document.getElementById("query-text").value;
+//     const splitType = document.getElementById('split-type').value;
+//     const splitParam = document.getElementById('split-param').value;
+//     let inputTexts = await splitText(text, splitType, splitParam);
+//
+//     await embedQuery(inputQuery);
+//
+//     let results = [];
+//     let max = inputTexts.length;
+//
+//     let i = 0;
+//
+//     // all are set into play async then function continues
+//     let interval = setInterval(async () => {
+//         let inputText = inputTexts[i];
+//         if (i >= max || !isProcessing) {
+//             clearInterval(interval);
+//             callback();
+//             return;
+//         }
+//         i++;
+//
+//         const cosineSimilarity = await similarity(inputText);
+//
+//         results.push([inputText, cosineSimilarity]);
+//         results.sort((a, b) => b[1] - a[1]);
+//
+//         updateResults(results);
+//         if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+//             editor.scrollIntoView(markers[0].find());
+//         }
+//
+//         let progress = Math.round((i * 100) / max);
+//         setProgressBarValue(progress);
+//     }, 0);
+// }
 
 
 
@@ -286,13 +353,20 @@ window.onload = async function () {
         lineWrapping: true,
     });
 
+    document.getElementById('model-name').addEventListener('change', async function() {
+        deactivateSubmitButton();
+        setProgressBarValue(0);
+        var model_name = this.value;
+        await loadSemantic(model_name);
+        activateSubmitButton();
+    });
+
 
     document.getElementById('split-type').addEventListener('change', function() {
         // Get the selected option value
-        var selectedValue = this.value;
         const split_param = document.getElementById('split-param')
 
-        switch (selectedValue) {
+        switch (this.value) {
             case "Words":
                 split_param.disabled = false;
                 document.querySelector("label[for='split-param']").textContent = "# Words";
@@ -307,7 +381,6 @@ window.onload = async function () {
                 split_param.value = 15;
                 split_param.min = 1;
                 split_param.max = 512;
-                console.groupEnd();
                 break;
             case "Chars":
                 split_param.disabled = false;
@@ -338,14 +411,13 @@ window.onload = async function () {
 
         if(isExpanded) {
             accordionButton.textContent = 'Settings ↡';
-            console.dir(accordionButton);
         } else {
             accordionButton.textContent = 'Settings ↠';
         }
     });
 
-
-    await loadSemantic();
+    let model_name = document.getElementById('model-name').value;
+    await loadSemantic(model_name);
     activateSubmitButton();
 
     document.getElementById('next').addEventListener('click', function (event) {
