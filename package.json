@@ -23,7 +23,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lizozom/semanticjs": "^1.0.6",
+    "@lizozom/semanticjs": "^1.0.7",
     "@xenova/transformers": "^2.2.0",
     "bootstrap": "^5.0.2",
     "codemirror": "^5.52.2"
