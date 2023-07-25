@@ -1,32 +1,32 @@
-import {getTokens} from "./semantic";
+import { getTokens } from './semantic';
 
 /**
- * @param {string} text 
- * @param {string} splitType 
- * @param {string} splitParam 
+ * @param {string} text
+ * @param {string} splitType
+ * @param {string} splitParam
  * @returns {Promise<Array<string> | null>}
  */
 export async function splitText(text, splitType, splitParam) {
-    switch(splitType) {
-        case 'Regex':
-            return splitByRegex(text, splitParam);
-        case 'Sentence':
-            return splitBySentences(text);
-        case 'Words':
-            return splitByWords(text, parseInt(splitParam));
-        case 'Chars':
-            return splitByChars(text, parseInt(splitParam));
-        case 'Tokens':
-            return await splitByTokens(text, parseInt(splitParam));
-        default:
-            console.error('Invalid split type');
-            return null;
+    switch (splitType) {
+    case 'Regex':
+        return splitByRegex(text, splitParam);
+    case 'Sentence':
+        return splitBySentences(text);
+    case 'Words':
+        return splitByWords(text, parseInt(splitParam));
+    case 'Chars':
+        return splitByChars(text, parseInt(splitParam));
+    case 'Tokens':
+        return await splitByTokens(text, parseInt(splitParam));
+    default:
+        console.error('Invalid split type');
+        return null;
     }
 }
 
 /**
- * @param {string} text 
- * @param {number} numTokens 
+ * @param {string} text
+ * @param {number} numTokens
  * @returns {Promise<Array<string> | null>}
  */
 async function splitByTokens(text, numTokens) {
@@ -50,17 +50,17 @@ async function splitByTokens(text, numTokens) {
 }
 
 /**
- * @param {string} text 
- * @param {number} numWords 
+ * @param {string} text
+ * @param {number} numWords
  * @returns {Array<string> | null}
  */
 function splitByWords(text, numWords) {
     if (isNaN(numWords) || !Number.isInteger(numWords)) {
-        console.error("numWords must be an integer.");
+        console.error('numWords must be an integer.');
         return null;
     }
 
-    const words = text.split(" ");
+    const words = text.split(' ');
     let chunks = [];
     let currentChunk = [];
 
@@ -84,8 +84,8 @@ function splitByWords(text, numWords) {
 }
 
 /**
- * @param {string} text 
- * @param {number} numChars 
+ * @param {string} text
+ * @param {number} numChars
  * @returns {Array<string> | null}
  */
 function splitByChars(text, numChars) {
@@ -107,19 +107,19 @@ function splitByChars(text, numChars) {
 }
 
 /**
- * @param {string} text 
+ * @param {string} text
  * @returns {Array<string> | null}
  */
 function splitBySentences(text) {
-    return text.match(/[^\.!\?]+[\.!\?]+/g);
+    return text.match(/[^.!?]+[.!?]+/g);
 }
 
 /**
- * @param {string} text 
- * @param {string} r 
+ * @param {string} text
+ * @param {string} r
  * @returns {Array<string> | null}
  */
 function splitByRegex(text, r) {
-    let regex = new RegExp(r, 'g');
+    const regex = new RegExp(r, 'g');
     return text.split(regex);
 }

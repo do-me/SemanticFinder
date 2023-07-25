@@ -5,9 +5,8 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import {loadSemantic, similarity, embedQuery} from './semantic.js';
-import {splitText} from './utils.js';
-
+import { loadSemantic, similarity, embedQuery } from './semantic.js';
+import { splitText } from './utils.js';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,14 +23,14 @@ let editor;
 let submitTime = 0;
 let isProcessing = false;
 let selectedIndex = -1;
-let selectedClassName = "";
+let selectedClassName = '';
 let prevCard;
-const nextButton = document.getElementById("next");
-const prevButton = document.getElementById("prev");
-const submitButton = document.getElementById("submit_button");
+const nextButton = document.getElementById('next');
+const prevButton = document.getElementById('prev');
+const submitButton = document.getElementById('submit_button');
 
 function removeHighlights() {
-    for (let marker of markers) {
+    for (const marker of markers) {
         marker.clear();
     }
     markers = [];
@@ -39,20 +38,20 @@ function removeHighlights() {
 
 function deactivateSubmitButton() {
     if (submitButton) {
-        submitButton.setAttribute("disabled", "");
-        submitButton.textContent = "Loading...";
+        submitButton.setAttribute('disabled', '');
+        submitButton.textContent = 'Loading...';
     }
 }
 
 function activateSubmitButton() {
     if (submitButton) {
-        submitButton.removeAttribute("disabled");
-        submitButton.textContent = "Submit";
+        submitButton.removeAttribute('disabled');
+        submitButton.textContent = 'Submit';
     }
 }
 
 function finishCallback() {
-    submitButton.textContent = "Submit";
+    submitButton.textContent = 'Submit';
     isProcessing = false;
     const processTime = new Date().getTime() - submitTime;
     console.log(`Finished ${processTime}ms`);
@@ -64,13 +63,13 @@ async function onSubmit() {
     if (!isProcessing) {
         submitTime = new Date().getTime();
         isProcessing = true;
-        submitButton.textContent = "Stop";
+        submitButton.textContent = 'Stop';
 
         document.getElementById('results-list').innerHTML = '';
         selectedIndex = -1;
         await semanticHighlight(finishCallback);
     } else {
-        submitButton.textContent = "Submit"
+        submitButton.textContent = 'Submit';
         isProcessing = false;
     }
 }
@@ -80,7 +79,7 @@ function resetResults() {
     removeHighlights();
 
     // Get results list element
-    let resultsDiv = document.getElementById('results-list');
+    const resultsDiv = document.getElementById('results-list');
     resultsDiv.innerHTML = '';
 }
 
@@ -90,18 +89,17 @@ function resetResults() {
  */
 function updateResults(results) {
     resetResults();
-    const k = document.getElementById("threshold").value;
+    const k = document.getElementById('threshold').value;
 
     for (let i = 0; i < Math.min(k, results.length); i++) {
-        let resultItem = results[i];
+        const resultItem = results[i];
 
         let highlightClass;
-        if (i === 0) highlightClass = "highlight-first";
-        else if (i === 1) highlightClass = "highlight-second";
-        else highlightClass = "highlight-third";
+        if (i === 0) highlightClass = 'highlight-first';
+        else if (i === 1) highlightClass = 'highlight-second';
+        else highlightClass = 'highlight-third';
 
         createHighlight(resultItem[0], highlightClass, resultItem[1]);
-
     }
 }
 
@@ -111,24 +109,24 @@ function updateResults(results) {
  * @param {number} similarity
  */
 function createHighlight(text, className, similarity) {
-    let resultsDiv = document.getElementById('results-list');
+    const resultsDiv = document.getElementById('results-list');
     const cursor = editor.getSearchCursor(text);
 
     while (cursor.findNext()) {
-        let marker = editor.markText(cursor.from(), cursor.to(), {className: className});
+        const marker = editor.markText(cursor.from(), cursor.to(), { className });
         markers.push(marker);
 
         // create card
-        let listItem = document.createElement('div');
+        const listItem = document.createElement('div');
         listItem.classList.add('card');
         listItem.innerHTML = createCardHTML(text, similarity);
 
         resultsDiv.appendChild(listItem);
 
-        let index = resultsDiv.childElementCount - 1;
+        const index = resultsDiv.childElementCount - 1;
 
         // Add click listener for card
-        listItem.addEventListener('click', function () {
+        listItem.addEventListener('click', function() {
             editor.scrollIntoView(markers[index].find());
             highlightSelected(index);
         });
@@ -156,7 +154,7 @@ function createCardHTML(title, similarity) {
 function highlightSelected(index) {
     highlightCard(index);
     if (selectedIndex !== -1) {
-        let marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: selectedClassName});
+        const marker0 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, { className: selectedClassName });
         markers[selectedIndex].clear();
         markers[selectedIndex] = marker0;
     }
@@ -164,14 +162,14 @@ function highlightSelected(index) {
     selectedIndex = index;
     selectedClassName = markers[selectedIndex].className;
 
-    let marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, {className: "highlight-select"});
+    const marker1 = editor.markText(markers[selectedIndex].find().from, markers[selectedIndex].find().to, { className: 'highlight-select' });
     markers[selectedIndex].clear();
     markers[selectedIndex] = marker1;
 }
 
 function highlightCard(index) {
-    let resultsDiv = document.getElementById('results-list');
-    let cards = resultsDiv.getElementsByClassName('card');
+    const resultsDiv = document.getElementById('results-list');
+    const cards = resultsDiv.getElementsByClassName('card');
 
     // Ensure the index is within the range of the cards.
     if (prevCard) {
@@ -182,8 +180,8 @@ function highlightCard(index) {
 }
 
 function setProgressBarValue(value) {
-    var progressBar = document.getElementById('progressBarProgress');
-    if (value === "" || value == "0") {
+    const progressBar = document.getElementById('progressBarProgress');
+    if (value === '' || value === '0') {
         progressBar.style.transition = 'width .1s ease'; // Temporarily override the transition duration
         progressBar.classList.add('progress-bar-animated');
         progressBar.classList.add('progress-bar-striped');
@@ -195,13 +193,11 @@ function setProgressBarValue(value) {
     progressBar.textContent = value + '%';
     progressBar.parentNode.setAttribute('aria-valuenow', value);
 
-
-    if (value == 100) {
+    if (value === 100) {
         progressBar.classList.remove('progress-bar-animated');
         progressBar.classList.remove('progress-bar-striped');
     }
 }
-
 
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
@@ -209,23 +205,23 @@ async function semanticHighlight(callback) {
     setProgressBarValue(0);
 
     // query input embedding
-    const text = editor.getValue("");
-    const inputQuery = document.getElementById("query-text").value;
+    const text = editor.getValue('');
+    const inputQuery = document.getElementById('query-text').value;
     const splitType = document.getElementById('split-type').value;
     const splitParam = document.getElementById('split-param').value;
     const inputTexts = await splitText(text, splitType, splitParam);
 
     await embedQuery(inputQuery);
 
-    let results = [];
+    const results = [];
 
-    // Only update results a max of num_updates times
-    let num_updates = 100;
-    let N = inputTexts.length;
-    let interval = Math.ceil(N / Math.min(num_updates, N));
+    // Only update results a max of numUpdates times
+    const numUpdates = 100;
+    const N = inputTexts.length;
+    const interval = Math.ceil(N / Math.min(numUpdates, N));
 
     for (let i = 0; i < N; i++) {
-        let inputText = inputTexts[i];
+        const inputText = inputTexts[i];
         if (!isProcessing) {
             break;
         }
@@ -242,7 +238,7 @@ async function semanticHighlight(callback) {
                 editor.scrollIntoView(markers[0].find());
             }
 
-            let progress = Math.round(((i + 1) * 100) / N);
+            const progress = Math.round(((i + 1) * 100) / N);
             setProgressBarValue(progress);
         }
     }
@@ -250,34 +246,31 @@ async function semanticHighlight(callback) {
     callback();
 }
 
-
 function activateScrollButtons() {
     // Enable the next and prev buttons
     if (nextButton) {
-        nextButton.removeAttribute("disabled");
+        nextButton.removeAttribute('disabled');
     }
 
     if (prevButton) {
-        prevButton.removeAttribute("disabled");
+        prevButton.removeAttribute('disabled');
     }
 }
 
 function deactivateScrollButtons() {
     // Disable the next and prev buttons
     if (nextButton) {
-        nextButton.setAttribute("disabled", "");
+        nextButton.setAttribute('disabled', '');
     }
 
     if (prevButton) {
-        prevButton.setAttribute("disabled", "");
+        prevButton.setAttribute('disabled', '');
     }
 }
-
 
 function nextMarker() {
     if (selectedIndex === -1) {
         highlightSelected(0);
-
     } else {
         highlightSelected((selectedIndex + 1) % markers.length);
         editor.scrollIntoView(markers[selectedIndex].find());
@@ -287,7 +280,6 @@ function nextMarker() {
 function prevMarker() {
     if (selectedIndex === -1) {
         highlightSelected(0);
-
     } else {
         highlightSelected((selectedIndex - 1 + markers.length) % markers.length);
         editor.scrollIntoView(markers[selectedIndex].find());
@@ -297,76 +289,75 @@ function prevMarker() {
 /**
  * Setup the application when the page loads.
  */
-window.onload = async function () {
+window.onload = async function() {
     window.onSubmit = onSubmit;
 
     editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
         lineNumbers: true,
         mode: 'text/plain',
         matchBrackets: true,
-        lineWrapping: true,
+        lineWrapping: true
     });
 
-    document.getElementById('model-name').addEventListener('change', async function () {
+    document.getElementById('model-name').addEventListener('change', async function() {
         deactivateSubmitButton();
         setProgressBarValue(0);
-        var model_name = this.value;
-        await loadSemantic(model_name);
+        const modelName = this.value;
+        await loadSemantic(modelName);
         activateSubmitButton();
     });
 
-
-    document.getElementById('split-type').addEventListener('change', function () {
+    document.getElementById('split-type').addEventListener('change', function() {
         // Get the selected option value
-        const split_param = document.getElementById('split-param')
+        const splitParam = document.getElementById('split-param');
 
         switch (this.value) {
-            case "Words":
-                split_param.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = "# Words";
-                split_param.type = 'number';
-                split_param.value = 7;
-                split_param.min = 1;
-                break;
-            case "Tokens":
-                split_param.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = "# Tokens";
-                split_param.type = 'number';
-                split_param.value = 15;
-                split_param.min = 1;
-                split_param.max = 512;
-                break;
-            case "Chars":
-                split_param.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = "# Chars";
-                split_param.type = 'number';
-                split_param.value = 40;
-                split_param.min = 1;
-                break;
-            case "Regex":
-                split_param.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = "Regex";
-                split_param.type = 'text';
-                split_param.value = "[.,]\\s";
-                break;
-            default:
-                split_param.value = null;
-                split_param.disabled = true;
-                document.querySelector("label[for='split-param']").textContent = "";
-                split_param.placeholder = "";
+        case 'Words':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Words';
+            splitParam.type = 'number';
+            splitParam.value = 7;
+            splitParam.min = 1;
+            break;
+        case 'Tokens':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Tokens';
+            splitParam.type = 'number';
+            splitParam.value = 15;
+            splitParam.min = 1;
+            splitParam.max = 512;
+            break;
+        case 'Chars':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Chars';
+            splitParam.type = 'number';
+            splitParam.value = 40;
+            splitParam.min = 1;
+            break;
+        case 'Regex':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = 'Regex';
+            splitParam.type = 'text';
+            splitParam.value = '[.,]\\s';
+            break;
+        default:
+            splitParam.value = null;
+            splitParam.disabled = true;
+            document.querySelector("label[for='split-param']").textContent = '';
+            splitParam.placeholder = '';
         }
     });
-    
-    let model_name = document.getElementById('model-name').value;
-    await loadSemantic(model_name);
+
+    const modelName = document.getElementById('model-name').value;
+    await loadSemantic(modelName);
     activateSubmitButton();
 
-    document.getElementById('next').addEventListener('click', function (event) {
+    document.getElementById('next').addEventListener('click', function(event) {
         event.preventDefault();
         nextMarker();
     });
 
-    document.getElementById('prev').addEventListener('click', function (event) {
+    document.getElementById('prev').addEventListener('click', function(event) {
         event.preventDefault();
         prevMarker();
     });
