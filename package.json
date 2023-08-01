@@ -4,9 +4,21 @@
   "description": "Update: just improved the UI - automatically scroll through the results!",
   "main": "src/js/index.js",
   "scripts": {
+    "lint": "eslint  --fix src",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --mode development",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix src"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +29,13 @@
   },
   "devDependencies": {
     "css-loader": "^6.8.1",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1",
     "html-webpack-plugin": "^5.5.3",
+    "husky": "^8.0.0",
     "mini-css-extract-plugin": "^2.7.6",
     "style-loader": "^3.3.3",
     "webpack": "^5.88.1",
