@@ -47,16 +47,16 @@ worker.onmessage = function(event) {
 
     switch (message.type) {
         case "download":
+
             let downloadBar = document.getElementById('loading-progress');
             if (message.data.status === 'initiate') {
 
             } else if (message.data.status === 'progress') {
-                if (message.data.file === "onnx/model_quantized.onnx") {
-                    // only care about model loading
-                    let progress = message.data.progress.toFixed(2);
-                    downloadBar.style.width = progress + '%';
-                    downloadBar.setAttribute('aria-valuenow', progress);
-                }
+                if (message.data.file !== "onnx/model_quantized.onnx") { break; }
+
+                let progress = message.data.progress.toFixed(2);
+                downloadBar.style.width = progress + '%';
+                downloadBar.setAttribute('aria-valuenow', progress);
             } else if (message.data.status === 'done') {
 
             } else if (message.data.status === 'ready') {

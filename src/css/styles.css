@@ -127,6 +127,10 @@ td {
   margin-top: 2vh; /* adjust this value as needed */
 }
 
+/*
+  see: https://github.com/twbs/bootstrap/issues/33871
+ */
+.form-floating > label { z-index: 3; }
 
 #advancedFeaturesHeader .accordion-button:hover {
   text-decoration: underline;

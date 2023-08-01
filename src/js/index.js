@@ -76,7 +76,6 @@ async function onSubmit() {
 }
 
 function resetResults() {
-    // Remove previous highlights
     removeHighlights();
 
     // Get results list element
@@ -356,7 +355,7 @@ window.onload = async function () {
                 split_param.placeholder = "";
         }
     });
-    
+
     let model_name = document.getElementById('model-name').value;
     await loadSemantic(model_name);
     activateSubmitButton();
