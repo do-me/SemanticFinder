@@ -1,4 +1,4 @@
-import { env } from '@xenova/transformers';
+import {env} from '@xenova/transformers';
 
 // @ts-ignore
 env.allowLocalModels = false;
@@ -35,43 +35,53 @@ let loadResolve;
  */
 let queryResolve;
 
-worker.onmessage = function(event) {
+worker.onmessage = function (event) {
     const message = event.data;
     let resolve;
     const downloadBar = document.getElementById('loading-progress');
 
     switch (message.type) {
-    case 'download':
-        if (message.data.status === 'progress') {
-            if (message.data.file === 'onnx/model_quantized.onnx') {
-                // only care about model loading
-                const progress = message.data.progress.toFixed(2);
+        case "download":
+
+            let downloadBar = document.getElementById('loading-progress');
+            if (message.data.status === 'initiate') {
+
+            } else if (message.data.status === 'progress') {
+                if (message.data.file !== "onnx/model_quantized.onnx") { break;}
+
+                let progress = message.data.progress.toFixed(2);
                 downloadBar.style.width = progress + '%';
                 downloadBar.setAttribute('aria-valuenow', progress);
+            } else if (message.data.status === 'done') {
+
+            } else if (message.data.status === 'ready') {
+                downloadBar.style.width = '100%';
+                downloadBar.setAttribute('aria-valuenow', 100);
+                downloadBar.textContent = "";
+                loadResolve();
+            } else if (message.data.status === 'ready') {
+                downloadBar.style.width = '100%';
+                downloadBar.setAttribute('aria-valuenow', '100');
+                downloadBar.textContent = '';
+                loadResolve();
             }
-        } else if (message.data.status === 'ready') {
-            downloadBar.style.width = '100%';
-            downloadBar.setAttribute('aria-valuenow', '100');
-            downloadBar.textContent = '';
-            loadResolve();
-        }
-        break;
-    case 'query':
-        queryEmbedding = message.embedding;
-        queryResolve();
-        break;
-    case 'similarity':
-        resolve = similarityResolveMap[message.text];
-        resolve(calculateCosineSimilarity(message.embedding));
-        delete similarityResolveMap[message.text];
-        break;
-    case 'tokens':
-        resolve = tokensResolveMap[message.text];
-        resolve(message.tokens);
-        delete tokensResolveMap[message.text];
-        break;
-    default:
-        console.error('Unknown message type: ' + message.type);
+            break;
+        case 'query':
+            queryEmbedding = message.embedding;
+            queryResolve();
+            break;
+        case 'similarity':
+            resolve = similarityResolveMap[message.text];
+            resolve(calculateCosineSimilarity(message.embedding));
+            delete similarityResolveMap[message.text];
+            break;
+        case 'tokens':
+            resolve = tokensResolveMap[message.text];
+            resolve(message.tokens);
+            delete tokensResolveMap[message.text];
+            break;
+        default:
+            console.error('Unknown message type: ' + message.type);
     }
 };
 
