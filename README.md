@@ -25,7 +25,7 @@ Afterwards, you'll find the `index.html`, `main.css` and `bundle.js` in `dist`.
 ## Browser extension 
 We currently develop a browser extension for Chrome. It's in an early stage.
 
-![](SemanticFinder_Chrome_Extension.gif)
+![](SemanticFinder_Chrome_Extension.gif?)
 
 ### Extension installation
 - download [SemanticFinder_Chrome_Extension.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension.zip) and unzip it
