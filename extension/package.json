@@ -1,0 +1,32 @@
+{
+  "name": "SemanticFinder",
+  "version": "0.0.1",
+  "description": "SemanticFinder | In-browser Semantic Search via Transformers.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --watch"
+  },
+  "type": "module",
+  "author": "Varun Neal Srivastava",
+  "contributors": ["Dominik Weckmüller", "Xenova"],
+  "license": "MIT",
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.1",
+    "style-loader": "^3.3.3",
+    "vue-loader": "^17.2.2",
+    "vue-template-compiler": "^2.7.14",
+    "vueify": "^9.4.1",
+    "webpack": "^5.79.0"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.4.4",
+    "@vue/compiler-sfc": "^3.3.4",
+    "@xenova/transformers": "^2.5.0",
+    "mark.js": "^8.11.1",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "util": "^0.12.5",
+    "vue": "^3.3.4"
+  }
+}
