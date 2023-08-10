@@ -56,13 +56,15 @@ export default {
 }
 
 /*
- orange: FF793B
- yellow: FFBF3E
+ dark orange: FF793B
+ light orange: ff9d3b
+ dark yellow: FFBF3E
+ bright yellow: ffd23e
  */
 .search-bar {
     width: 100%;
     height: 15px;
-    background-color: #FFBF3E;
+    background-color: #ffd23e;
     border: none;
     outline: none;
     color: black;
@@ -73,7 +75,7 @@ export default {
 }
 
 .search-bar:hover {
-    background-color: #ff9d3b;
+    background-color: #FFBF3E;
 }
 
 

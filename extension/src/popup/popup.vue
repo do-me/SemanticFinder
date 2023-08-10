@@ -67,7 +67,7 @@ export default {
     watch: {},
     methods: {
         async handleMessage(request, sender, sendResponse) {
-            console.dir(request);
+            // console.dir(request);
             switch (request.type) {
                 case "results":
                     if ('text' in request) {
@@ -187,7 +187,7 @@ export default {
 
 .progress-bar {
     height: 15px;
-    background-color: #FFBF3E;
+    background-color: #ffd23e;
     clip-path: polygon(0 0, 75% 0, 100% 100%, 0 100%);
     z-index: 2;
 }

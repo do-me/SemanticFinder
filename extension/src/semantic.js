@@ -39,9 +39,16 @@ class EmbedPipeline {
 }
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-
-    if (request.type === "load") {
-         await load();
+    switch (request.type) {
+        case "load":
+            await load();
+            break;
+        case "loadEmbeddings":
+            await loadEmbeddingsIfAvailable(request.ID);
+            break;
+        case "storeEmbeddings":
+            await storeEmbeddings(request.ID);
+            break;
     }
 });
 
@@ -63,10 +70,12 @@ async function embed(text) {
 }
 
 
-export async function loadEmbeddingsIfAvailable(ID) {
+async function loadEmbeddingsIfAvailable(ID) {
     return new Promise((resolve) => {
         chrome.storage.local.get(ID, function(data) {
+            // todo: make this behave well with existing embeddingsDict
             if (data[ID]) {
+                prettyLog("loaded", ID);
                 embeddingsDict = data[ID].embedding_dict;
             }
             resolve();
@@ -75,15 +84,40 @@ export async function loadEmbeddingsIfAvailable(ID) {
 }
 
 
-export async function storeEmbeddings(ID) {
+// do on clean-up / unmount
+async function pruneStoredEmbeddings(k) {
+    return new Promise((resolve) => {
+
+        chrome.storage.local.get(null, function(allData) {
+            // Sort all entries based on frecency scores
+            let sortedKeys = Object.keys(allData).sort((a, b) => allData[b].frecency_score - allData[a].frecency_score);
+            let top10Keys = sortedKeys.slice(0, k);
+
+            let keysToRemove = sortedKeys.filter(key => !top10Keys.includes(key));
+            // Remove the non-top k embeddings from storage.
+            if (keysToRemove.length > 0) {
+                chrome.storage.local.remove(keysToRemove, () => {
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+
+
+async function storeEmbeddings(ID) {
     let storeObj = {};
     storeObj[ID] = {
         domain_path: ID,
         embedding_dict: embeddingsDict,
-        frecency_score: computeFrecencyScore(ID)  // Placeholder function for now
+        frecency_score: computeFrecencyScore(ID)
     };
     return new Promise((resolve) => {
         chrome.storage.local.set(storeObj, function() {
+            prettyLog("stored", ID);
             resolve();
         });
     });

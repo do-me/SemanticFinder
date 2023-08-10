@@ -5,9 +5,7 @@ export function prettyLog(label, message, labelColor = 'blue', messageColor = 'b
 }
 
 
-/*
-    Looks for a sentence ending after numChars.
- */
+/*  Looks for a sentence ending after numChars.  */
 function splitByChars(text, numChars) {
     let chunks = [];
     let currChunk = '';
@@ -38,6 +36,10 @@ function splitByChars(text, numChars) {
 }
 
 
+export function getSiteID(url) {
+    let urlObj = new URL(url);
+    return urlObj.hostname + urlObj.pathname;
+}
 
 
 export function splitReadableContent(readableContent) {

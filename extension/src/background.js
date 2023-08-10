@@ -1,7 +1,7 @@
 // background.js - Handles requests from the UI, runs the model, then sends back a response
 
 import { CustomCache } from "./cache.js";
-import { prettyLog } from './utils.js';
+import { prettyLog, getSiteID } from './utils.js';
 import {similarity} from './semantic.js';
 
 
@@ -51,12 +51,13 @@ let bodyText = [];
 let inputText = "";
 
 let liveProcess = 0;
+let currSite = "";
 
 chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
     if (request.type === "tabUpdated") {
         if (request.text.length > 0) {
             bodyText = request.text;
-            // prettyLog("received " + bodyText.length + " chunks", bodyText);
+            currSite = getSiteID(request.currentURL);
         }
     } else if (request.type === "inputText") {
         // prettyLog("received query", request.text, "grey");
@@ -79,7 +80,7 @@ async function processQuery(query, bodyText, processId) {
         prettyLog("Error", "no content found. please reload this page if this is unexpected", "red");
         chrome.runtime.sendMessage({type: "error", reason: "No content detected. Reloading may help."});
     }
-    // prettyLog("process " + processId + " beginning", bodyText.length + " items.", "purple");
+    chrome.runtime.sendMessage({type: "loadEmbeddings", ID: currSite});
 
     let results = [];
     const k = 10;
@@ -89,8 +90,8 @@ async function processQuery(query, bodyText, processId) {
         if (processId !== liveProcess) {
             return;
         }
-        // prettyLog("process " + processId + " processing", text, "yellow");
 
+        // todo: use message-driven call instead of direct call
         let sim = await similarity(query, text);
 
         if (sim > 0.15) {
@@ -103,6 +104,7 @@ async function processQuery(query, bodyText, processId) {
         }
         i += 1;
     }
+    chrome.runtime.sendMessage({type: "storeEmbeddings", ID: currSite});
     chrome.runtime.sendMessage({type: "results", progress: 100 });
 }
 
