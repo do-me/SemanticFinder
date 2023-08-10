@@ -1,6 +1,7 @@
 // Define caching parameters
 import {CustomCache} from "./cache.js";
 import { pipeline, env } from '@xenova/transformers';
+import {prettyLog} from "./utils.js";
 
 env.useBrowserCache = false;
 env.useCustomCache = true;
@@ -21,24 +22,31 @@ class EmbedPipeline {
     static instance = null;
 
     static async getInstance() {
+
         if (this.instance === null) { // no await?
             this.instance = await pipeline(this.task, this.model,
                 {
-                    progress_callback: data => {
-                        // console.log('progress_callback triggered', data);
-                        chrome.runtime.sendMessage({type: "download", data: data});
-
+                    progress_callback: async data => {
+                        await chrome.runtime.sendMessage({type: "download", data: data});
                     }
                 }
             );
         }
-        chrome.runtime.sendMessage({type: "download", data: {status: "done"}})
+        await chrome.runtime.sendMessage({type: "download", data: {status: "complete"}})
 
         return this.instance;
     }
 }
 
-export async function load() {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+
+    if (request.type === "load") {
+         await load();
+    }
+});
+
+
+async function load() {
     await EmbedPipeline.getInstance();
 }
 
@@ -52,6 +60,38 @@ async function embed(text) {
     let e0 = await embedder(text, { pooling: 'mean', normalize: true });
     embeddingsDict[text] = e0["data"];
     return e0["data"];
+}
+
+
+export async function loadEmbeddingsIfAvailable(ID) {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(ID, function(data) {
+            if (data[ID]) {
+                embeddingsDict = data[ID].embedding_dict;
+            }
+            resolve();
+        });
+    });
+}
+
+
+export async function storeEmbeddings(ID) {
+    let storeObj = {};
+    storeObj[ID] = {
+        domain_path: ID,
+        embedding_dict: embeddingsDict,
+        frecency_score: computeFrecencyScore(ID)  // Placeholder function for now
+    };
+    return new Promise((resolve) => {
+        chrome.storage.local.set(storeObj, function() {
+            resolve();
+        });
+    });
+}
+
+// todo: implement & move to utils
+function computeFrecencyScore(ID) {
+    return 0;
 }
 
 

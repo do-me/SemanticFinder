@@ -15,7 +15,7 @@ const config = {
     mode: 'development',
     devtool: 'inline-source-map',
     entry: {
-        background: './src/background.js',
+        background: ['./src/background.js', './src/semantic.js'],
         popup: './src/popup/popup.js',
         content: './src/content.js',
     },

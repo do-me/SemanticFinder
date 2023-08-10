@@ -4,18 +4,26 @@ import { Readability } from '@mozilla/readability';
 import Mark from 'mark.js';
 
 chrome.runtime.onMessage.addListener((request, sender) => {
-    if (request.type === "getText") {
-        let documentClone = document.cloneNode(true);
-        let {byline, content, dir, excerpt, lang,
-            length, siteName, textContent} = new Readability(documentClone).parse();
-        prettyLog("article", textContent);
-        let texts = splitReadableContent(textContent);
-        // console.dir( texts);
-        chrome.runtime.sendMessage({type: "tabUpdated", text: texts});
-    } else if (request.type === 'highlightAndScroll') {
-        highlightAndScrollToText(request.text);
+    try {
+        if (request.type === "getText") {
+            let documentClone = document.cloneNode(true);
+            let {byline, content, dir, excerpt, lang,
+                length, siteName, textContent} = new Readability(documentClone).parse();
+            prettyLog("article", textContent);
+            let texts = splitReadableContent(textContent);
+            chrome.runtime.sendMessage({type: "tabUpdated", text: texts, currentURL: window.location.href});
+        } else if (request.type === 'highlightAndScroll') {
+            highlightAndScrollToText(request.text);
+        }
+    } catch (error) {
+        if (error.message.includes('net::ERR_BLOCKED_BY_CLIENT')) {
+            chrome.runtime.sendMessage({type: "error", reason: "ERR_BLOCKED_BY_CLIENT"});
+        } else {
+            chrome.runtime.sendMessage({type: "error", reason: error.message});
+        }
     }
 });
+
 
 let currText;
 let instance = new Mark(document.querySelector("body")); // Create a new instance on the body element
@@ -26,8 +34,9 @@ function highlightAndScrollToText(text) {
         instance.unmark({ "element": "span", "className": "highlight" });
     }
 
-    // Update the current text
     currText = text;
+
+    let textFound = false;
 
     // Mark and highlight the new text
     instance.mark(text, {
@@ -41,8 +50,18 @@ function highlightAndScrollToText(text) {
                 behavior: "smooth",
                 block: "center"
             });
-            // Break after scrolling to the first instance
+            textFound = true;
             return false;
         }
     });
+
+    // If text not found, split and find the longest segment
+    if (!textFound) {
+        let segments = text.split('\n');
+        let longestSegment = segments.sort((a, b) => b.length - a.length)[0];
+        if (longestSegment) {
+            highlightAndScrollToText(longestSegment); // Recursive call
+        }
+    }
 }
+

@@ -1,7 +1,6 @@
 
-# Transformers.js - Sample browser extension
+# SemanticFinder Browser Extension
 
-An example project to show how to run 🤗 Transformers in a browser extension. Although we only provide instructions for running in Chrome, it should be similar for other browsers.
 
 ## Getting Started
 1. Install the necessary dependencies:
@@ -21,3 +20,7 @@ An example project to show how to run 🤗 Transformers in a browser extension. 
 
 3. Add the extension to your browser. To do this, go to `chrome://extensions/`, enable developer mode (top right), and click "Load unpacked". Select the `build` directory from the dialog which appears and click "Select Folder".
 
+
+----
+
+A big thank you to Xenova, whose work on 🤗 Transformers.js makes this entire project possible. 

@@ -46,6 +46,7 @@ import {similarity} from './semantic.js';
 //
 // Listen for messages from the UI, process it, and send the result back.
 
+// TODO: body text is not persistent!! MUST STORE SOMEWHERE to reuse
 let bodyText = [];
 let inputText = "";
 
@@ -55,10 +56,10 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
     if (request.type === "tabUpdated") {
         if (request.text.length > 0) {
             bodyText = request.text;
-            prettyLog("received " + bodyText.length + " chunks", bodyText);
+            // prettyLog("received " + bodyText.length + " chunks", bodyText);
         }
     } else if (request.type === "inputText") {
-        prettyLog("received query", request.text, "grey");
+        // prettyLog("received query", request.text, "grey");
         inputText = request.text;
     } else {
         // prettyLog(request.type, "misc request type");
@@ -75,7 +76,8 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
 
 async function processQuery(query, bodyText, processId) {
     if (bodyText.length === 0) {
-        prettyLog("Error", "something went wrong. please reload this page", "red");
+        prettyLog("Error", "no content found. please reload this page if this is unexpected", "red");
+        chrome.runtime.sendMessage({type: "error", reason: "No content detected. Reloading may help."});
     }
     // prettyLog("process " + processId + " beginning", bodyText.length + " items.", "purple");
 
@@ -85,27 +87,23 @@ async function processQuery(query, bodyText, processId) {
     let i = 0;
     for (let text of bodyText) {
         if (processId !== liveProcess) {
-            // prettyLog("terminated", processId, "green");
             return;
-        } // process killed
+        }
         // prettyLog("process " + processId + " processing", text, "yellow");
 
         let sim = await similarity(query, text);
 
         if (sim > 0.15) {
-            prettyLog("selected", text);
             results.push({sim: sim, text: text});
             results.sort((a, b) => b.sim - a.sim);
             results.length = Math.min(results.length, k);
 
-            // Send the results up to the cutoff point
             chrome.runtime.sendMessage({type: "results", progress: 100 * (i / bodyText.length),
                 text: results });
         }
         i += 1;
     }
     chrome.runtime.sendMessage({type: "results", progress: 100 });
-    prettyLog("completed", processId, "green");
 }
 
 //////////////////////////////////////////////////////////////
