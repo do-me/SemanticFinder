@@ -35,7 +35,9 @@ export class CustomCache {
         const cached = await chrome.storage.local.get([url]);
 
         if (cached[url]) {
-            return await fetch(cached[url]._body);
+            let model =  await fetch(cached[url]._body);
+            // console.log("model: ", model);
+            return model;
         } else {
             return undefined;
         }

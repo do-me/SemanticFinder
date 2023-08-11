@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "host_permissions": ["http://*/*", "https://*/*"],
   "permissions": [
+    "webRequest",
     "tabs",
     "activeTab",
     "scripting",
@@ -22,7 +23,7 @@
         "<all_urls>"
       ],
       "js": [
-        "content.js"
+        "content.js", "pdf.js", "pdf.worker.js"
       ],
       "css": [
         "content.css"
@@ -36,7 +37,7 @@
       "24": "icons/icon.png",
       "32": "icons/icon.png"
     },
-    "default_title": "Transformers.js",
+    "default_title": "SemanticFinder",
     "default_popup": "popup.html"
   },
   "content_security_policy": {

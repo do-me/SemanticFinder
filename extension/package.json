@@ -17,6 +17,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.1",
+    "pdfjs-dist": "^3.9.179",
     "style-loader": "^3.3.3",
     "vue-loader": "^17.2.2",
     "vue-template-compiler": "^2.7.14",

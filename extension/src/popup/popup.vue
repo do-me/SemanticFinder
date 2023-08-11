@@ -102,18 +102,17 @@ export default {
 
     async mounted() {
         chrome.runtime.onMessage.addListener(this.handleMessage);
-
         const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
         chrome.tabs.sendMessage(tab.id, {type: "getText"});
-
         chrome.runtime.sendMessage({type: "load"});
+
         this.results = [];
 
     },
     beforeUnmount() {
-
         this.results = [];
+        chrome.runtime.sendMessage({type: "pruneEmbeddings"});
         chrome.runtime.onMessage.removeListener(this.handleMessage);
     },
 };
@@ -130,6 +129,8 @@ export default {
 
 
 #app {
+    padding: 0;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;

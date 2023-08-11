@@ -71,7 +71,15 @@ const config = {
                 {
                     from: "src/content.css",
                     to: "content.css"
-                }
+                },
+                {
+                    from: "src/pdf.js",
+                    to: "pdf.js"
+                },
+                {
+                    from: "src/pdf.worker.js",
+                    to: "pdf.worker.js"
+                },
             ],
         })
     ],
