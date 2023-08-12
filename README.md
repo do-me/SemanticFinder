@@ -1,8 +1,8 @@
 # SemanticFinder - frontend-only live semantic search with transformers.js
 
-## [Try the demo](https://do-me.github.io/SemanticFinder/) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
+## [Try the web app](https://do-me.github.io/SemanticFinder/), [install the Chrome extension](#browser-extension) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
 
-![](/SemanticFinder.gif)
+![](/SemanticFinder.gif?)
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
@@ -21,6 +21,27 @@ If you want to build instead, run
 `npm run build`
 
 Afterwards, you'll find the `index.html`, `main.css` and `bundle.js` in `dist`.
+
+## Browser extension 
+We currently develop a browser extension for Chrome. It's in an early stage.
+
+![](SemanticFinder_Chrome_Extension.gif?)
+
+### Extension installation
+- download [SemanticFinder_Chrome_Extension.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension.zip) and unzip it
+- go to Chrome extension settings with `chrome://extensions`
+- select `Load Unpacked` and choose the unzipped `SemanticFinder_Chrome_Extension` folder
+- pin the extension in Chrome so you can access it easily. If it doesn't work for you, feel free to open an issue.
+
+Tested on Windows 11 and Ubuntu 22.04 but most distros should just work. 
+
+### Local build 
+If you want to build the browser extension locally, clone the repo and cd in `extension` directory then run: 
+- `npm install`
+- `npm run build` for a static build or
+- `npm run dev` for the auto-refreshing development version
+
+The default model is the English-only [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), currently hard-coded in [semantic.js](https://github.com/do-me/SemanticFinder/blob/main/extension/src/semantic.js#L20). If you'd like to support ~100 languages, use e.g. [Xenova/distiluse-base-multilingual-cased-v2](https://huggingface.co/Xenova/distiluse-base-multilingual-cased-v2). More infos about the model [here](https://huggingface.co/sentence-transformers/distiluse-base-multilingual-cased-v2).
 
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
