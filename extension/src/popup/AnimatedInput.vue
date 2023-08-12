@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import {prettyLog} from "../utils.js";
 
 export default {
     name: 'AnimatedInput',
@@ -63,19 +62,19 @@ export default {
  */
 .search-bar {
     width: 100%;
-    height: 15px;
-    background-color: #ffd23e;
+    height: 20px;
+    background-color: #000;
     border: none;
     outline: none;
-    color: black;
+    color: white;
     font-family: 'Space Mono', 'monospace'; /* Same font as loading text */
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 400;
     padding-left: 7.5px; /* Same padding as loading text */
 }
 
 .search-bar:hover {
-    background-color: #FFBF3E;
+    background-color: #525252;
 }
 
 

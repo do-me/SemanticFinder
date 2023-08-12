@@ -4,30 +4,32 @@
 
         <div v-else>
             <div v-if="!isModelLoaded" class="progress-container">
+                <!--todo: make this its own vue component-->
                 <div class="progress-background">
                     <div class="progress-bar" :style="{ width: progressValue + `%`}"></div>
                 </div>
-                <div class="loading-text">Loading model...</div>
+                <div class="loading-text">Loading model</div>
             </div>
 
-            <AnimatedInput
-                v-else ref="input"
-            ></AnimatedInput>
+            <div v-else>
+                <AnimatedInput  ref="input" ></AnimatedInput>
 
-            <!-- Display results and progress only if popupClass is 'popup-expanded' -->
-            <div v-if="popupClass === 'popup-expanded'">
-                <div class="results-container">
-                    <ResultItem
-                        v-for="(result, index) in results"
-                        :key="index"
-                        :result="result.text"
-                        :score="result.sim"
-                        @click="handleResultClick(result)"
-                    />
-                </div>
+                <!-- Display results and progress only if popupClass is 'popup-expanded' -->
+                <div v-if="popupClass === 'popup-expanded'">
+                    <div class="results-container">
+                        <ResultItem
+                            v-for="(result, index) in results"
+                            :key="index"
+                            :result="result.text"
+                            :score="result.sim"
+                            @click="handleResultClick(result)"
+                        />
+                    </div>
 
-                <div>process:
-                    <progress id="searchProgress" max="100" :value="searchProgress"></progress>
+                    <div class="progress-container search-progress">
+                        <div class="progress-bar" :style="{ width: searchProgress + `%` }"></div>
+                    </div>
+
                 </div>
             </div>
 
@@ -42,7 +44,7 @@
 import ResultItem from './result.vue';
 import AnimatedInput from './AnimatedInput.vue'
 import AnimatedSquare from './AnimatedSquare.vue';
-import {prettyLog} from "../utils.js";
+import {prettyLog} from "../utils/utils.js";
 
 export default {
     components: {
@@ -121,11 +123,6 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap');
 
-.results-container {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-}
 
 
 #app {
@@ -187,18 +184,32 @@ export default {
 
 
 .progress-bar {
-    height: 15px;
-    background-color: #ffd23e;
+    height: 22px;
+    background-color: #525252;
     clip-path: polygon(0 0, 75% 0, 100% 100%, 0 100%);
     z-index: 2;
 }
 
+
+.results-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.progress-container.search-progress >>> .progress-bar {
+    height: 12px;
+    background-color: #525252;
+    color: #525252;
+    clip-path: none;
+}
 
 .progress-bar[style*="100%"] {
     clip-path: none;
 }
 
 .error {
+    font-family: 'Space Mono', 'monospace';
     background: red;
     width: 100vw;
     height: 100vh;

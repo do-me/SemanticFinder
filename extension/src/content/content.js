@@ -1,12 +1,12 @@
 // content.js
-import {prettyLog, splitReadableContent} from './utils.js';
+import {prettyLog, splitReadableContent} from '../utils/utils.js';
 import {Readability} from '@mozilla/readability';
 import Mark from 'mark.js';
 import {getDocument, GlobalWorkerOptions} from 'pdfjs-dist';
 
 
 async function fetchAndExtractPDFText(url) {
-    GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('./pdf.worker.js');
+    GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('../serviceworkers/pdf.worker.js');
 
     const pdf = await getDocument(url).promise;
 
@@ -14,6 +14,7 @@ async function fetchAndExtractPDFText(url) {
     let texts = [];
 
     for (let i = 1; i <= totalPages; i++) {
+        console.log("page ", i);
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
         const pageText = textContent.items.map(item => item.str).join(' ');
@@ -26,13 +27,14 @@ async function fetchAndExtractPDFText(url) {
 
 chrome.runtime.onMessage.addListener(async function(request, sender) {
     try {
+        let currentURL = window.location.href;
         if (request.type === "getText") {
-            let currentURL = window.location.href;
             let texts = [];
-            prettyLog("url", currentURL);
+            // hacky support for pdf
             if (currentURL.endsWith('.pdf')) {
                 let textContent = await fetchAndExtractPDFText(currentURL);
                 texts = splitReadableContent(textContent);
+
             } else {
                 let documentClone = document.cloneNode(true);
                 let {
@@ -44,6 +46,7 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
             }
             chrome.runtime.sendMessage({type: "tabUpdated", text: texts, currentURL});
         } else if (request.type === 'highlightAndScroll') {
+            // if (currentURL.endsWith('.pdf')) { return; }
             highlightAndScrollToText(request.text);
         }
     } catch (error) {
@@ -58,7 +61,7 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
 
 
 let currText;
-let instance = new Mark(document.querySelector("body")); // Create a new instance on the body element
+let instance = new Mark(document.querySelector("body"));
 
 function highlightAndScrollToText(text) {
     // If there's a previous highlighted text, unmark it
@@ -70,12 +73,12 @@ function highlightAndScrollToText(text) {
 
     let textFound = false;
 
-    // Mark and highlight the new text
     instance.mark(text, {
         "element": "span",
         "separateWordSearch": false,
         "className": "highlight",
         "acrossElements": true,
+        "iframes": true,
         "each": function (node) {
             // Scroll to the first instance of it
             node.scrollIntoView({
@@ -87,7 +90,6 @@ function highlightAndScrollToText(text) {
         }
     });
 
-    // If text not found, split and find the longest segment
     if (!textFound) {
         let segments = text.split('\n');
         let longestSegment = segments.sort((a, b) => b.length - a.length)[0];

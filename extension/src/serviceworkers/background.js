@@ -1,7 +1,6 @@
 // background.js - Handles requests from the UI, runs the model, then sends back a response
 
-import {CustomCache} from "./cache.js";
-import {prettyLog, getSiteID} from './utils.js';
+import {prettyLog, getSiteID} from '../utils/utils.js';
 import {similarity, storeEmbeddings, loadEmbeddings} from "./semantic.js";
 
 ////////////////////// 1. Context Menus //////////////////////
@@ -45,7 +44,7 @@ import {similarity, storeEmbeddings, loadEmbeddings} from "./semantic.js";
 //
 // Listen for messages from the UI, process it, and send the result back.
 
-// TODO: body text is not persistent!
+// TODO: body text is not persistent
 let bodyText = [];
 let inputText = "";
 
@@ -60,10 +59,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
         }
     } else if (request.type === "inputText") {
         inputText = request.text;
-    } else {
-        // prettyLog(request.type, "misc request type");
-        return;
-    }
+    } else {return; }
     if (!bodyText || !inputText) {
         return;
     }

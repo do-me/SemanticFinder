@@ -1,7 +1,7 @@
 // Define caching parameters
-import {CustomCache} from "./cache.js";
+import {CustomCache} from "../utils/cache.js";
 import {pipeline, env} from '@xenova/transformers';
-import {prettyLog} from "./utils.js";
+import {prettyLog} from "../utils/utils.js";
 
 env.useBrowserCache = false;
 env.useCustomCache = true;
@@ -16,7 +16,6 @@ env.backends.onnx.wasm.numThreads = 1;
 // these should go in EmbedPipeline prob
 let embeddingsDict = {};
 let currID = "";
-
 
 class EmbedPipeline {
     static task = 'feature-extraction';
@@ -61,7 +60,6 @@ async function load() {
 }
 
 async function embed(text, use_dict = true) {
-    // console.log(Object.keys(embeddingsDict).length);
     if (use_dict && text in embeddingsDict) {
         return embeddingsDict[text];
     }
@@ -79,7 +77,6 @@ async function embed(text, use_dict = true) {
 async function pruneStoredEmbeddings(k) {
     return new Promise((resolve) => {
         chrome.storage.local.get(null, function (allData) {
-            // Filter out keys that do not have the is_embeddings property
             let embeddingKeys = Object.keys(allData).filter(key => allData[key].is_embeddings === true);
 
             console.log("All embedding keys found:", embeddingKeys);  // This logs all the embedding keys
@@ -104,18 +101,6 @@ async function pruneStoredEmbeddings(k) {
     });
 }
 
-
-function getSizeOfLargestItem(obj) {
-    let largestSize = 0;
-    for (const [key, value] of Object.entries(obj)) {
-        const serializedItem = `"${key}": ${JSON.stringify(value)}`;
-        const size = new Blob([serializedItem]).size;
-        if (size > largestSize) {
-            largestSize = size;
-        }
-    }
-    return largestSize;
-}
 
 
 export async function storeEmbeddings() {
