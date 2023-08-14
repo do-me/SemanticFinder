@@ -5,20 +5,28 @@ export function prettyLog(label, message, labelColor = 'blue', messageColor = 'b
 }
 
 
-
+/*  Looks for a sentence ending after numChars.  */
 function splitByChars(text, numChars) {
     let chunks = [];
     let currChunk = '';
+    const sentenceEndings = ['.', '?', '!', ';', ':', '\n', '–'];
 
     for (let i = 0; i < text.length; i++) {
         currChunk += text[i];
 
-        if (currChunk.trim().length >= numChars && text[i] === '.') {
+        let isEndingPunctuation = sentenceEndings.includes(text[i]);
+
+        // Special case: if the punctuation is a period and the next character is a quote
+        if (text[i] === '.' && text[i + 1] === '"') {
+            currChunk += text[++i];
+            isEndingPunctuation = true;
+        }
+
+        if (currChunk.trim().length >= numChars && isEndingPunctuation) {
             chunks.push(currChunk.trim());
             currChunk = '';
         }
     }
-
 
     if (currChunk.trim()) {
         chunks.push(currChunk.trim());
@@ -27,6 +35,11 @@ function splitByChars(text, numChars) {
     return chunks;
 }
 
+
+export function getSiteID(url) {
+    let urlObj = new URL(url);
+    return urlObj.hostname + urlObj.pathname;
+}
 
 
 export function splitReadableContent(readableContent) {

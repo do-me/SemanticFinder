@@ -8,12 +8,16 @@
   },
   "type": "module",
   "author": "Varun Neal Srivastava",
-  "contributors": ["Dominik Weckmüller", "Xenova"],
+  "contributors": [
+    "Dominik Weckmüller",
+    "Xenova"
+  ],
   "license": "MIT",
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.1",
+    "pdfjs-dist": "^3.9.179",
     "style-loader": "^3.3.3",
     "vue-loader": "^17.2.2",
     "vue-template-compiler": "^2.7.14",
@@ -24,6 +28,7 @@
     "@mozilla/readability": "^0.4.4",
     "@vue/compiler-sfc": "^3.3.4",
     "@xenova/transformers": "^2.5.0",
+    "animejs": "^3.2.1",
     "mark.js": "^8.11.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "util": "^0.12.5",

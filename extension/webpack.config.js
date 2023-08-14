@@ -15,9 +15,9 @@ const config = {
     mode: 'development',
     devtool: 'inline-source-map',
     entry: {
-        background: './src/background.js',
+        background: ['./src/serviceworkers/background.js', './src/serviceworkers/semantic.js'],
         popup: './src/popup/popup.js',
-        content: './src/content.js',
+        content: './src/content/content.js',
     },
     resolve: {
         fallback: {
@@ -69,9 +69,17 @@ const config = {
                     to: "popup.css"
                 },
                 {
-                    from: "src/content.css",
+                    from: "src/content/content.css",
                     to: "content.css"
-                }
+                },
+                {
+                    from: "src/serviceworkers/pdf.js",
+                    to: "pdf.js"
+                },
+                {
+                    from: "src/serviceworkers/pdf.worker.js",
+                    to: "pdf.worker.js"
+                },
             ],
         })
     ],

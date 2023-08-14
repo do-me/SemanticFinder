@@ -36,6 +36,8 @@ export default {
     background-color: #f5f5f5;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-family: "Helvetica", sans-serif;
+    font-size: 9pt;
 }
 .result-item:hover {
     background-color: #e0e0e0;
@@ -49,6 +51,7 @@ export default {
     border-radius: 3px;
     background-color: #ddd;
     color: #333;
+    font-family: "Helvetica", sans-serif;
     font-size: 0.8em;
 }
 </style>
