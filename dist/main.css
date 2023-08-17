@@ -82,10 +82,6 @@ td {
   margin-left: 5px;
 }
 
-#progressBarProgress {
-  margin-left: 5px;
-}
-
 #query-text {
   height: 75%;
   min-width: 80%;
@@ -130,6 +126,10 @@ td {
   margin-top: 2vh; /* adjust this value as needed */
 }
 
+/*
+  see: https://github.com/twbs/bootstrap/issues/33871
+ */
+.form-floating > label { z-index: 3; }
 
 #advancedFeaturesHeader .accordion-button:hover {
   text-decoration: underline;
