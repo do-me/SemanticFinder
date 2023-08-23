@@ -78,6 +78,18 @@ self.onmessage = async(event) => {
             tokens: await getTokens(text)
         });
         break;
+    case 'summary':
+        text = message.text
+        let generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+        let thisSummary = await generator(text, {
+            max_new_tokens: 100,
+          })
+
+        self.postMessage({
+            type: 'summary',
+            summary: thisSummary
+        });
+        break;
     default:
     }
 };

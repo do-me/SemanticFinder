@@ -66,6 +66,9 @@ worker.onmessage = function (event) {
                 loadResolve();
             }
             break;
+        case 'summary':
+            queryResolve(message.summary);
+            break;
         case 'query':
             queryEmbedding = message.embedding;
             queryResolve();
@@ -97,6 +100,21 @@ export async function similarity(text) {
     return new Promise((resolve) => {
         // needs to return calculateCosineSimilarity(queryEmbedding, textEmbedding);
         similarityResolveMap[text] = resolve;
+    });
+}
+
+/**
+ *
+ * @param {string} text
+ * @returns
+ */
+export async function summarizeText(text) {
+    worker.postMessage({
+        type: 'summary',
+        text
+    });
+    return new Promise((resolve) => {
+        queryResolve = resolve;
     });
 }
 
