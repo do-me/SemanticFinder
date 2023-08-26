@@ -49,7 +49,6 @@ export default {
     components: {
         AnimatedInput,
         ResultItem,
-        AnimatedSquare,
     },
     data() {
         return {
