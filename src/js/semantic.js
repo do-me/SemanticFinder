@@ -38,31 +38,39 @@ let queryResolve;
 worker.onmessage = function (event) {
     const message = event.data;
     let resolve;
-    const downloadBar = document.getElementById('loading-progress');
 
     switch (message.type) {
         case "download":
-
             let downloadBar = document.getElementById('loading-progress');
-            if (message.data.status === 'initiate') {
 
-            } else if (message.data.status === 'progress') {
+            if (message.data.status === 'progress') {
                 if (message.data.file !== "onnx/model_quantized.onnx") { break;}
-
                 let progress = message.data.progress.toFixed(2);
                 downloadBar.style.width = progress + '%';
-                downloadBar.setAttribute('aria-valuenow', progress);
-            } else if (message.data.status === 'done') {
+                downloadBar.textContent = progress + "%";
 
+                downloadBar.setAttribute('aria-valuenow', progress);
             } else if (message.data.status === 'ready') {
                 downloadBar.style.width = '100%';
                 downloadBar.setAttribute('aria-valuenow', 100);
                 downloadBar.textContent = "";
                 loadResolve();
+            }
+            break;
+        case "summary_download":
+            console.dir(message.data);
+            let summaryDownloadBar = document.getElementById('summary-progress');
+
+            if (message.data.status === 'progress') {
+                if (message.data.file !== "onnx/decoder_model_merged_quantized.onnx") { break;}
+                let progress = message.data.progress.toFixed(2);
+                summaryDownloadBar.style.width = progress + '%';
+                summaryDownloadBar.textContent = Math.round(progress) + '%';
+                summaryDownloadBar.setAttribute('aria-valuenow', progress);
             } else if (message.data.status === 'ready') {
-                downloadBar.style.width = '100%';
-                downloadBar.setAttribute('aria-valuenow', '100');
-                downloadBar.textContent = '';
+                summaryDownloadBar.style.width = '100%';
+                summaryDownloadBar.setAttribute('aria-valuenow', 100);
+                summaryDownloadBar.textContent = "";
                 loadResolve();
             }
             break;

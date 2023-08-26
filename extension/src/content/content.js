@@ -36,13 +36,33 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
                 texts = splitReadableContent(textContent);
 
             } else {
-                let documentClone = document.cloneNode(true);
-                let {
-                    byline, content, dir, excerpt, lang,
-                    length, siteName, textContent
-                } = new Readability(documentClone).parse();
-                prettyLog("article", textContent);
-                texts = splitReadableContent(textContent);
+                let concatenatedContent = "";
+
+                const iframes = document.querySelectorAll('iframe');
+                console.dir(iframes);
+
+                iframes.forEach(function(iframe) {
+                    try {
+                        const iframeDocument = iframe.contentDocument;
+
+                        if (iframeDocument) {
+
+                            let { textContent } = new Readability(iframeDocument.cloneNode(true)).parse();
+                            prettyLog("Iframe text content:", textContent, "orange");
+                            concatenatedContent += textContent;
+                        }
+                    } catch (error) {
+                        prettyLog("Skipped an iframe due to permissions issue:", error, "red");
+                    }
+                });
+
+                const documentClone = document.cloneNode(true);
+                let { textContent } = new Readability(documentClone).parse();
+                concatenatedContent += textContent;
+                prettyLog("Main document text content:", textContent);
+
+                texts = splitReadableContent(concatenatedContent);
+
             }
             chrome.runtime.sendMessage({type: "tabUpdated", text: texts, currentURL});
         } else if (request.type === 'highlightAndScroll') {
@@ -90,6 +110,8 @@ function highlightAndScrollToText(text) {
         }
     });
 
+
+    // can use "noMatch" in markjs instead
     if (!textFound) {
         let segments = text.split('\n');
         let longestSegment = segments.sort((a, b) => b.length - a.length)[0];
