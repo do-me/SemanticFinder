@@ -80,7 +80,16 @@ self.onmessage = async(event) => {
         break;
     case 'summary':
         text = message.text
-        let generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+        let generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6',
+            {
+                progress_callback: data => {
+                    console.log("message 1");
+                    self.postMessage({
+                        type: 'summary_download',
+                        data
+                    });
+                }
+            });
         let thisSummary = await generator(text, {
             max_new_tokens: 100,
           })
