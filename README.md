@@ -1,8 +1,13 @@
-# SemanticFinder - frontend-only live semantic search with transformers.js
-
-## [Try the web app](https://do-me.github.io/SemanticFinder/), [install the Chrome extension](#browser-extension) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
+<p align="center">
+  <a href="https://do-me.github.io/SemanticFinder/">
+    <img src="https://github.com/do-me/SemanticFinder/assets/47481567/4522ab9d-08f4-4f4c-92db-dbf14ccb2b70" width="320" alt="Material for MkDocs">
+  </a>    
+<h1 align="center">Frontend-only live semantic search with transformers.js</h1>
+</p>
 
 ![](/SemanticFinder.gif?)
+
+## [Try the web app](https://do-me.github.io/SemanticFinder/), [install the Chrome extension](#browser-extension) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
