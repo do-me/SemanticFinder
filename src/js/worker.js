@@ -83,7 +83,6 @@ self.onmessage = async(event) => {
         let generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6',
             {
                 progress_callback: data => {
-                    console.log("message 1");
                     self.postMessage({
                         type: 'summary_download',
                         data
@@ -91,7 +90,7 @@ self.onmessage = async(event) => {
                 }
             });
         let thisSummary = await generator(text, {
-            max_new_tokens: 100,
+            max_new_tokens: 200,
           })
 
         self.postMessage({
