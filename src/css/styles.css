@@ -141,3 +141,7 @@ td {
 .card-subtitle {
   font-size: 0.8em;
 }
+
+#SemanticFinderLogo{
+  max-width: 250px;
+}

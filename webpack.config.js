@@ -17,6 +17,13 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
 
       },
+      {
+        test: /\.svg$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]'
+        }
+      },
     ],
   },
   plugins: [

@@ -12,6 +12,8 @@ import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
+import logo from './SemanticFinder.svg';
+
 /**
  * @type {Array<CodeMirror.TextMarker>}
  */
