@@ -118,7 +118,8 @@ export async function storeEmbeddings() {
             [currID]: {
                 _body: body,
                 frecency_score: computeFrecencyScore(currID),
-                is_embeddings: true
+                is_embeddings: true,
+                model_name: EmbedPipeline.model
             }
         });
         prettyLog("stored " + currID, Object.keys(embeddingsDict).length + " items");
@@ -147,6 +148,7 @@ export async function loadEmbeddings(ID) {
     const data = await chrome.storage.local.get([currID]);
     if (data[ID] && data[ID].is_embeddings) {
         prettyLog("attempting load", ID);
+        if (!data[ID].model_name || data[ID].model_name !== EmbedPipeline.model) { return; }
         const body = data[ID]._body;
 
         const jsonString = await new Promise((resolve, reject) => {

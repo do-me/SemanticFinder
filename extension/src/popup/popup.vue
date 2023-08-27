@@ -43,14 +43,12 @@
 
 import ResultItem from './result.vue';
 import AnimatedInput from './AnimatedInput.vue'
-import AnimatedSquare from './AnimatedSquare.vue';
 import {prettyLog} from "../utils/utils.js";
 
 export default {
     components: {
         AnimatedInput,
         ResultItem,
-        AnimatedSquare,
     },
     data() {
         return {
