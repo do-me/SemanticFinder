@@ -14,7 +14,7 @@ async function fetchAndExtractPDFText(url) {
     let texts = [];
 
     for (let i = 1; i <= totalPages; i++) {
-        console.log("page ", i);
+        // console.log("page ", i);
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
         const pageText = textContent.items.map(item => item.str).join(' ');
@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
                 const documentClone = document.cloneNode(true);
                 let { textContent } = new Readability(documentClone).parse();
                 concatenatedContent += textContent;
-                prettyLog("Main document text content:", textContent);
+                // prettyLog("Main document text content:", textContent);
 
                 texts = splitReadableContent(concatenatedContent);
 

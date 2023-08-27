@@ -11,7 +11,7 @@
   height: 55vh !important;
 }
 
-p {
+#summary_text {
   margin: 10px;
 }
 
@@ -79,7 +79,6 @@ td {
 #progressBar {
   height: 25px;
   width: 100%;
-  margin-left: 5px;
 }
 
 #query-text {
@@ -104,7 +103,7 @@ td {
 }
 
 #results {
-  height: 100vh;
+  height: 78vh;
   overflow-y: auto;
 }
 
