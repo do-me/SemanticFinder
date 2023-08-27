@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "SemanticFinder",
+  "description": "SemanticFinder | In-browser Semantic Search via Transformers.js",
+  "version": "0.0.1",
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "permissions": [
+    "webRequest",
+    "tabs",
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "storage",
+    "unlimitedStorage"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js", "pdf.js", "pdf.worker.js"
+      ],
+      "css": [
+        "content.css"
+      ]
+    }
+  ],
+  "minimum_chrome_version": "92",
+  "action": {
+    "default_icon": {
+      "16": "icons/logo48.png",
+      "24": "icons/logo48.png",
+      "32": "icons/logo128.png"
+    },
+    "default_title": "SemanticFinder",
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'"
+  },
+  "icons": {
+    "16": "icons/logo48.png",
+    "48": "icons/logo48.png",
+    "128": "icons/logo128.png"
+  }
+}

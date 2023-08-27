@@ -33,7 +33,7 @@ We currently develop a browser extension for Chrome. It's in an early stage.
 ![](SemanticFinder_Chrome_Extension.gif?)
 
 ### Extension installation
-- download [SemanticFinder_Chrome_Extension.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension.zip) and unzip it
+- download the zip archive [SemanticFinder_Chrome_Extension_en.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension_en.zip) (English-only) or [SemanticFinder_Chrome_Extension_multilingual.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension_mulitlingual.zip) ([multilingual](https://www.sbert.net/docs/pretrained_models.html#multi-lingual-models)) and unzip it
 - go to Chrome extension settings with `chrome://extensions`
 - select `Load Unpacked` and choose the unzipped `SemanticFinder_Chrome_Extension` folder
 - pin the extension in Chrome so you can access it easily. If it doesn't work for you, feel free to open an issue.
