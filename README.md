@@ -45,6 +45,7 @@ If you want to build the browser extension locally, clone the repo and cd in `ex
 - `npm install`
 - `npm run build` for a static build or
 - `npm run dev` for the auto-refreshing development version
+- load `build` folder as extension in Chrome just as explained above
 
 The default model is the English-only [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), currently hard-coded in [semantic.js](https://github.com/do-me/SemanticFinder/blob/main/extension/src/semantic.js#L20). If you'd like to support ~100 languages, use e.g. [Xenova/distiluse-base-multilingual-cased-v2](https://huggingface.co/Xenova/distiluse-base-multilingual-cased-v2). More infos about the model [here](https://huggingface.co/sentence-transformers/distiluse-base-multilingual-cased-v2).
 
