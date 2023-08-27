@@ -9,36 +9,39 @@
 <script defer src="bundle.js"></script><link href="main.css" rel="stylesheet"></head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-1">
         <div class="row justify-content-left">
-            <div class="col-sm-9" style="display: inline-flex;">
-        
-        <img id="SemanticFinderLogo" src="./SemanticFinder.svg" alt="SemanticFinder Logo">
-        <div class="content">
-            <br>
-            <h4>Frontend-only live semantic search with <a href="https://xenova.github.io/transformers.js/"
-                    target="_blank">transformers.js</a>. <a href="https://github.com/do-me/SemanticFinder">GitHub</a></h4>
-            <p>
-                Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side
-                without server-side inferencing.<br>
-                Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this blog
-                    post</a>, building on two former ones <a
-                    href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a
-                    href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search. See
-                other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc">IPCC Report 2023
-                    (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary">IPCC Summary 2023 (35
-                    pages)</a>.<br>For a more refined search, enter a low character count; for a coarser search,
-                enter a high one. Simply copy and paste any text and hit Find.
-            </p>
-        </div>
+            <div id="introContainer" class="col-sm-9">
+
+                <img id="SemanticFinderLogo" src="./SemanticFinder.svg" alt="SemanticFinder Logo">
+                <div class="content">
+                    <br>
+                    <h4>Frontend-only live semantic search with <a href="https://xenova.github.io/transformers.js/"
+                            target="_blank">transformers.js</a>. <a
+                            href="https://github.com/do-me/SemanticFinder">GitHub</a></h4>
+                    <p>
+                        Semantic search right in your browser! Calculates the embeddings and cosine similarity
+                        client-side
+                        without server-side inferencing.<br>
+                        Demo for <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">this
+                            blog
+                            post</a>, building on two former ones <a
+                            href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a
+                            href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search.
+                        See
+                        other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc">IPCC Report
+                            2023
+                            (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary">IPCC Summary 2023
+                            (35
+                            pages)</a>.<br>For a more refined search, enter a low character count; for a coarser search,
+                        enter a high one. Simply copy and paste any text and hit Find.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    
-    
-    
 
-    <div class="container mt-5">
+    <div class="container mt-1">
         <div class="row justify-content-center">
             <div class="col-sm-9"> <!-- 80% column for text region-->
 
@@ -130,6 +133,14 @@
                                 <div class="progress-bar bg-secondary" id="loading-progress" style="width: 0;">""</div>
                             </div>
                         </div>
+                        <div>
+                            <div class="progress" role="progressbar" aria-label="Progress Bar" aria-valuenow="0"
+                                aria-valuemin="0" aria-valuemax="100" style="height: 75%">
+                                <div id="progressBarProgress" class="progress-bar progress-bar-striped" style="width: 0%;">""
+                                </div>
+                            </div>
+        
+                        </div>
 
 
                         <!--  text box -->
@@ -148,40 +159,34 @@ Not very long after that there was again great scarcity in those parts, and the 
 
                         <!--  navigation buttons -->
                         <div class="text-center" id="submitGroup">
-                            <button id="prev" class="btn btn-md btn-secondary mb-2 nav-button" disabled>&lt;
+                            <button id="prev" class="btn btn-md btn-secondary mb-2 nav-button" disabled>👈
                                 prev
                             </button>
                             <button id="next" class="btn btn-md btn-secondary mb-2 nav-button" disabled>next
-                                &gt;
+                                👉
                             </button>
                         </div>
                     </div>
                 </form>
 
-                <div>
-                    <p>Progress:</p>
-                    <div class="progress"  role="progressbar" aria-label="Progress Bar"
-                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 75%">
-                        <div id="progressBarProgress" class="progress-bar progress-bar-striped" style="width: 0%;">""
-                        </div>
-                    </div>
-
-                </div>
-
-
                 <div class="col-12">
                     <div>
                         <hr />
                         <h4>Summary (experimental)</h4>
-                        <p>Summarizes the top results in 1-2 min. Works best with non-fictional texts and longer text chunks (>200 chars).<br><b>Attention</b>: Loads the large <a href="https://huggingface.co/Xenova/distilbart-cnn-6-6" target="_blank">distilbart-cnn-6-6</a> model with <b>335Mb</b> trained on newspaper articles.</p>
+                        <p>Summarizes the top results in 1-2 min. Works best with non-fictional texts and longer text
+                            chunks (>200 chars).<br><b>Attention</b>: Loads the large <a
+                                href="https://huggingface.co/Xenova/distilbart-cnn-6-6"
+                                target="_blank">distilbart-cnn-6-6</a> model with <b>335Mb</b> trained on newspaper
+                            articles.</p>
                         <div class="d-flex align-items-center flex-row">
-                            <button id="get_summary" class="btn btn-md btn-primary mb-2 nav-button" disabled>Summarize</button>
+                            <button id="get_summary" class="btn btn-md btn-primary mb-2 nav-button"
+                                disabled>Summarize</button>
                             <p id="summary_text" class="ml-2"></p>
                         </div>
                     </div>
 
-                    <div class="progress"  role="progressbar" aria-label="Progress Bar"
-                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 75%">
+                    <div class="progress" role="progressbar" aria-label="Progress Bar" aria-valuenow="0"
+                        aria-valuemin="0" aria-valuemax="100" style="height: 75%">
                         <div id="summary-progress" class="progress-bar progress-bar-striped" style="width: 0%;">""
                         </div>
                     </div>
