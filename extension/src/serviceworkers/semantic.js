@@ -19,7 +19,7 @@ let currID = "";
 
 class EmbedPipeline {
     static task = 'feature-extraction';
-    static model = 'Xenova/distiluse-base-multilingual-cased-v2';
+    static model = 'Supabase/gte-small';
     static instance = null;
 
     static async getInstance() {
