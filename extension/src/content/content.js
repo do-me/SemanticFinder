@@ -83,7 +83,10 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
 let currText;
 let instance = new Mark(document.querySelector("body"));
 
-function highlightAndScrollToText(text) {
+function highlightAndScrollToText(text, depth= 3) {
+    if (depth === 0) {
+        return;
+    }
     // If there's a previous highlighted text, unmark it
     if (currText) {
         instance.unmark({"element": "span", "className": "highlight"});
@@ -116,7 +119,7 @@ function highlightAndScrollToText(text) {
         let segments = text.split('\n');
         let longestSegment = segments.sort((a, b) => b.length - a.length)[0];
         if (longestSegment) {
-            highlightAndScrollToText(longestSegment); // Recursive call
+            highlightAndScrollToText(longestSegment, depth - 1); // Recursive call
         }
     }
 }

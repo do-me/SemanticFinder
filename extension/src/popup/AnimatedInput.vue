@@ -11,15 +11,15 @@ export default {
     data() {
         return {
             inputText: "",
+            debounceTimeout: null
         };
     },
 
     methods: {
         debounce(func, args, wait) {
-            let timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                func.apply(this, args); // async?
+            clearTimeout(this.debounceTimeout);
+            this.debounceTimeout = setTimeout(() => {
+                func.apply(this, args);
             }, wait);
         },
         async spawnProcess(type, text) {
@@ -30,7 +30,7 @@ export default {
     watch: {
         inputText: function (newVal, oldVal) {
             if (newVal !== oldVal) {
-                this.debounce(this.spawnProcess, ["inputText", this.inputText], 100);
+                this.debounce(this.spawnProcess, ["inputText", this.inputText], 250);
             }
             if (this.inputText === "") {
                 this.$parent.results = []

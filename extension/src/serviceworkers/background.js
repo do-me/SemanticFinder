@@ -79,7 +79,7 @@ async function processQuery(query, bodyText, processId) {
     }
 
     await loadEmbeddings(currSite);
-    prettyLog("starting process " + processId, bodyText.length + " items", "orange");
+    prettyLog("starting process " + processId, bodyText.length + " items, input: " + query, "orange");
 
     let results = [];
     const k = 10;
