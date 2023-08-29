@@ -33,7 +33,7 @@ We currently develop a browser extension for Chrome. It's in an early stage.
 ![](SemanticFinder_Chrome_Extension.gif?)
 
 ### Extension installation
-- download the zip archive [SemanticFinder_Chrome_Extension_en.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension_en.zip) (English-only) or [SemanticFinder_Chrome_Extension_multilingual.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension_mulitlingual.zip) ([multilingual](https://www.sbert.net/docs/pretrained_models.html#multi-lingual-models)) and unzip it
+- download the zip archive [SemanticFinder_Chrome_Extension_en.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension_en.zip) (currently English-only) and unzip it
 - go to Chrome extension settings with `chrome://extensions`
 - select `Load Unpacked` and choose the unzipped `SemanticFinder_Chrome_Extension` folder
 - pin the extension in Chrome so you can access it easily. If it doesn't work for you, feel free to open an issue.
@@ -47,7 +47,7 @@ If you want to build the browser extension locally, clone the repo and cd in `ex
 - `npm run dev` for the auto-refreshing development version
 - load `build` folder as extension in Chrome just as explained above
 
-The default model is the English-only [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), currently hard-coded in [semantic.js](https://github.com/do-me/SemanticFinder/blob/main/extension/src/semantic.js#L20). If you'd like to support ~100 languages, use e.g. [Xenova/distiluse-base-multilingual-cased-v2](https://huggingface.co/Xenova/distiluse-base-multilingual-cased-v2). More infos about the model [here](https://huggingface.co/sentence-transformers/distiluse-base-multilingual-cased-v2).
+The default model is a quantized version of the English-only [thenlper/gte-small](https://huggingface.co/thenlper/gte-small), hard-coded in [semantic.js](https://github.com/do-me/SemanticFinder/blob/main/extension/src/semantic.js#L20). We are working on allowing for multilingual models, e.g. [intfloat/multilingual-e5-small](https://huggingface.co/intfloat/multilingual-e5-small) but there are [some challenges](https://github.com/xenova/transformers.js/issues/267) to overcome.
 
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
