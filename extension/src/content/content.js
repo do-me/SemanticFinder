@@ -67,7 +67,9 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
             chrome.runtime.sendMessage({type: "tabUpdated", text: texts, currentURL});
         } else if (request.type === 'highlightAndScroll') {
             // if (currentURL.endsWith('.pdf')) { return; }
-            highlightAndScrollToText(request.text);
+            if (!highlightAndScrollToText(request.text)) {
+                chrome.runtime.sendMessage({type: "error", reason: "Cannot find and highlight selection."})
+            }
         }
     } catch (error) {
         prettyLog("ERROR", error.message, "red", "red");
@@ -85,7 +87,7 @@ let instance = new Mark(document.querySelector("body"));
 
 function highlightAndScrollToText(text, depth= 3) {
     if (depth === 0) {
-        return;
+        return false;
     }
     // If there's a previous highlighted text, unmark it
     if (currText) {
@@ -109,7 +111,7 @@ function highlightAndScrollToText(text, depth= 3) {
                 block: "center"
             });
             textFound = true;
-            return false;
+            return true;
         }
     });
 
@@ -119,7 +121,7 @@ function highlightAndScrollToText(text, depth= 3) {
         let segments = text.split('\n');
         let longestSegment = segments.sort((a, b) => b.length - a.length)[0];
         if (longestSegment) {
-            highlightAndScrollToText(longestSegment, depth - 1); // Recursive call
+            return highlightAndScrollToText(longestSegment, depth - 1); // Recursive call
         }
     }
 }
