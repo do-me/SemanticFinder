@@ -135,7 +135,6 @@ function highlightAndScrollToText(text, depth= 3) {
                 block: "center"
             });
             textFound = true;
-            return true;
         }
     });
 
@@ -145,8 +144,10 @@ function highlightAndScrollToText(text, depth= 3) {
         let segments = text.split('\n');
         let longestSegment = segments.sort((a, b) => b.length - a.length)[0];
         if (longestSegment) {
-            return highlightAndScrollToText(longestSegment, depth - 1); // Recursive call
+            return highlightAndScrollToText(longestSegment, depth - 1); 
         }
+    } else {
+        return true;
     }
 }
 
