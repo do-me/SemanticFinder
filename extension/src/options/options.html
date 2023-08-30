@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SemanticFinder Settings</title>
+    <link rel="stylesheet" href="options.css">
 </head>
+
 <body>
-<label for="settingInput">Sample Setting:</label>
-<input type="text" id="settingInput">
-<button id="saveButton">Save</button>
+<div class="container">
+    <label for="modelSelector">Model Selector:</label>
+    <select id="modelSelector">
+        <option value="Xenova/all-MiniLM-L6-v2">all-MiniLM-L6-v2 (23mb)</option>
+        <option value="Supabase/gte-small" selected>gte-small (34 mb)</option>
+        <option value="Xenova/distiluse-base-multilingual-cased-v2">distiluse-base-multilingual-cased-v2 (135 mb)</option>
+    </select>
+
+    <br><br>
+
+    <label for="minCharsInput">Min # chars to split by:</label>
+    <input type="number" id="minCharsInput" min="2" value="50">
+
+    <br><br>
+    <button id="restoreButton" class="rectangular-button">Restore Defaults</button>
+
+    <button id="saveButton" class="rectangular-button">Save Settings</button>
+</div>
 
 <script src="options.js"></script>
 </body>
+
 </html>

@@ -19,11 +19,34 @@ let currID = "";
 
 class EmbedPipeline {
     static task = 'feature-extraction';
-    static model = 'Xenova/distiluse-base-multilingual-cased-v2';
+    static model ='Supabase/gte-small';
     static instance = null;
 
+    static async getModelFromStorage() {
+        return new Promise((resolve, reject) => {
+            chrome.storage.sync.get('model_name', function(result) {
+                if (chrome.runtime.lastError) {
+                    reject(new Error(chrome.runtime.lastError));
+                } else {
+                    resolve(result.model_name);
+                    return false;
+                }
+            });
+        });
+    }
+    static async updateModelName() {
+        try {
+            const storedModelName = await this.getModelFromStorage();
+            if (storedModelName) {
+                this.model = storedModelName;
+            }
+        } catch (error) {}
+    }
+
     static async getInstance() {
-        if (this.instance === null) { // no await?
+        if (this.instance === null) {
+            await this.updateModelName();
+
             this.instance = await pipeline(this.task, this.model,
                 {
                     progress_callback: async data => {

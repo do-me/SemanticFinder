@@ -1,39 +1,40 @@
 <template>
     <div id="app" :class="popupClass">
-        <div v-if="error" class="error">ERROR: {{ error }}</div>
+
+        <div v-if="!isModelLoaded" class="progress-container">
+            <!--todo: make this its own vue component-->
+            <div class="progress-background">
+                <div class="progress-bar" :style="{ width: progressValue + `%`}"></div>
+            </div>
+            <div class="loading-text">Loading model</div>
+        </div>
 
         <div v-else>
-            <div v-if="!isModelLoaded" class="progress-container">
-                <!--todo: make this its own vue component-->
-                <div class="progress-background">
-                    <div class="progress-bar" :style="{ width: progressValue + `%`}"></div>
-                </div>
-                <div class="loading-text">Loading model</div>
+            <div v-if="error" class="error">
+                <span class="dismiss" @click="dismissError">&#x2612;</span>
+                ERROR: {{ error }}
             </div>
+            <AnimatedInput ref="input"></AnimatedInput>
 
-            <div v-else>
-                <AnimatedInput  ref="input" ></AnimatedInput>
-
-                <!-- Display results and progress only if popupClass is 'popup-expanded' -->
-                <div v-if="popupClass === 'popup-expanded'">
-                    <div class="results-container">
-                        <ResultItem
+            <!-- Display results and progress only if popupClass is 'popup-expanded' -->
+            <div v-if="popupClass === 'popup-expanded'">
+                <div class="results-container">
+                    <ResultItem
                             v-for="(result, index) in results"
                             :key="index"
                             :result="result.text"
                             :score="result.sim"
                             @click="handleResultClick(result)"
-                        />
-                    </div>
-
-                    <div class="progress-container search-progress">
-                        <div class="progress-bar" :style="{ width: searchProgress + `%` }"></div>
-                    </div>
-
+                    />
                 </div>
-            </div>
 
+                <div class="progress-container search-progress">
+                    <div class="progress-bar" :style="{ width: searchProgress + `%` }"></div>
+                </div>
+
+            </div>
         </div>
+
 
     </div>
 </template>
@@ -98,6 +99,9 @@ export default {
                 chrome.tabs.sendMessage(tabs[0].id, {type: 'highlightAndScroll', text: result.text});
             });
         },
+        dismissError() {
+            this.error = null;
+        },
     },
 
     async mounted() {
@@ -122,7 +126,6 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap');
 
 
-
 #app {
     padding: 0;
     margin: 0;
@@ -134,7 +137,6 @@ export default {
 
 #app.popup-default {
     width: 150px;
-    height: 30px;
     transition: width 0.5s ease;
 }
 
@@ -191,6 +193,7 @@ export default {
 
 .results-container {
     max-height: 400px;
+    width: 290px;
     overflow-y: auto;
     padding: 10px;
 }
@@ -209,9 +212,25 @@ export default {
 .error {
     font-family: 'Space Mono', 'monospace';
     background: red;
-    width: 100vw;
-    height: 100vh;
     color: white;
     z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1;
+    padding: 15px 10px 10px 10px;  /* Adjust as needed */
 }
+
+
+.dismiss {
+    position: absolute;
+    top: 0px;
+    left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 28px;
+}
+
 </style>
