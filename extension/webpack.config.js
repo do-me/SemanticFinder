@@ -18,6 +18,7 @@ const config = {
         background: ['./src/serviceworkers/background.js', './src/serviceworkers/semantic.js'],
         popup: './src/popup/popup.js',
         content: './src/content/content.js',
+        options: './src/options/options.js'
     },
     resolve: {
         fallback: {
@@ -58,6 +59,10 @@ const config = {
             template: './src/popup/popup.html',
             filename: 'popup.html',
         }),
+        new HtmlWebpackPlugin({
+            template: './src/options/options.html',
+            filename: 'options.html',
+        }),
         new CopyPlugin({
             patterns: [
                 {
@@ -80,9 +85,15 @@ const config = {
                     from: "src/serviceworkers/pdf.worker.js",
                     to: "pdf.worker.js"
                 },
+                {
+                    from: "src/options/options.css",
+                    to: "options.css"
+                },
             ],
         })
     ],
 };
 
 export default config;
+
+

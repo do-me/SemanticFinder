@@ -24,16 +24,39 @@ async function fetchAndExtractPDFText(url) {
     return texts.join(' ');
 }
 
+function getValueFromStorage(key, defaultValue) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get(key, function(result) {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve(result[key] || defaultValue);
+            }
+        });
+    });
+}
+
+async function fetchNumChars() {
+    try {
+        const defaultNumChars = 50; // You can set this to your desired default value
+        const storedNumChars = await getValueFromStorage('num_chars', defaultNumChars);
+        return storedNumChars;
+    } catch (error) {
+        console.error('Error fetching num_chars:', error);
+        return null;
+    }
+}
 
 chrome.runtime.onMessage.addListener(async function(request, sender) {
     try {
         let currentURL = window.location.href;
         if (request.type === "getText") {
+            const numChars = await fetchNumChars();
             let texts = [];
             // hacky support for pdf
             if (currentURL.endsWith('.pdf')) {
                 let textContent = await fetchAndExtractPDFText(currentURL);
-                texts = splitReadableContent(textContent);
+                texts = splitReadableContent(textContent, numChars);
 
             } else {
                 let concatenatedContent = "";
@@ -61,13 +84,15 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
                 concatenatedContent += textContent;
                 // prettyLog("Main document text content:", textContent);
 
-                texts = splitReadableContent(concatenatedContent);
+                texts = splitReadableContent(concatenatedContent, numChars);
 
             }
             chrome.runtime.sendMessage({type: "tabUpdated", text: texts, currentURL});
         } else if (request.type === 'highlightAndScroll') {
             // if (currentURL.endsWith('.pdf')) { return; }
-            highlightAndScrollToText(request.text);
+            if (!highlightAndScrollToText(request.text)) {
+                chrome.runtime.sendMessage({type: "error", reason: "Cannot find and highlight selection."})
+            }
         }
     } catch (error) {
         prettyLog("ERROR", error.message, "red", "red");
@@ -83,7 +108,10 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
 let currText;
 let instance = new Mark(document.querySelector("body"));
 
-function highlightAndScrollToText(text) {
+function highlightAndScrollToText(text, depth= 3) {
+    if (depth === 0) {
+        return false;
+    }
     // If there's a previous highlighted text, unmark it
     if (currText) {
         instance.unmark({"element": "span", "className": "highlight"});
@@ -98,6 +126,7 @@ function highlightAndScrollToText(text) {
         "separateWordSearch": false,
         "className": "highlight",
         "acrossElements": true,
+        "wildcards": "enabled",
         "iframes": true,
         "each": function (node) {
             // Scroll to the first instance of it
@@ -106,7 +135,6 @@ function highlightAndScrollToText(text) {
                 block: "center"
             });
             textFound = true;
-            return false;
         }
     });
 
@@ -116,8 +144,10 @@ function highlightAndScrollToText(text) {
         let segments = text.split('\n');
         let longestSegment = segments.sort((a, b) => b.length - a.length)[0];
         if (longestSegment) {
-            highlightAndScrollToText(longestSegment); // Recursive call
+            return highlightAndScrollToText(longestSegment, depth - 1);
         }
+    } else {
+        return true;
     }
 }
 

@@ -42,8 +42,8 @@ export function getSiteID(url) {
 }
 
 
-export function splitReadableContent(readableContent) {
-    return splitByChars(readableContent, 50);
+export function splitReadableContent(readableContent, numChars = 50) {
+    return splitByChars(readableContent, numChars);
 }
 
 
