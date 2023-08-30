@@ -19,7 +19,8 @@ let currID = "";
 
 class EmbedPipeline {
     static task = 'feature-extraction';
-    static model ='Supabase/gte-small';
+
+    static model = 'Supabase/gte-small';
     static instance = null;
 
     static async getModelFromStorage() {

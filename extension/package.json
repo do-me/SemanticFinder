@@ -22,7 +22,8 @@
     "vue-loader": "^17.2.2",
     "vue-template-compiler": "^2.7.14",
     "vueify": "^9.4.1",
-    "webpack": "^5.79.0"
+    "webpack": "^5.79.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@mozilla/readability": "^0.4.4",
