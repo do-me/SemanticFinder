@@ -99,8 +99,6 @@ async function processQuery(query, bodyText, processId) {
                 type: "results", progress: 100 * (i / bodyText.length),
                 text: results
             });
-        } else if (!(i % 20)) {
-            chrome.runtime.sendMessage({type: "results", progress: 100 * (i / bodyText.length)});
         }
         i += 1;
     }
