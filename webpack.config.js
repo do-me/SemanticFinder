@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // FOUC-correction
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 
 module.exports = {
   entry: './src/js/index.js',
@@ -31,5 +32,6 @@ module.exports = {
       template: './index.html',
     }),
     new MiniCssExtractPlugin(),
+    new FaviconsWebpackPlugin(),
   ],
 };

@@ -145,6 +145,22 @@ td {
   font-size: 0.8em;
 }
 
+#SemanticFinderLogo{
+  max-width: 250px;
+}
+
+@media (min-width: 992px) {
+  #introContainer {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 992px) {
+  .col-sm-9  {
+    width: 100% !important;
+  }
+}
+
 /*!*****************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/bootstrap/dist/css/bootstrap.min.css ***!
   \*****************************************************************************************************/
