@@ -1,4 +1,10 @@
+
+console.log("Script loaded");
+let loadCount = 0;
+
 document.addEventListener('DOMContentLoaded', function() {
+    loadCount++;
+    console.log("DOMContentLoaded triggered", loadCount);
     // Load saved settings when the page is loaded
     loadSettings();
 
@@ -15,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function saveSettings() {
+function saveSettings(showAlert = true) {
     const modelName = document.getElementById('modelSelector').value;
     const numChars = document.getElementById('minCharsInput').value;
 
@@ -23,9 +29,20 @@ function saveSettings() {
         'model_name': modelName,
         'num_chars': numChars
     }, function() {
-        alert('Settings saved.');
+        if (showAlert) {
+            alert('Settings saved.');
+        }
     });
 }
+
+function restoreDefaults() {
+    document.getElementById('modelSelector').value = 'Supabase/gte-small'; // Default model
+    document.getElementById('minCharsInput').value = 50; // Default number
+
+    // Optional: Automatically save defaults back to storage
+    saveSettings(false);  // Don't show an alert here
+}
+
 
 function loadSettings() {
     chrome.storage.sync.get(['model_name', 'num_chars'], function(items) {
@@ -42,12 +59,4 @@ function loadSettings() {
             }
         }
     });
-}
-
-function restoreDefaults() {
-    document.getElementById('modelSelector').value = 'Supabase/gte-small'; // Default model
-    document.getElementById('minCharsInput').value = 50; // Default number
-
-    // Optional: Automatically save defaults back to storage
-    saveSettings();
 }
