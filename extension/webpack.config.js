@@ -16,7 +16,9 @@ const config = {
     devtool: 'inline-source-map',
     entry: {
         background: ['./src/serviceworkers/background.js', './src/serviceworkers/semantic.js'],
+        popup: './src/popup/popup.js',
         content: './src/content/content.js',
+        options: './src/options/options.js'
     },
     resolve: {
         fallback: {
