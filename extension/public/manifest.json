@@ -5,11 +5,8 @@
   "version": "0.0.1",
   "host_permissions": ["http://*/*", "https://*/*"],
   "permissions": [
-    "webRequest",
     "tabs",
     "activeTab",
-    "scripting",
-    "contextMenus",
     "storage",
     "unlimitedStorage"
   ],
