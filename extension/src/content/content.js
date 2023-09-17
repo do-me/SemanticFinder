@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener(async function(request, sender) {
             const numChars = await fetchNumChars();
             let texts = [];
             // hacky support for pdf
-            if (currentURL.endsWith('.pdf')) {
+            if (currentURL.includes('pdf')) {
                 let textContent = await fetchAndExtractPDFText(currentURL);
                 texts = splitReadableContent(textContent, numChars);
 
