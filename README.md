@@ -28,26 +28,20 @@ If you want to build instead, run
 Afterwards, you'll find the `index.html`, `main.css` and `bundle.js` in `dist`.
 
 ## Browser extension 
-We currently develop a browser extension for Chrome. It's in an early stage.
+Download the Chrome extension from [Chrome webstore](https://chrome.google.com/webstore/detail/semanticfinder/ddmgffoffelnhnonpoiblaoboaeieejl) and pin it. Right click the extension icon for `options`: 
+- choose distiluse-base-multilingual-cased-v2 for multilingual usage (default is English-only)
+- set a higher number for min characters to split by for larger texts
 
 ![](SemanticFinder_Chrome_Extension.gif?)
-
-### Extension installation
-- download the zip archive [SemanticFinder_Chrome_Extension_en.zip](https://github.com/do-me/SemanticFinder/blob/main/SemanticFinder_Chrome_Extension_en.zip) (currently English-only) and unzip it
-- go to Chrome extension settings with `chrome://extensions`
-- select `Load Unpacked` and choose the unzipped `SemanticFinder_Chrome_Extension` folder
-- pin the extension in Chrome so you can access it easily. If it doesn't work for you, feel free to open an issue.
-
-Tested on Windows 11 and Ubuntu 22.04 but most distros should just work. 
 
 ### Local build 
 If you want to build the browser extension locally, clone the repo and cd in `extension` directory then run: 
 - `npm install`
 - `npm run build` for a static build or
 - `npm run dev` for the auto-refreshing development version
-- load `build` folder as extension in Chrome just as explained above
-
-The default model is a quantized version of the English-only [thenlper/gte-small](https://huggingface.co/thenlper/gte-small), hard-coded in [semantic.js](https://github.com/do-me/SemanticFinder/blob/main/extension/src/semantic.js#L20). We are working on allowing for multilingual models, e.g. [intfloat/multilingual-e5-small](https://huggingface.co/intfloat/multilingual-e5-small) but there are [some challenges](https://github.com/xenova/transformers.js/issues/267) to overcome.
+- go to Chrome extension settings with `chrome://extensions`
+- select `Load Unpacked` and choose the `build` folder
+- pin the extension in Chrome so you can access it easily. If it doesn't work for you, feel free to open an issue.
 
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
