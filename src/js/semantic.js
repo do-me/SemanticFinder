@@ -57,8 +57,23 @@ worker.onmessage = function (event) {
                 loadResolve();
             }
             break;
+        case "chat_download":
+                let chatDownloadBar = document.getElementById('chat-progress');
+    
+                if (message.data.status === 'progress') {
+                    if (message.data.file !== "onnx/decoder_model_merged_quantized.onnx") { break;}
+                    let progress = message.data.progress.toFixed(2);
+                    chatDownloadBar.style.width = progress + '%';
+                    chatDownloadBar.textContent = Math.round(progress) + '%';
+                    chatDownloadBar.setAttribute('aria-valuenow', progress);
+                } else if (message.data.status === 'ready') {
+                    chatDownloadBar.style.width = '100%';
+                    chatDownloadBar.setAttribute('aria-valuenow', 100);
+                    chatDownloadBar.textContent = "";
+                    loadResolve();
+                }
+                break;
         case "summary_download":
-            console.dir(message.data);
             let summaryDownloadBar = document.getElementById('summary-progress');
 
             if (message.data.status === 'progress') {
@@ -74,6 +89,9 @@ worker.onmessage = function (event) {
                 loadResolve();
             }
             break;
+        case 'chat':
+                queryResolve(message.chat);
+                break;
         case 'summary':
             queryResolve(message.summary);
             break;
@@ -119,6 +137,22 @@ export async function similarity(text) {
 export async function summarizeText(text) {
     worker.postMessage({
         type: 'summary',
+        text
+    });
+    return new Promise((resolve) => {
+        queryResolve = resolve;
+    });
+}
+
+/**
+ *
+ * @param {string} text
+ * @returns
+ */
+export async function chatText(text, max_new_tokens) {
+    worker.postMessage({
+        type: 'chat',
+        max_new_tokens: max_new_tokens,
         text
     });
     return new Promise((resolve) => {

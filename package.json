@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xenova/transformers": "^2.2.0",
+    "@xenova/transformers": "^2.6.2",
     "bootstrap": "^5.0.2",
     "codemirror": "^5.52.2"
   },

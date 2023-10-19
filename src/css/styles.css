@@ -8,8 +8,18 @@
   height: 55vh !important;
 }
 
-#summary_text {
+#summary_text, #chat_text {
   margin: 10px;
+  font-weight: 700;
+}
+
+#max_new_tokens{
+  width: 100px;
+}
+
+#get_chat, #get_summary{
+ height: calc(3.5rem + calc(var(--bs-border-width) * 2));
+ width: 110px;
 }
 
 table {

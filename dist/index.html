@@ -82,16 +82,18 @@
                                         <div class="col-md-4">
                                             <div class="form-floating">
                                                 <select class="form-select form-control " id="model-name">
-                                                    <option value="Xenova/all-MiniLM-L6-v2">all-MiniLM-L6-v2 (23 MB)
-                                                    </option>
-                                                    <option value="Supabase/gte-small" selected>gte-small (34 MB)
-                                                    </option>
-                                                    <option value="Xenova/kobert">kobert (92 MB)</option>
-                                                    <!--<option value="Xenova/multilingual-e5-small">multilingual-e5-small (118 MB)</option>-->
-                                                    <option value="Xenova/distiluse-base-multilingual-cased-v2">
-                                                        distiluse-base-multilingual-cased-v2 (135 MB)
-                                                    </option>
+                                                    <option value="TaylorAI/gte-tiny" selected>gte-tiny (23 MB)</option>
+                                                    <option value="Supabase/gte-small">gte-small (34 MB)</option>
+                                                    <option value="Xenova/gte-base">gte-base (110 MB)</option>                               
+                                                    <option value="Xenova/gte-large">gte-large (337 MB)</option>   
+                                                    <option value="Xenova/all-MiniLM-L6-v2">all-MiniLM-L6-v2 (23 MB)</option>
+                                                    <option value="Xenova/multilingual-e5-small">multilingual-e5-small (118 MB)</option>
+                                                    <option value="Xenova/distiluse-base-multilingual-cased-v2">distiluse-base-multilingual-cased-v2 (135 MB)</option>
                                                     <option value="Xenova/e5-large-v2">e5-large-v2 (335 MB)</option>
+                                                    <option value="Xenova/bge-small-en-v1.5">bge-small-en-v1.5 (34 MB)</option>
+                                                    <option value="Xenova/bge-base-en-v1.5">bge-base-en-v1.5 (110 MB)</option>
+                                                    <option value="Xenova/e5-base-v2">e5-base-v2 (110 MB)</option>
+                                                    <option value="Xenova/kobert">kobert (92 MB)</option>
                                                 </select>
                                                 <label for="model-name">Model:</label>
                                             </div>
@@ -169,6 +171,27 @@ Not very long after that there was again great scarcity in those parts, and the 
                         </div>
                     </div>
                 </form>
+
+                <div class="col-12">
+                    <div>
+                        <hr />
+                        <h4>Chat (experimental)</h4>
+                        <p>Query the top results in 1-2 min.</p>
+                        <input id="chat_query" value="Summarize these bullet points: ">
+                        <div class="d-flex align-items-center flex-row">
+                            <button id="get_chat" class="btn btn-md btn-primary mb-2 nav-button"
+                                disabled>Chat</button>
+                            <p id="chat_text" class="ml-2"></p>
+                        </div>
+                    </div>
+
+                    <div class="progress" role="progressbar" aria-label="Progress Bar" aria-valuenow="0"
+                        aria-valuemin="0" aria-valuemax="100" style="height: 75%">
+                        <div id="chat-progress" class="progress-bar progress-bar-striped" style="width: 0%;">""
+                        </div>
+                    </div>
+                    <br><br>
+                </div>
 
                 <div class="col-12">
                     <div>
