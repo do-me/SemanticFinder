@@ -15,7 +15,7 @@ let embedder;
 
 let tokenizer;
 
-let chatModel = 'Xenova/LaMini-Flan-T5-783M';
+let chatModel = 'Xenova/t5-small';
 
 async function token_to_text(beams){
     let chatTokenizer = await AutoTokenizer.from_pretrained(chatModel);
@@ -111,7 +111,7 @@ self.onmessage = async (event) => {
         case 'chat':
             text = message.text.trim()
             let max_new_tokens = message.max_new_tokens
-            console.log(text)
+            console.log(max_new_tokens, chatModel, text)
 
             let chatGenerator = await pipeline('text2text-generation', chatModel,
                 {
@@ -122,6 +122,7 @@ self.onmessage = async (event) => {
                         });
                     }
                 });
+
             let thisChat = await chatGenerator(text, {
                 max_new_tokens: max_new_tokens,
                 return_prompt: false,

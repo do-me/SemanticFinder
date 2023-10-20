@@ -33,7 +33,46 @@ const submitButton = document.getElementById('submit_button');
 const summaryButton = document.getElementById('get_summary')
 const chatButton = document.getElementById('get_chat')
 
+async function fetchModels(modelType, sortOption) {
+    try {
+        const filename = `models/${modelType}_${sortOption}_sizes.json`;
+        const response = await fetch(filename);
 
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json()
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+async function replaceOptionsWithJSONData(jsonData) {
+    // Get the select element
+    const selectElement = document.getElementById("model-name");
+
+    // Clear existing options
+    selectElement.innerHTML = "";
+
+    // Iterate over the models and add options to the select element
+    jsonData.models.forEach((model) => {
+        const option = document.createElement("option");
+        option.value = model.id;
+        option.textContent = `${model.id} | 💾${model.model_size}Mb 📥${model.downloads} ❤️${model.likes}`;
+
+        // Check if the current model's ID is "TaylorAI/gte-tiny"
+        if (model.id === "TaylorAI/gte-tiny") {
+            option.selected = true;
+        }
+
+        selectElement.appendChild(option);
+    });
+}
+
+////////////////////////////////////
 function removeHighlights() {
     for (const marker of markers) {
         marker.clear();
@@ -134,7 +173,7 @@ function createHighlight(text, className, similarity) {
         const index = resultsDiv.childElementCount - 1;
 
         // Add click listener for card
-        listItem.addEventListener('click', function() {
+        listItem.addEventListener('click', function () {
             editor.scrollIntoView(markers[index].find());
             highlightSelected(index);
         });
@@ -294,7 +333,7 @@ function prevMarker() {
     }
 }
 
-async function summarizeTopResults(){
+async function summarizeTopResults() {
     var topResultsString = Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('; ');
     //console.log(topResultsString)
     //let currentTopResults = "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building, and the tallest structure in Paris. Its base is square, measuring 125 metres (410 ft) on each side. During its construction, the Eiffel Tower surpassed the Washington Monument to become the tallest man-made structure in the world, a title it held for 41 years until the Chrysler Building in New York City was finished in 1930. It was the first structure to reach a height of 300 metres. Due to the addition of a broadcasting aerial at the top of the tower in 1957, it is now taller than the Chrysler Building by 5.2 metres (17 ft). Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France after the Millau Viaduct."
@@ -303,15 +342,15 @@ async function summarizeTopResults(){
     document.getElementById("summary_text").innerHTML = currentSummary[0].summary_text //out[0].summary_text;
 }
 
-async function chatTopResults(){
-    document.getElementById("chat_text").innerHTML = "" 
+async function chatTopResults() {
+    document.getElementById("chat_text").innerHTML = ""
     var chatQuery = document.getElementById("chat_query").value;
     var max_new_tokens = document.getElementById("max_new_tokens").value;
 
     var topResultsString = chatQuery + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('; ');
     //console.log(topResultsString)
     //let currentTopResults = "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building, and the tallest structure in Paris. Its base is square, measuring 125 metres (410 ft) on each side. During its construction, the Eiffel Tower surpassed the Washington Monument to become the tallest man-made structure in the world, a title it held for 41 years until the Chrysler Building in New York City was finished in 1930. It was the first structure to reach a height of 300 metres. Due to the addition of a broadcasting aerial at the top of the tower in 1957, it is now taller than the Chrysler Building by 5.2 metres (17 ft). Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France after the Millau Viaduct."
-    
+
     const currentChat = await chatText(topResultsString, max_new_tokens);
     console.log(currentChat) //[0].summary_text)
     document.getElementById("chat_text").innerHTML = currentChat[0] //out[0].summary_text;
@@ -320,7 +359,7 @@ async function chatTopResults(){
 /**
  * Setup the application when the page loads.
  */
-window.onload = async function() {
+window.onload = async function () {
     window.onSubmit = onSubmit;
 
     editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
@@ -330,7 +369,7 @@ window.onload = async function() {
         lineWrapping: true
     });
 
-    document.getElementById('model-name').addEventListener('change', async function() {
+    document.getElementById('model-name').addEventListener('change', async function () {
         deactivateSubmitButton();
         setProgressBarValue(0);
         const modelName = this.value;
@@ -338,68 +377,83 @@ window.onload = async function() {
         activateSubmitButton();
     });
 
-    document.getElementById('split-type').addEventListener('change', function() {
+    document.getElementById('split-type').addEventListener('change', function () {
         // Get the selected option value
         const splitParam = document.getElementById('split-param');
 
         switch (this.value) {
-        case 'Words':
-            splitParam.disabled = false;
-            document.querySelector("label[for='split-param']").textContent = '# Words';
-            splitParam.type = 'number';
-            splitParam.value = 7;
-            splitParam.min = 1;
-            break;
-        case 'Tokens':
-            splitParam.disabled = false;
-            document.querySelector("label[for='split-param']").textContent = '# Tokens';
-            splitParam.type = 'number';
-            splitParam.value = 15;
-            splitParam.min = 1;
-            splitParam.max = 512;
-            break;
-        case 'Chars':
-            splitParam.disabled = false;
-            document.querySelector("label[for='split-param']").textContent = '# Chars';
-            splitParam.type = 'number';
-            splitParam.value = 40;
-            splitParam.min = 1;
-            break;
-        case 'Regex':
-            splitParam.disabled = false;
-            document.querySelector("label[for='split-param']").textContent = 'Regex';
-            splitParam.type = 'text';
-            splitParam.value = '[.,]\\s';
-            break;
-        default:
-            splitParam.value = null;
-            splitParam.disabled = true;
-            document.querySelector("label[for='split-param']").textContent = '';
-            splitParam.placeholder = '';
+            case 'Words':
+                splitParam.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = '# Words';
+                splitParam.type = 'number';
+                splitParam.value = 7;
+                splitParam.min = 1;
+                break;
+            case 'Tokens':
+                splitParam.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = '# Tokens';
+                splitParam.type = 'number';
+                splitParam.value = 15;
+                splitParam.min = 1;
+                splitParam.max = 512;
+                break;
+            case 'Chars':
+                splitParam.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = '# Chars';
+                splitParam.type = 'number';
+                splitParam.value = 40;
+                splitParam.min = 1;
+                break;
+            case 'Regex':
+                splitParam.disabled = false;
+                document.querySelector("label[for='split-param']").textContent = 'Regex';
+                splitParam.type = 'text';
+                splitParam.value = '[.,]\\s';
+                break;
+            default:
+                splitParam.value = null;
+                splitParam.disabled = true;
+                document.querySelector("label[for='split-param']").textContent = '';
+                splitParam.placeholder = '';
         }
     });
 
+
+    // Dynamically load/overwrite existing options from JSON. Useful for different sorting or updates.
+    //const modelType = 'feature-extraction'; // Replace with 'text2text' if needed
+    //const sortingOptions = ['trending', 'likes', 'downloads', 'modified'];
+    //const selectedSortOption = 'downloads'; // Replace with the desired sorting option
+    //fetchModels(modelType, selectedSortOption)
+    //    .then(data => {
+    //        if (data) {
+    //            console.log(data);
+    //            replaceOptionsWithJSONData(data)
+    //        }
+    //    })
+    //    .catch(err => {
+    //        console.error('Error:', err);
+    //    });
 
     const modelName = document.getElementById('model-name').value;
     await loadSemantic(modelName);
     activateSubmitButton();
 
-    document.getElementById('get_summary').addEventListener('click', function(event) {
+    document.getElementById('get_summary').addEventListener('click', function (event) {
         event.preventDefault();
         summarizeTopResults();
     });
 
-    document.getElementById('get_chat').addEventListener('click', function(event) {
+    document.getElementById('get_chat').addEventListener('click', function (event) {
         event.preventDefault();
         chatTopResults();
     });
 
-    document.getElementById('next').addEventListener('click', function(event) {
+    document.getElementById('next').addEventListener('click', function (event) {
         event.preventDefault();
         nextMarker();
     });
 
-    document.getElementById('prev').addEventListener('click', function(event) {
+    document.getElementById('prev').addEventListener('click', function (event) {
         event.preventDefault();
         prevMarker();
     });
