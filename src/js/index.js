@@ -344,10 +344,10 @@ async function summarizeTopResults() {
 
 async function chatTopResults() {
     document.getElementById("chat_text").innerHTML = ""
-    var chatQuery = document.getElementById("chat_query").value;
+    var chatQuery = "Based on the following input, answer the question:" + document.getElementById("chat_query").value;
     var max_new_tokens = document.getElementById("max_new_tokens").value;
 
-    var topResultsString = chatQuery + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('; ');
+    var topResultsString = chatQuery + " Context:\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
     //console.log(topResultsString)
     //let currentTopResults = "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building, and the tallest structure in Paris. Its base is square, measuring 125 metres (410 ft) on each side. During its construction, the Eiffel Tower surpassed the Washington Monument to become the tallest man-made structure in the world, a title it held for 41 years until the Chrysler Building in New York City was finished in 1930. It was the first structure to reach a height of 300 metres. Due to the addition of a broadcasting aerial at the top of the tower in 1957, it is now taller than the Chrysler Building by 5.2 metres (17 ft). Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France after the Millau Viaduct."
 
