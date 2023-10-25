@@ -15,7 +15,7 @@ let embedder;
 
 let tokenizer;
 
-let chatModel = 'Xenova/t5-small';
+let chatModel = 'Xenova/LaMini-Flan-T5-783M';
 
 async function token_to_text(beams){
     let chatTokenizer = await AutoTokenizer.from_pretrained(chatModel);
