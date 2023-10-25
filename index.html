@@ -271,7 +271,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-floating mb-3">
-                                                <input type="number" id="threshold" class="form-control w-100" value="5"
+                                                <input type="number" id="threshold" class="form-control w-100" value="10"
                                                     min="1" step="1" />
                                                 <label for="threshold"># results</label>
                                             </div>
@@ -349,7 +349,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                         <hr />
                         <h4>Chat (experimental)</h4>
                         <p>Enter a question to be answered. The model is automatically prompted with the top search
-                            results. If you encounter errors, the input is probably too long (either too many or too
+                            results in the form: <br><b>"Based on the following input, answer the question: [your question] [top search results]"</b>.<br> If you encounter errors, the input is probably too long (either too many or too
                             long results or too long prompt). <br><b>Attention</b>: Loads the large <a
                                 href="https://huggingface.co/Xenova/LaMini-Flan-T5-783M"
                                 target="_blank">LaMini-Flan-T5-783M</a> model with <b>1.65Gb</b> of resources.</p>
@@ -360,7 +360,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                         </div>
                         <div class="form-floating input-group mb-3">
                             <input id="chat_query" class="form-control"
-                                value="Based on the following input, are these paragraphs from a fairytale? Input: ">
+                                value="What do these paragraphs have in common?">
                             <label for="query-text">Chat Query</label>
                         </div>
 
