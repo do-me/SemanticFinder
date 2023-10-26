@@ -111,7 +111,7 @@ self.onmessage = async (event) => {
         case 'chat':
             text = message.text.trim()
             let max_new_tokens = message.max_new_tokens
-            console.log(max_new_tokens, chatModel, text)
+            console.log(`Using ${chatModel} with max ${max_new_tokens} new tokens. Prompt:\n\n${text}`)
 
             let chatGenerator = await pipeline('text2text-generation', chatModel,
                 {
