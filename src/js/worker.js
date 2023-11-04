@@ -22,9 +22,6 @@ let chat_tokenizer;
 let summary_generator;
 let summary_tokenizer;
 
-let chatModel = 'Xenova/LaMini-Flan-T5-783M';
-let summaryModel = 'Xenova/distilbart-cnn-6-6'
-
 async function token_to_text(beams, tokenizer_type) {
     //let chatTokenizer = await AutoTokenizer.from_pretrained(chatModel);
     let decoded_text = tokenizer_type.decode(beams[0].output_token_ids, {
@@ -119,7 +116,8 @@ self.onmessage = async (event) => {
                 });
             break;
         case 'load_summary':
-            summary_generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6',
+            summary_tokenizer = await AutoTokenizer.from_pretrained(message.model_name) 
+            summary_generator = await pipeline('summarization', message.model_name,
                 {
                     progress_callback: data => {
                         self.postMessage({
@@ -128,11 +126,11 @@ self.onmessage = async (event) => {
                         });
                     }
                 });
-            summary_tokenizer = await AutoTokenizer.from_pretrained(summaryModel) 
             break;
         case 'load_chat':
             console.log("loading chat")
-            chat_generator = await pipeline('text2text-generation', chatModel,
+            chat_tokenizer = await AutoTokenizer.from_pretrained(message.model_name) // no progress callbacks -- assume its quick
+            chat_generator = await pipeline('text2text-generation', message.model_name,
                 {
                     progress_callback: data => {
                         self.postMessage({
@@ -141,7 +139,6 @@ self.onmessage = async (event) => {
                         });
                     }
                 });
-            chat_tokenizer = await AutoTokenizer.from_pretrained(chatModel) // no progress callbacks -- assume its quick
             break;
         case 'query':
             text = message.text;

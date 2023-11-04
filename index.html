@@ -362,7 +362,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                 <div class="col-12">
                     <div>
                         <hr />
-                        <h4>Chat (experimental)</h4>
+                        <h4>Chat (Retrieval Augmented Generation, RAG)</h4>
                         <p>Enter a question to be answered. The model is automatically prompted with the top search
                             results in the form: <br><b>"Based on the following input, answer the question: [your
                                 question] [top search results]"</b>.<br> If you encounter errors, the input is probably
@@ -384,8 +384,8 @@ Not very long after that there was again great scarcity in those parts, and the 
                                         <select class="form-select form-control" id="chat-model-name">
                                             <option selected value="Xenova/LaMini-Flan-T5-783M">
                                                 Xenova/LaMini-Flan-T5-783M | 💾1.65Gb 📥17 ❤️20</option>
-                                            <option selected value="Xenova/t5-small">Xenova/t5-small | 💾1.65Gb 📥17
-                                                ❤️20</option>
+                                            <option value="Xenova/t5-small">Xenova/t5-small | 💾81Mb 📥2
+                                                ❤️2</option>
 
                                         </select>
                                         <label for="model-name">Model:</label>
@@ -423,7 +423,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                 <div class="col-12">
                     <div>
                         <hr />
-                        <h4>Summary (experimental)</h4>
+                        <h4>Summary (Retrieval Augmented Generation, RAG)</h4>
                         <p>Summarizes the top results in 1-2 min. Works best with non-fictional texts and longer text
                             chunks (>200 chars).<br><b>Attention</b>: Loads the large <a
                                 href="https://huggingface.co/Xenova/distilbart-cnn-6-6"
@@ -440,8 +440,6 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select form-control" id="summary-model-name">
-                                            <option selected value="Xenova/distilbart-cnn-6-6">Xenova/distilbart-cnn-6-6
-                                            </option>
                                             <option selected value="Xenova/distilbart-cnn-6-6">Xenova/distilbart-cnn-6-6
                                             </option>
                                         </select>

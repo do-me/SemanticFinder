@@ -453,15 +453,36 @@ window.onload = async function () {
     await loadSemantic(modelName);
     activateSubmitButton();
 
-    document.getElementById('get_summary').addEventListener('click', function (event) {
+    let summary_is_loaded = true; // Flag to track the first click
+    document.getElementById('get_summary').addEventListener('click', async function (event) {
+        deactivateSubmitButton(summaryButton);
         event.preventDefault();
-        summarizeTopResults();
+        let this_model = document.getElementById('summary-model-name').value;
+    
+        if (summary_is_loaded) {
+            await loadSummary(this_model); // Execute only on the first click
+            summary_is_loaded = false; // Set the flag to false after the first click
+        }
+    
+        await summarizeTopResultsTopResults(); // Execute on every click after the first one
+        activateSubmitButton(summaryButton, "Summarize");
     });
 
-    document.getElementById('get_chat').addEventListener('click', function (event) {
+    let chat_is_loaded = true; // Flag to track the first click
+    document.getElementById('get_chat').addEventListener('click', async function (event) {
+        deactivateSubmitButton(chatButton);
         event.preventDefault();
-        chatTopResults();
+        let this_model = document.getElementById('chat-model-name').value;
+    
+        if (chat_is_loaded) {
+            await loadChat(this_model); // Execute only on the first click
+            chat_is_loaded = false; // Set the flag to false after the first click
+        }
+    
+        await chatTopResults(); // Execute on every click after the first one
+        activateSubmitButton(chatButton, "Chat");
     });
+    
 
     document.getElementById('next').addEventListener('click', function (event) {
         event.preventDefault();
