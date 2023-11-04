@@ -207,6 +207,32 @@ export async function loadSemantic(modelName) {
     });
 }
 
+export async function loadChat(modelName) {
+    let downloadBar = document.getElementById('chat-progress');
+    downloadBar.style.width = '0%';
+    downloadBar.textContent = 'Loading model...';
+    worker.postMessage({
+        type: 'load_chat',
+        model_name: modelName
+    });
+    return new Promise((resolve) => {
+        loadResolve = resolve;
+    });
+}
+
+export async function loadSummary(modelName) {
+    let downloadBar = document.getElementById('summary-progress');
+    downloadBar.style.width = '0%';
+    downloadBar.textContent = 'Loading model...';
+    worker.postMessage({
+        type: 'load_summary',
+        model_name: modelName
+    });
+    return new Promise((resolve) => {
+        loadResolve = resolve;
+    });
+}
+
 /**
  * @typedef {Array<number>} EmbeddingVector
  * @param {EmbeddingVector} embedding

@@ -13,13 +13,10 @@
   font-weight: 700;
 }
 
-#max_new_tokens{
-  width: 100px;
-}
-
 #get_chat, #get_summary{
  height: calc(3.5rem + calc(var(--bs-border-width) * 2));
  width: 110px;
+ margin-right: 20px;
 }
 
 table {
@@ -110,7 +107,7 @@ td {
 }
 
 #results {
-  height: 78vh;
+  height: 70vh;
   overflow-y: auto;
 }
 
@@ -165,5 +162,14 @@ td {
 @media (max-width: 992px) {
   .col-sm-9  {
     width: 100% !important;
+  }
+  #results{
+    height: unset !important;
+  }
+  .col-sm-3  {
+    width: 100% !important;
+  }
+  ul {
+    padding-left: 0 !important;
   }
 }

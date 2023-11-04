@@ -5,7 +5,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
+import { loadSemantic,loadChat,loadSummary, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
 import { splitText } from './utils.js';
 
 import '../css/styles.css';
@@ -32,6 +32,9 @@ const prevButton = document.getElementById('prev');
 const submitButton = document.getElementById('submit_button');
 const summaryButton = document.getElementById('get_summary')
 const chatButton = document.getElementById('get_chat')
+const progressBarEmbeddings = document.getElementById('progressBarProgress');
+const progressBarChat = document.getElementById('progressBarChat');
+const progressBarSummary = document.getElementById('progressBarSummary');
 
 async function fetchModels(modelType, sortOption) {
     try {
@@ -80,17 +83,17 @@ function removeHighlights() {
     markers = [];
 }
 
-function deactivateSubmitButton() {
-    if (submitButton) {
-        submitButton.setAttribute('disabled', '');
-        submitButton.textContent = 'Loading...';
+function deactivateSubmitButton(button=submitButton) {
+    if (button) {
+        button.setAttribute('disabled', '');
+        button.textContent = 'Loading...';
     }
 }
 
-function activateSubmitButton() {
-    if (submitButton) {
-        submitButton.removeAttribute('disabled');
-        submitButton.textContent = 'Find';
+function activateSubmitButton(button=submitButton, buttonText="Find") {
+    if (button) {
+        button.removeAttribute('disabled');
+        button.textContent = buttonText;
     }
 }
 
@@ -226,8 +229,7 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-function setProgressBarValue(value) {
-    const progressBar = document.getElementById('progressBarProgress');
+function setProgressBarValue(value, progressBar=progressBarEmbeddings) {
     if (value === '' || value === '0') {
         progressBar.style.transition = 'width .1s ease'; // Temporarily override the transition duration
         progressBar.classList.add('progress-bar-animated');
@@ -345,7 +347,7 @@ async function summarizeTopResults() {
 async function chatTopResults() {
     document.getElementById("chat_text").innerHTML = ""
     var chatQuery = "Based on the following input, answer the question:" + document.getElementById("chat_query").value;
-    var max_new_tokens = document.getElementById("max_new_tokens").value;
+    var max_new_tokens = document.getElementById("chat_max_new_tokens").value;
 
     var topResultsString = chatQuery + " Context:\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
     //console.log(topResultsString)
@@ -375,6 +377,23 @@ window.onload = async function () {
         const modelName = this.value;
         await loadSemantic(modelName);
         activateSubmitButton();
+    });
+
+    document.getElementById('summary-model-name').addEventListener('change', async function () {
+        deactivateSubmitButton(summaryButton);
+        setProgressBarValue(0, progressBarSummary);
+        const modelName = this.value;
+        await loadSummary(modelName);
+        activateSubmitButton(summaryButton, "Summarize");
+    });
+
+    document.getElementById('chat-model-name').addEventListener('change', async function () {
+        deactivateSubmitButton(chatButton);
+        setProgressBarValue(0, progressBarChat);
+        const modelName = this.value;
+        console.log(modelName);
+        await loadChat(modelName);
+        activateSubmitButton(chatButton, "Chat");
     });
 
     document.getElementById('split-type').addEventListener('change', function () {
