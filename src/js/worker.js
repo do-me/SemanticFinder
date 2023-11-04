@@ -20,20 +20,19 @@ let chat_tokenizer;
 
 // summary model
 let summary_generator;
-//let summary_tokenizer;
-
+let summary_tokenizer;
 
 let chatModel = 'Xenova/LaMini-Flan-T5-783M';
+let summaryModel = 'Xenova/distilbart-cnn-6-6'
 
-async function token_to_text(beams){
+async function token_to_text(beams, tokenizer_type) {
     //let chatTokenizer = await AutoTokenizer.from_pretrained(chatModel);
-    let decoded_text =  chat_tokenizer.decode(beams[0].output_token_ids, {
+    let decoded_text = tokenizer_type.decode(beams[0].output_token_ids, {
         skip_special_tokens: true
     });
-    console.log(decoded_text);
+    //console.log(decoded_text);
     return decoded_text
 }
-
 
 /**
  * @param {string} text
@@ -52,25 +51,54 @@ async function getTokens(text) {
     return await tokenizer(text).input_ids.data;
 }
 
-async function chat(text,max_new_tokens=100) {
-    const thisChat = await chat_generator(text, {
-        max_new_tokens: max_new_tokens,
-        return_prompt: false,
-        callback_function: async function (beams) {
-            //console.log(beams);
-            const decodedText = token_to_text(beams)
-            console.log(decodedText);
+async function chat(text, max_new_tokens = 100) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const thisChat = await chat_generator(text, {
+                max_new_tokens: max_new_tokens,
+                return_prompt: false,
+                callback_function: async function (beams) {
+                    const decodedText = await token_to_text(beams,chat_tokenizer);
+                    //console.log(decodedText);
+
+                    self.postMessage({
+                        type: 'chat',
+                        chat_text: decodedText,
+                    });
+
+                    resolve(decodedText); // Resolve the main promise with chat text
+                },
+            });
+        } catch (error) {
+            reject(error);
         }
     });
-    return thisChat
 }
 
-async function summary(text,max_new_tokens=100) {
-    let thisSummary = await summary_generator(text, {
-        max_new_tokens: max_new_tokens,
-    })
-    return thisSummary
+async function summary(text, max_new_tokens = 100) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const thisSummary = await summary_generator(text, {
+                max_new_tokens: max_new_tokens,
+                return_prompt: false,
+                callback_function: async function (beams) {
+                    const decodedText = await token_to_text(beams,summary_tokenizer);
+                    //console.log(beams)
+
+                    self.postMessage({
+                        type: 'summary',
+                        summary_text: decodedText,
+                    });
+
+                    resolve(decodedText); // Resolve the main promise with chat text
+                },
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
+
 
 self.onmessage = async (event) => {
     const message = event.data;
@@ -100,6 +128,7 @@ self.onmessage = async (event) => {
                         });
                     }
                 });
+            summary_tokenizer = await AutoTokenizer.from_pretrained(summaryModel) 
             break;
         case 'load_chat':
             console.log("loading chat")

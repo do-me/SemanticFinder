@@ -90,10 +90,14 @@ worker.onmessage = function (event) {
             }
             break;
         case 'chat':
-                queryResolve(message.chat);
-                break;
+            console.log(message.chat_text);
+            document.getElementById("chat_text").innerHTML = message.chat_text
+            queryResolve(message.chat_text);
+            break;
         case 'summary':
-            queryResolve(message.summary);
+            console.log(message.summary_text);
+            document.getElementById("summary_text").innerHTML = message.summary_text
+            queryResolve(message.summary_text);
             break;
         case 'query':
             queryEmbedding = message.embedding;
