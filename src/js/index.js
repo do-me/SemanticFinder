@@ -464,7 +464,7 @@ window.onload = async function () {
             summary_is_loaded = false; // Set the flag to false after the first click
         }
     
-        await summarizeTopResultsTopResults(); // Execute on every click after the first one
+        await summarizeTopResults(); // Execute on every click after the first one
         activateSubmitButton(summaryButton, "Summarize");
     });
 
