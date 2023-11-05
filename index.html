@@ -34,7 +34,7 @@
                             (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary">IPCC Summary 2023
                             (35
                             pages)</a>.<br>For a more refined search, enter a low character count; for a coarser search,
-                        enter a high one. Simply copy and paste any text and hit Find.
+                        enter a high one. Simply copy and paste any text and hit <b>Find</b>.
                     </p>
                 </div>
             </div>
@@ -281,8 +281,8 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-floating mb-3">
-                                                <input type="number" id="threshold" class="form-control w-100"
-                                                    value="5" min="1" step="1" />
+                                                <input type="number" id="threshold" class="form-control w-100" value="5"
+                                                    min="1" step="1" />
                                                 <label for="threshold"># results</label>
                                             </div>
                                         </div>
@@ -330,7 +330,8 @@
 
                         <!--  text box -->
                         <div class="form-floating">
-                            <textarea id="input-text" class="form-control" placeholder="Enter">Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
+                            <textarea id="input-text" class="form-control"
+                                placeholder="Enter">Near a great forest there lived a poor woodcutter and his wife, and his two children; the boy's name was Hansel and the girl's Grethel. They had very little to bite or to sup, and once, when there was great dearth in the land, the man could not even gain the daily bread. As he lay in bed one night thinking of this, and turning and tossing, he sighed heavily, and said to his wife, "What will become of us? we cannot even feed our children; there is nothing left for ourselves."
 "I will tell you what, husband," answered the wife; "we will take the children early in the morning into the forest, where it is thickest; we will make them a fire, and we will give each of them a piece of bread, then we will go to our work and leave them alone; they will never find the way home again, and we shall be quit of them."
 "No, wife," said the man, "I cannot do that; I cannot find in my heart to take my children into the forest and to leave them there alone; the wild animals would soon come and devour them." - "O you fool," said she, "then we will all four starve; you had better get the coffins ready," and she left him no peace until he consented. "But I really pity the poor children," said the man.
 The two children had not been able to sleep for hunger, and had heard what their step-mother had said to their father. Grethel wept bitterly, and said to Hansel, "It is all over with us."
@@ -367,7 +368,10 @@ Not very long after that there was again great scarcity in those parts, and the 
                             results in the form: <br><b>"Based on the following input, answer the question: [your
                                 question] [top search results]"</b>.<br> If you encounter errors, the input is probably
                             too long (either too many or too
-                            long results or too long prompt). Xenova/LaMini-Flan-T5-783M is by far the best quantized model and delivers good results while the others produce nonsense in most cases. Also, make sure to check the right prompting style!<br><b>Attention</b>: Loads very large models with more than 1.5Gb1 (!) of resources.</p>
+                            long results or too long prompt). Xenova/LaMini-Flan-T5-783M is by far the best quantized
+                            model and delivers good results while the others produce nonsense in most cases. Also, make
+                            sure to check the right prompting style!<br><b>Attention</b>: Loads very large models with
+                            more than 1.5Gb1 (!) of resources.</p>
                         <div class="form-floating input-group mb-3">
                             <input id="chat_query" class="form-control"
                                 value="What do these paragraphs have in common?">
@@ -380,29 +384,35 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select form-control" id="chat-model-name">
-                                                <option selected value="Xenova/LaMini-Flan-T5-783M">
-                                                    Xenova/LaMini-Flan-T5-783M | 💾1.65Gb 📥17 ❤️20</option>
-                                                    <option value="Xenova/t5-small">Xenova/t5-small | 💾81Mb 📥2
-                                                        ❤️2</option>
-                                                <option value="Xenova/flan-t5-small">Xenova/flan-t5-small</option>
-                                                <option value="Xenova/LaMini-Flan-T5-783M">Xenova/LaMini-Flan-T5-783M</option>
-                                                <option value="Xenova/LaMini-Flan-T5-248M">Xenova/LaMini-Flan-T5-248M</option>
-                                                <option value="Xenova/LaMini-Flan-T5-77M">Xenova/LaMini-Flan-T5-77M</option>
-                                                <option value="Xenova/LaMini-T5-61M">Xenova/LaMini-T5-61M</option>
-                                                <option value="Xenova/LaMini-T5-738M">Xenova/LaMini-T5-738M</option>
-                                                <option value="Xenova/LaMini-T5-223M">Xenova/LaMini-T5-223M</option>
-                                                <option value="Xenova/mt5-small">Xenova/mt5-small</option>
-                                                <option value="Xenova/mt5-base">Xenova/mt5-base</option>
-                                                <option value="Xenova/t5-base">Xenova/t5-base</option>
-                                                <option value="Xenova/t5-v1_1-base">Xenova/t5-v1_1-base</option>
-                                                <option value="Xenova/flan-t5-base">Xenova/flan-t5-base</option>
-                                                <option value="Xenova/t5-v1_1-small">Xenova/t5-v1_1-small</option>
-                                                <option value="Xenova/blenderbot-400M-distill">Xenova/blenderbot-400M-distill</option>
-                                                <option value="Xenova/blenderbot_small-90M">Xenova/blenderbot_small-90M</option>
-                                                <option value="Xenova/long-t5-tglobal-base">Xenova/long-t5-tglobal-base</option>
-                                                <option value="Xenova/long-t5-local-base">Xenova/long-t5-local-base</option>
-                                                <option value="Xenova/long-t5-tglobal-base-16384-book-summary">Xenova/long-t5-tglobal-base-16384-book-summary</option>
-                                                                
+                                            <option selected value="Xenova/LaMini-Flan-T5-783M">
+                                                Xenova/LaMini-Flan-T5-783M | 💾1.65Gb 📥17 ❤️20</option>
+                                            <option value="Xenova/t5-small">Xenova/t5-small | 💾81Mb 📥2
+                                                ❤️2</option>
+                                            <option value="Xenova/flan-t5-small">Xenova/flan-t5-small</option>
+                                            <option value="Xenova/LaMini-Flan-T5-783M">Xenova/LaMini-Flan-T5-783M
+                                            </option>
+                                            <option value="Xenova/LaMini-Flan-T5-248M">Xenova/LaMini-Flan-T5-248M
+                                            </option>
+                                            <option value="Xenova/LaMini-Flan-T5-77M">Xenova/LaMini-Flan-T5-77M</option>
+                                            <option value="Xenova/LaMini-T5-61M">Xenova/LaMini-T5-61M</option>
+                                            <option value="Xenova/LaMini-T5-738M">Xenova/LaMini-T5-738M</option>
+                                            <option value="Xenova/LaMini-T5-223M">Xenova/LaMini-T5-223M</option>
+                                            <option value="Xenova/mt5-small">Xenova/mt5-small</option>
+                                            <option value="Xenova/mt5-base">Xenova/mt5-base</option>
+                                            <option value="Xenova/t5-base">Xenova/t5-base</option>
+                                            <option value="Xenova/t5-v1_1-base">Xenova/t5-v1_1-base</option>
+                                            <option value="Xenova/flan-t5-base">Xenova/flan-t5-base</option>
+                                            <option value="Xenova/t5-v1_1-small">Xenova/t5-v1_1-small</option>
+                                            <option value="Xenova/blenderbot-400M-distill">
+                                                Xenova/blenderbot-400M-distill</option>
+                                            <option value="Xenova/blenderbot_small-90M">Xenova/blenderbot_small-90M
+                                            </option>
+                                            <option value="Xenova/long-t5-tglobal-base">Xenova/long-t5-tglobal-base
+                                            </option>
+                                            <option value="Xenova/long-t5-local-base">Xenova/long-t5-local-base</option>
+                                            <option value="Xenova/long-t5-tglobal-base-16384-book-summary">
+                                                Xenova/long-t5-tglobal-base-16384-book-summary</option>
+
                                         </select>
                                         <label for="model-name">Model:</label>
                                     </div>
@@ -435,7 +445,7 @@ Not very long after that there was again great scarcity in those parts, and the 
 
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="col-12">
                     <div>
@@ -451,21 +461,26 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select form-control" id="summary-model-name">
-                                          
-                                                <option value="Xenova/distilbart-cnn-6-6">Xenova/distilbart-cnn-6-6</option>
-                                                <option value="Xenova/bart-large-cnn">Xenova/bart-large-cnn</option>
-                                                <option value="ahmedaeb/distilbart-cnn-6-6-optimised">ahmedaeb/distilbart-cnn-6-6-optimised</option>
-                                                <option value="Xenova/distilbart-xsum-12-1">Xenova/distilbart-xsum-12-1</option>
-                                                <option value="Xenova/distilbart-xsum-6-6">Xenova/distilbart-xsum-6-6</option>
-                                                <option value="Xenova/distilbart-xsum-12-3">Xenova/distilbart-xsum-12-3</option>
-                                                <option value="Xenova/distilbart-xsum-9-6">Xenova/distilbart-xsum-9-6</option>
-                                                <option selected value="Xenova/distilbart-xsum-12-6">Xenova/distilbart-xsum-12-6</option>
-                                                <option value="Xenova/distilbart-cnn-12-3">Xenova/distilbart-cnn-12-3</option>
-                                                <option value="Xenova/distilbart-cnn-12-6">Xenova/distilbart-cnn-12-6</option>
-                                                <option value="Xenova/bart-large-xsum">Xenova/bart-large-xsum</option>
-                                           
-                                            
 
+                                            <option value="Xenova/distilbart-cnn-6-6">Xenova/distilbart-cnn-6-6</option>
+                                            <option value="Xenova/bart-large-cnn">Xenova/bart-large-cnn</option>
+                                            <option value="ahmedaeb/distilbart-cnn-6-6-optimised">
+                                                ahmedaeb/distilbart-cnn-6-6-optimised</option>
+                                            <option value="Xenova/distilbart-xsum-12-1">Xenova/distilbart-xsum-12-1
+                                            </option>
+                                            <option value="Xenova/distilbart-xsum-6-6">Xenova/distilbart-xsum-6-6
+                                            </option>
+                                            <option value="Xenova/distilbart-xsum-12-3">Xenova/distilbart-xsum-12-3
+                                            </option>
+                                            <option value="Xenova/distilbart-xsum-9-6">Xenova/distilbart-xsum-9-6
+                                            </option>
+                                            <option selected value="Xenova/distilbart-xsum-12-6">
+                                                Xenova/distilbart-xsum-12-6</option>
+                                            <option value="Xenova/distilbart-cnn-12-3">Xenova/distilbart-cnn-12-3
+                                            </option>
+                                            <option value="Xenova/distilbart-cnn-12-6">Xenova/distilbart-cnn-12-6
+                                            </option>
+                                            <option value="Xenova/bart-large-xsum">Xenova/bart-large-xsum</option>
                                         </select>
                                         <label for="model-name">Model:</label>
                                     </div>
@@ -479,9 +494,9 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 </div>
                             </div>
                         </div>
-                            <div class="d-flex align-items-center flex-row">
-                                <p id="summary_text" class="ml-2"></p>
-                            </div>
+                        <div class="d-flex align-items-center flex-row">
+                            <p id="summary_text" class="ml-2"></p>
+                        </div>
                         <!-- progress bar -->
                         <div class="col-12">
                             <div class="progress" role="progressbar" aria-label="Loading model" aria-valuenow="0"
