@@ -367,7 +367,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                             results in the form: <br><b>"Based on the following input, answer the question: [your
                                 question] [top search results]"</b>.<br> If you encounter errors, the input is probably
                             too long (either too many or too
-                            long results or too long prompt). <br><b>Attention</b>: Loads very large models with more than 1.5Gb1 (!) of resources.</p>
+                            long results or too long prompt). Xenova/LaMini-Flan-T5-783M is by far the best quantized model and delivers good results while the others produce nonsense in most cases. Also, make sure to check the right prompting style!<br><b>Attention</b>: Loads very large models with more than 1.5Gb1 (!) of resources.</p>
                         <div class="form-floating input-group mb-3">
                             <input id="chat_query" class="form-control"
                                 value="What do these paragraphs have in common?">
@@ -441,7 +441,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                     <div>
                         <hr />
                         <h4>Summary (Retrieval Augmented Generation, RAG)</h4>
-                        <p>Summarizes the top results in 1-2 min. Works best with non-fictional texts and longer text
+                        <p>Summarizes the top search results. Works best with non-fictional texts and longer text
                             chunks (>200 chars).<br><b>Attention</b>: Loads very large models with hundreds of MB!</p>
                         <br>
                         <div class="d-flex flex-row">
