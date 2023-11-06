@@ -286,7 +286,7 @@
                                                 <label for="threshold"># results</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-2">
                                             <div class="form-floating">
                                                 <select class="form-select form-control " id="split-type">
                                                     <option value="Sentence">Sentence</option>
@@ -303,6 +303,25 @@
                                                 <input id="split-param" class="form-control w-100" type="number" min="1"
                                                     value="100" />
                                                 <label for="split-param"># Chars</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="quantized" checked>
+                                                <label class="form-check-label" for="quantized" title="Use ~4x smaller & faster quantized but less accurate models (good for low bandwidth)">quantized</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4" title="Monospace | Calibri | Open Sans | Arial | Arial | Arial Black | Comic Sans MS | Courier New | Georgia | Impact | Times New Roman | Trebuchet MS | Verdana | Tahoma | Lucida Console | Lucida Sans Unicode | Palatino Linotype | Book Antiqua | Palatino | Symbol | Wingdings">
+                                            <div class="form-floating mb-3">
+                                                <input id="font-family" class="form-control w-100" type="text" value="Open Sans" />
+                                                <label for="font-family">Font-Family</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-floating mb-3">
+                                                <input id="font-size" class="form-control w-100" type="number" min="1" value="15" />
+                                                <label for="font-siz"># Font-Size</label>
                                             </div>
                                         </div>
                                     </div>
@@ -369,8 +388,12 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 question] [top search results]"</b>.<br> If you encounter errors, the input is probably
                             too long (either too many or too
                             long results or too long prompt). Also, make
-                            sure to check the right prompting style! Xenova/LaMini-Flan-T5-783M is by far the best quantized
-                            model currently available and delivers good results while the others produce nonsense in most cases. At some point <a href="https://github.com/xenova/transformers.js/pull/379" target="_blank">Falcon & Mistral/Zephyr models</a> will probably become available here.<br><b>Attention</b>: Loads very large models with
+                            sure to check the right prompting style! Xenova/LaMini-Flan-T5-783M is by far the best
+                            quantized
+                            model currently available and delivers good results while the others produce nonsense in
+                            most cases. At some point <a href="https://github.com/xenova/transformers.js/pull/379"
+                                target="_blank">Falcon & Mistral/Zephyr models</a> will probably become available
+                            here.<br><b>Attention</b>: Loads very large models with
                             more than 1.5Gb1 (!) of resources.</p>
                         <div class="form-floating input-group mb-3">
                             <input id="chat_query" class="form-control"
