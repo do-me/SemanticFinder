@@ -199,12 +199,14 @@ export async function getTokens(text) {
  * @returns
  */
 export async function loadSemantic(modelName) {
+    const quantized = document.getElementById("quantized").checked;
     const downloadBar = document.getElementById('loading-progress');
     downloadBar.style.width = '0%';
     downloadBar.textContent = 'Loading model...';
     worker.postMessage({
         type: 'load',
-        model_name: modelName
+        model_name: modelName,
+        quantized: quantized
     });
     return new Promise((resolve) => {
         loadResolve = resolve;
@@ -212,12 +214,14 @@ export async function loadSemantic(modelName) {
 }
 
 export async function loadChat(modelName) {
+    //const quantized = document.getElementById("quantized").checked;
     let downloadBar = document.getElementById('chat-progress');
     downloadBar.style.width = '0%';
     downloadBar.textContent = 'Loading model...';
     worker.postMessage({
         type: 'load_chat',
         model_name: modelName
+        //quantized: quantized
     });
     return new Promise((resolve) => {
         loadResolve = resolve;
@@ -225,12 +229,14 @@ export async function loadChat(modelName) {
 }
 
 export async function loadSummary(modelName) {
+    //const quantized = document.getElementById("quantized").checked;
     let downloadBar = document.getElementById('summary-progress');
     downloadBar.style.width = '0%';
     downloadBar.textContent = 'Loading model...';
     worker.postMessage({
         type: 'load_summary',
         model_name: modelName
+        //quantized: quantized
     });
     return new Promise((resolve) => {
         loadResolve = resolve;

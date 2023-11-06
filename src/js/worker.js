@@ -97,22 +97,26 @@ async function summary(text, max_new_tokens = 100) {
 }
 
 
+
 self.onmessage = async (event) => {
     const message = event.data;
     let text;
     let embedding;
+    console.log(message);
     switch (message.type) {
         case 'load':
             embeddingsDict = {}; // clear dict
             tokenizer = await AutoTokenizer.from_pretrained(message.model_name); // no progress callbacks -- assume its quick
             embedder = await pipeline('feature-extraction', message.model_name,
                 {
+                    quantized: message.quantized,
                     progress_callback: data => {
                         self.postMessage({
                             type: 'download',
                             data
                         });
                     }
+                    
                 });
             break;
         case 'load_summary':
@@ -125,6 +129,7 @@ self.onmessage = async (event) => {
                             data
                         });
                     }
+                    //quantized: message.quantized // currently not possible, models unquantized way too large!
                 });
             break;
         case 'load_chat':
@@ -138,6 +143,7 @@ self.onmessage = async (event) => {
                             data
                         });
                     }
+                    //quantized: message.quantized // currently not possible, models unquantized way too large!
                 });
             break;
         case 'query':

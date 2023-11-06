@@ -8,6 +8,10 @@
   height: 55vh !important;
 }
 
+.CodeMirror.cm-s-default.CodeMirror-wrap {
+  font-family: 'Open Sans', sans-serif;
+}
+
 #summary_text, #chat_text {
   margin: 10px;
   font-weight: 700;

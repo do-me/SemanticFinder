@@ -367,10 +367,36 @@ window.onload = async function () {
         lineWrapping: true
     });
 
+    const fontFamilyInput = document.getElementById("font-family");
+    const fontSizeInput = document.getElementById("font-size");
+    
+    const updateStyles = () => {
+        const newFontFamily = fontFamilyInput.value;
+        const newFontSize = fontSizeInput.value + "px";
+        const codeMirrorElement = document.querySelector(".CodeMirror.cm-s-default.CodeMirror-wrap");
+        
+        codeMirrorElement.style.fontFamily = newFontFamily;
+        codeMirrorElement.style.fontSize = newFontSize;
+    };
+    
+    document.addEventListener("input", (event) => {
+        if (event.target === fontFamilyInput || event.target === fontSizeInput) {
+            updateStyles();
+        }
+    });
+    
     document.getElementById('model-name').addEventListener('change', async function () {
         deactivateSubmitButton();
         setProgressBarValue(0);
         const modelName = this.value;
+        await loadSemantic(modelName);
+        activateSubmitButton();
+    });
+
+    document.getElementById('quantized').addEventListener('change', async function () {
+        deactivateSubmitButton();
+        setProgressBarValue(0);
+        const modelName = document.getElementById("model-name").value
         await loadSemantic(modelName);
         activateSubmitButton();
     });
