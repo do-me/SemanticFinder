@@ -102,7 +102,7 @@ self.onmessage = async (event) => {
     const message = event.data;
     let text;
     let embedding;
-    console.log(message);
+    //console.log(message);
     switch (message.type) {
         case 'load':
             embeddingsDict = {}; // clear dict
