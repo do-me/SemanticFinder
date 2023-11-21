@@ -77,10 +77,8 @@ async function replaceOptionsWithJSONData(jsonData) {
 
 ////////////////////////////////////
 function removeHighlights() {
-    for (const marker of markers) {
-        marker.clear();
-    }
-    markers = [];
+    markers.forEach(_ => _.clear());
+    markers.length = 0;
 }
 
 function deactivateSubmitButton(button=submitButton) {
