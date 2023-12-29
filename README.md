@@ -168,3 +168,7 @@ PRs welcome!
 - [ ] add possible use cases
 - [ ] package as a standalone application (maybe with custom model choice; to be downloaded once from HF hub, then saved locally)
 - [ ] possible integration as example in [transformers.js homepage](https://github.com/xenova/transformers.js/issues/84)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=do-me/SemanticFinder&type=Timeline)](https://star-history.com/#do-me/SemanticFinder&Timeline)
