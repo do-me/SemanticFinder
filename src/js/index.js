@@ -264,7 +264,7 @@ async function semanticHighlight(callback) {
     const results = [];
 
     // Only update results a max of numUpdates times
-    const N = numUpdates;
+    const N = inputTexts.length;
     const interval = Math.ceil(N / Math.min(numUpdates, N));
 
     for (let i = 0; i < N; i++) {
