@@ -257,13 +257,13 @@ async function semanticHighlight(callback) {
     const splitType = document.getElementById('split-type').value;
     const splitParam = document.getElementById('split-param').value;
     const inputTexts = await splitText(text, splitType, splitParam);
+    const numUpdates = document.getElementById('update-rate').value;
 
     await embedQuery(inputQuery);
 
     const results = [];
 
     // Only update results a max of numUpdates times
-    const numUpdates = 100;
     const N = inputTexts.length;
     const interval = Math.ceil(N / Math.min(numUpdates, N));
 
