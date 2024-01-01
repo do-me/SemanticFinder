@@ -265,7 +265,8 @@ async function semanticHighlight(callback) {
 
     // Only update results a max of numUpdates times
     const N = inputTexts.length;
-    const interval = Math.ceil(N / Math.min(numUpdates, N));
+    const interval = Math.ceil(N / Math.min(numUpdates, N)); // html cards and highlight update is costly, so do it only a few times
+    const progressBarInterval = Math.ceil(N / Math.min(100, N)); // for every percent update progress
 
     for (let i = 0; i < N; i++) {
         const inputText = inputTexts[i];
@@ -277,6 +278,11 @@ async function semanticHighlight(callback) {
 
         results.push([inputText, cosineSimilarity]);
 
+        if (i % progressBarInterval === 0 || i === N - 1) {
+            const progress = Math.round(((i + 1) * 100) / N);
+            setProgressBarValue(progress);
+        }
+
         if (i % interval === 0 || i === N - 1) {
             results.sort((a, b) => b[1] - a[1]);
 
@@ -284,9 +290,6 @@ async function semanticHighlight(callback) {
             if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
                 editor.scrollIntoView(markers[0].find());
             }
-
-            const progress = Math.round(((i + 1) * 100) / N);
-            setProgressBarValue(progress);
         }
     }
 
