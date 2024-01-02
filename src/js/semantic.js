@@ -10,6 +10,8 @@ const worker = new Worker(new URL('./worker.js', import.meta.url), {
     type: 'module'
 });
 
+window.semanticWorker = worker;
+
 /**
  * @type {EmbeddingVector}
  */
@@ -40,6 +42,10 @@ worker.onmessage = function (event) {
     let resolve;
 
     switch (message.type) {
+        case 'embeddingsDict':
+            const embeddingsDict = message.data;
+            console.log(embeddingsDict);
+            break;
         case "download":
             let downloadBar = document.getElementById('loading-progress');
 

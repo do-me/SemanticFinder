@@ -96,14 +96,28 @@ async function summary(text, max_new_tokens = 100) {
     });
 }
 
+// Function to update embeddingsDict
+const updateEmbeddingsDict = (newData) => {
+    embeddingsDict = newData;
+    postMessage({ type: 'updateEmbeddingsDict', data: embeddingsDict });
+  };
+  
+  // Expose a function to manually update embeddingsDict
+  self.updateEmbeddingsDictManually = updateEmbeddingsDict;
 
-
-self.onmessage = async (event) => {
+  self.onmessage = async (event) => {
     const message = event.data;
     let text;
     let embedding;
-    //console.log(message);
+    
+    // Other cases in your existing switch statement
     switch (message.type) {
+        case 'updateEmbeddingsDict':
+            embeddingsDict = message.data;
+            break
+        case 'readEmbeddingsDict':
+            self.postMessage({ type: 'embeddingsDict', data: embeddingsDict });
+            break;
         case 'load':
             embeddingsDict = {}; // clear dict
             tokenizer = await AutoTokenizer.from_pretrained(message.model_name); // no progress callbacks -- assume its quick

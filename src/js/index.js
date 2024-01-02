@@ -135,7 +135,7 @@ function resetResults() {
  *
  * @param {*} results
  */
-function updateResults(results) {
+async function updateResults(results) {
     resetResults();
     const k = document.getElementById('threshold').value;
 
@@ -227,7 +227,7 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-function setProgressBarValue(value, progressBar=progressBarEmbeddings) {
+async function setProgressBarValue(value, progressBar=progressBarEmbeddings) {
     if (value === '' || value === '0') {
         progressBar.style.transition = 'width .1s ease'; // Temporarily override the transition duration
         progressBar.classList.add('progress-bar-animated');
@@ -246,6 +246,10 @@ function setProgressBarValue(value, progressBar=progressBarEmbeddings) {
     }
 }
 
+async function CoderMirrorFindAndScrollIntoView(CM_text){
+    editor.scrollIntoView(CM_text.find())
+}
+
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
     resetResults();
@@ -256,41 +260,45 @@ async function semanticHighlight(callback) {
     const inputQuery = document.getElementById('query-text').value;
     const splitType = document.getElementById('split-type').value;
     const splitParam = document.getElementById('split-param').value;
-    const inputTexts = await splitText(text, splitType, splitParam);
+    let inputTexts = await splitText(text, splitType, splitParam);
+    // Initialize inputTexts dictionary with 0 as similarity
+    inputTexts = inputTexts.reduce((acc, text) => {
+        acc[text] = 0;
+        return acc;
+    }, {});
+    
     const numUpdates = document.getElementById('update-rate').value;
 
     await embedQuery(inputQuery);
 
-    const results = [];
+    const N = Object.keys(inputTexts).length;
+    const interval = Math.ceil(N / Math.min(numUpdates, N));
+    const progressBarInterval = Math.ceil(N / Math.min(100, N));
 
-    // Only update results a max of numUpdates times
-    const N = inputTexts.length;
-    const interval = Math.ceil(N / Math.min(numUpdates, N)); // html cards and highlight update is costly, so do it only a few times
-    const progressBarInterval = Math.ceil(N / Math.min(100, N)); // for every percent update progress
-
-    for (let i = 0; i < N; i++) {
-        const inputText = inputTexts[i];
+    let i = 0;
+    for (const inputText in inputTexts) {
         if (!isProcessing) {
             break;
         }
 
         const cosineSimilarity = await similarity(inputText);
-
-        results.push([inputText, cosineSimilarity]);
+        inputTexts[inputText] = cosineSimilarity;
 
         if (i % progressBarInterval === 0 || i === N - 1) {
             const progress = Math.round(((i + 1) * 100) / N);
             setProgressBarValue(progress);
         }
 
-        if (i % interval === 0 || i === N - 1) {
-            results.sort((a, b) => b[1] - a[1]);
+        if (i !== 0 && (i % interval === 0 || i === N - 1)) {
+            const sortedResults = Object.entries(inputTexts).sort((a, b) => b[1] - a[1]);
+            updateResults(sortedResults);
 
-            updateResults(results);
             if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
-                editor.scrollIntoView(markers[0].find());
+                CoderMirrorFindAndScrollIntoView(markers[0])
             }
         }
+
+        i++;
     }
 
     callback();

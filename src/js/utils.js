@@ -44,8 +44,8 @@ async function splitByTokens(text, numTokens) {
             chunks[chunks.length - 1] += ' ' + word;
         }
     }
-    console.table(chunks);
-
+    //console.table(chunks);
+    console.log("Number of chunks: " + chunks.length)
     return chunks;
 }
 
@@ -78,7 +78,8 @@ function splitByWords(text, numWords) {
     }
     chunks = chunks.filter(chunk => chunk.trim().length > 0);
 
-    console.table(chunks);
+    //console.table(chunks);
+    console.log("Number of chunks: " + chunks.length)
 
     return chunks;
 }
@@ -101,8 +102,8 @@ function splitByChars(text, numChars) {
             chunks[chunks.length - 1] += ' ' + word;
         }
     }
-    console.table(chunks);
-
+    // console.table(chunks);
+    console.log("Number of chunks: " + chunks.length)
     return chunks;
 }
 
@@ -111,7 +112,10 @@ function splitByChars(text, numChars) {
  * @returns {Array<string> | null}
  */
 function splitBySentences(text) {
-    return text.match(/[^.!?]+[.!?]+/g);
+    const chunks = text.match(/[^.!?]+[.!?]+/g);
+    console.log("Number of chunks: " + chunks.length)
+
+    return chunks
 }
 
 /**
@@ -121,5 +125,9 @@ function splitBySentences(text) {
  */
 function splitByRegex(text, r) {
     const regex = new RegExp(r, 'g');
-    return text.split(regex);
+    const chunks = text.split(regex);
+
+    console.log("Number of chunks: " + chunks.length)
+
+    return chunks
 }
