@@ -2,6 +2,7 @@
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import CodeMirror from 'codemirror';
+import pako from 'pako';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
@@ -363,6 +364,36 @@ async function chatTopResults() {
   }
   
 
+  function handleFileUpload() {
+    const fileInput = document.getElementById('file-upload');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a file.');
+        return;
+    }
+
+    // Read the file as an ArrayBuffer
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const arrayBuffer = event.target.result;
+
+        // Use pako.js to decompress the gzip data
+        const inflatedData = pako.inflate(arrayBuffer, { to: 'string' });
+
+        // Convert the JSON string to a JavaScript object
+        const jsonData = JSON.parse(inflatedData);
+
+        // Post the data to the semanticWorker
+        semanticWorker.postMessage({ type: 'importEmbeddingsDict', data: jsonData });
+    };
+
+    // Read the file as an ArrayBuffer
+    reader.readAsArrayBuffer(file);
+
+    alert('Index loaded');
+}
+
 /**
  * Setup the application when the page loads.
  */
@@ -528,4 +559,13 @@ window.onload = async function () {
         event.preventDefault();
         prevMarker();
     });
+
+    document.getElementById('exportEmbeddingsDict').addEventListener('click', function (event) {
+        semanticWorker.postMessage({ type: 'exportEmbeddingsDict' });
+    });
+
+    document.getElementById('confirm-upload').addEventListener('click', function (event) {
+        handleFileUpload();
+    });
+
 };

@@ -37,14 +37,32 @@ let loadResolve;
  */
 let queryResolve;
 
+
+function downloadFile(data, filename, mimeType) {
+    const blob = new Blob([data], { type: mimeType });
+
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+
+    // Append the link to the body for programmatic click
+    document.body.appendChild(link);
+    link.click();
+
+    // Remove the link from the DOM
+    document.body.removeChild(link);
+}
+
 worker.onmessage = function (event) {
     const message = event.data;
     let resolve;
 
     switch (message.type) {
         case 'embeddingsDict':
-            const embeddingsDict = message.data;
-            console.log(embeddingsDict);
+            const gzippedData = message.data;
+            console.log("Embeddings data received.");
+            // Download gzipped data as 'index.json.gz'
+            downloadFile(gzippedData, 'index.json.gz', 'application/gzip');
             break;
         case "download":
             let downloadBar = document.getElementById('loading-progress');

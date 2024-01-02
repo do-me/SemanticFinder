@@ -1,4 +1,5 @@
 import { pipeline, AutoTokenizer } from '@xenova/transformers';
+import pako from 'pako';
 
 // env.useBrowserCache = false; // for testing
 
@@ -109,14 +110,27 @@ const updateEmbeddingsDict = (newData) => {
     const message = event.data;
     let text;
     let embedding;
-    
+     
     // Other cases in your existing switch statement
     switch (message.type) {
-        case 'updateEmbeddingsDict':
+        case 'logEmbeddingsDict':
+            console.log(embeddingsDict);
+            break
+        case 'importEmbeddingsDict':
             embeddingsDict = message.data;
             break
-        case 'readEmbeddingsDict':
-            self.postMessage({ type: 'embeddingsDict', data: embeddingsDict });
+        case 'exportEmbeddingsDict':
+            const embeddingsArray = {};
+            for (const key in embeddingsDict) {
+                embeddingsArray[key] = Object.values(embeddingsDict[key]);
+            }
+            const jsonStr = JSON.stringify(embeddingsArray);
+
+            // Gzip the JSON string
+            const gzippedData = pako.gzip(jsonStr, { to: 'string' });
+
+            // Send the gzipped data as a response
+            self.postMessage({ type: 'embeddingsDict', data: gzippedData });
             break;
         case 'load':
             embeddingsDict = {}; // clear dict

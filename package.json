@@ -13,7 +13,8 @@
   "dependencies": {
     "@xenova/transformers": "^2.9.0",
     "bootstrap": "^5.0.2",
-    "codemirror": "^5.52.2"
+    "codemirror": "^5.52.2",
+    "pako": "^2.1.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
