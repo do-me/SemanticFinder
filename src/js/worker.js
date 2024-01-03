@@ -108,6 +108,11 @@ const updateEmbeddingsDict = (newData) => {
 
   self.onmessage = async (event) => {
     const message = event.data;
+    //console.log(message)
+    let roundDecimals;
+    let embeddingsAsArray;
+    let exportDict;
+    let gzippedData;
     let text;
     let embedding;
      
@@ -120,18 +125,19 @@ const updateEmbeddingsDict = (newData) => {
             embeddingsDict = message.data;
             break
         case 'exportEmbeddingsDict':
-            const embeddingsArray = {};
-            for (const key in embeddingsDict) {
-                embeddingsArray[key] = Object.values(embeddingsDict[key]);
-            }
-            const jsonStr = JSON.stringify(embeddingsArray);
+            roundDecimals = (num) => parseFloat(num.toFixed(parseInt(message.data.meta.exportDecimals)));
 
-            // Gzip the JSON string
-            const gzippedData = pako.gzip(jsonStr, { to: 'string' });
+            embeddingsAsArray = Object.fromEntries(
+                Object.entries(embeddingsDict).map(([key, values]) => [key, Object.values(values).map(roundDecimals)])
+            );
+
+            exportDict = {"meta": message.data.meta, "text": message.data.text, "index":embeddingsAsArray}
+            gzippedData = pako.gzip(JSON.stringify(exportDict), { to: 'string' });
 
             // Send the gzipped data as a response
-            self.postMessage({ type: 'embeddingsDict', data: gzippedData });
+            self.postMessage({ type: 'embeddingsDict', data: gzippedData , filename: message.data.meta.exportFilename});
             break;
+            
         case 'load':
             embeddingsDict = {}; // clear dict
             tokenizer = await AutoTokenizer.from_pretrained(message.model_name); // no progress callbacks -- assume its quick

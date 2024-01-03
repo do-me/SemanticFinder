@@ -6,7 +6,7 @@ import pako from 'pako';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
-import { loadSemantic,loadChat,loadSummary, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
+import { loadSemantic, loadChat, loadSummary, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
 import { splitText } from './utils.js';
 
 import '../css/styles.css';
@@ -82,14 +82,14 @@ function removeHighlights() {
     markers.length = 0;
 }
 
-function deactivateSubmitButton(button=submitButton) {
+function deactivateSubmitButton(button = submitButton) {
     if (button) {
         button.setAttribute('disabled', '');
         button.textContent = 'Loading...';
     }
 }
 
-function activateSubmitButton(button=submitButton, buttonText="Find") {
+function activateSubmitButton(button = submitButton, buttonText = "Find") {
     if (button) {
         button.removeAttribute('disabled');
         button.textContent = buttonText;
@@ -228,7 +228,7 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-async function setProgressBarValue(value, progressBar=progressBarEmbeddings) {
+async function setProgressBarValue(value, progressBar = progressBarEmbeddings) {
     if (value === '' || value === '0') {
         progressBar.style.transition = 'width .1s ease'; // Temporarily override the transition duration
         progressBar.classList.add('progress-bar-animated');
@@ -247,7 +247,7 @@ async function setProgressBarValue(value, progressBar=progressBarEmbeddings) {
     }
 }
 
-async function CoderMirrorFindAndScrollIntoView(CM_text){
+async function CoderMirrorFindAndScrollIntoView(CM_text) {
     editor.scrollIntoView(CM_text.find())
 }
 
@@ -267,7 +267,7 @@ async function semanticHighlight(callback) {
         acc[text] = 0;
         return acc;
     }, {});
-    
+
     const numUpdates = document.getElementById('update-rate').value;
 
     await embedQuery(inputQuery);
@@ -358,13 +358,51 @@ async function chatTopResults() {
     document.getElementById("chat_text").innerHTML = "";
     var chatQuery = "Based on the following input, answer the question:" + document.getElementById("chat_query").value;
     var max_new_tokens = document.getElementById("chat_max_new_tokens").value;
-  
+
     var topResultsString = chatQuery + " Context:\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
     const currentChat = await chatText(topResultsString, max_new_tokens);
-  }
-  
+}
 
-  function handleFileUpload() {
+function createMetaJSON() {
+
+    var modelName = document.getElementById("model-name").value;
+    var quantized = document.getElementById("quantized").checked;
+    var splitType = document.getElementById("split-type").value;
+    var splitParam = document.getElementById("split-param").value;
+    var exportDecimals = document.getElementById("exportDecimals").value;
+    var exportFilename = document.getElementById("exportFilename").value;
+
+    // Create "meta" JSON structure
+    var metaJSON = {
+        "modelName": modelName,
+        "quantized": quantized,
+        "splitType": splitType,
+        "splitParam": splitParam,
+        "exportDecimals": exportDecimals,
+        "exportFilename": exportFilename
+    };
+
+    return metaJSON
+}
+
+function setValuesFromMetaJSON(jsonObject) {
+    // Set values based on the provided JSON object
+    document.getElementById("model-name").value = jsonObject.modelName;
+    document.getElementById("quantized").checked = jsonObject.quantized;
+    document.getElementById("split-type").value = jsonObject.splitType;
+    document.getElementById("split-param").value = jsonObject.splitParam;
+    document.getElementById("exportDecimals").value = jsonObject.exportDecimals;
+    document.getElementById("exportFilename").value = jsonObject.exportFilename;
+}
+
+async function reloadModel(modelName){
+    deactivateSubmitButton();
+    setProgressBarValue(0);
+    await loadSemantic(modelName);
+    activateSubmitButton();
+}
+
+function handleFileUpload() {
     const fileInput = document.getElementById('file-upload');
     const file = fileInput.files[0];
 
@@ -384,8 +422,16 @@ async function chatTopResults() {
         // Convert the JSON string to a JavaScript object
         const jsonData = JSON.parse(inflatedData);
 
+        setValuesFromMetaJSON(jsonData.meta)
+
+        if (jsonData && jsonData.text !== "") {
+            editor.setValue(jsonData.text);
+        }
+
+        reloadModel(jsonData.meta.modelName)
+
         // Post the data to the semanticWorker
-        semanticWorker.postMessage({ type: 'importEmbeddingsDict', data: jsonData });
+        semanticWorker.postMessage({ type: 'importEmbeddingsDict', data: jsonData.index });
     };
 
     // Read the file as an ArrayBuffer
@@ -409,22 +455,22 @@ window.onload = async function () {
 
     const fontFamilyInput = document.getElementById("font-family");
     const fontSizeInput = document.getElementById("font-size");
-    
+
     const updateStyles = () => {
         const newFontFamily = fontFamilyInput.value;
         const newFontSize = fontSizeInput.value + "px";
         const codeMirrorElement = document.querySelector(".CodeMirror.cm-s-default.CodeMirror-wrap");
-        
+
         codeMirrorElement.style.fontFamily = newFontFamily;
         codeMirrorElement.style.fontSize = newFontSize;
     };
-    
+
     document.addEventListener("input", (event) => {
         if (event.target === fontFamilyInput || event.target === fontSizeInput) {
             updateStyles();
         }
     });
-    
+
     document.getElementById('model-name').addEventListener('change', async function () {
         deactivateSubmitButton();
         setProgressBarValue(0);
@@ -524,12 +570,12 @@ window.onload = async function () {
         deactivateSubmitButton(summaryButton);
         event.preventDefault();
         let this_model = document.getElementById('summary-model-name').value;
-    
+
         if (summary_is_loaded) {
             await loadSummary(this_model); // Execute only on the first click
             summary_is_loaded = false; // Set the flag to false after the first click
         }
-    
+
         await summarizeTopResults(); // Execute on every click after the first one
         activateSubmitButton(summaryButton, "Summarize");
     });
@@ -539,16 +585,16 @@ window.onload = async function () {
         deactivateSubmitButton(chatButton);
         event.preventDefault();
         let this_model = document.getElementById('chat-model-name').value;
-    
+
         if (chat_is_loaded) {
             await loadChat(this_model); // Execute only on the first click
             chat_is_loaded = false; // Set the flag to false after the first click
         }
-    
+
         await chatTopResults(); // Execute on every click after the first one
         activateSubmitButton(chatButton, "Chat");
     });
-    
+
 
     document.getElementById('next').addEventListener('click', function (event) {
         event.preventDefault();
@@ -560,8 +606,23 @@ window.onload = async function () {
         prevMarker();
     });
 
+    function exportEmbeddings(type, text = '') {
+        semanticWorker.postMessage({
+            type: type,
+            data: {
+                "text": text,
+                "meta": createMetaJSON()
+            }
+        });
+    }
+
     document.getElementById('exportEmbeddingsDict').addEventListener('click', function (event) {
-        semanticWorker.postMessage({ type: 'exportEmbeddingsDict' });
+        exportEmbeddings('exportEmbeddingsDict');
+    });
+
+    document.getElementById('exportEmbeddingsDictWithText').addEventListener('click', function (event) {
+        const currentEditorText = editor.getValue('');
+        exportEmbeddings('exportEmbeddingsDict', currentEditorText);
     });
 
     document.getElementById('confirm-upload').addEventListener('click', function (event) {

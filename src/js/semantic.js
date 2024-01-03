@@ -60,9 +60,9 @@ worker.onmessage = function (event) {
     switch (message.type) {
         case 'embeddingsDict':
             const gzippedData = message.data;
-            console.log("Embeddings data received.");
+            //console.log("Embeddings data received.");
             // Download gzipped data as 'index.json.gz'
-            downloadFile(gzippedData, 'index.json.gz', 'application/gzip');
+            downloadFile(gzippedData, message.filename, 'application/gzip');
             break;
         case "download":
             let downloadBar = document.getElementById('loading-progress');
