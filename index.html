@@ -48,7 +48,7 @@
                     <div class="form-group" id="formGroupCenter">
                         <div class="row no-gutters">
                             <div class="col-md-10">
-                                <div class="form-floating input-group mb-3">
+                                <div class="form-floating input-group mb-2">
                                     <input type="text" id="query-text" class="form-control"
                                         placeholder="Enter query here" value="food" />
                                     <label for="query-text">query</label>
@@ -76,270 +76,420 @@
                         <!-- settings -->
                         <div class="col-12">
                             <div id="advancedFeaturesContent" class="collapse">
-                                <div class="card card-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <!-- all models from https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js + gte-tiny -->
-                                                <select class="form-select form-control " id="model-name">
-                                                    <option selected value="TaylorAI/gte-tiny">TaylorAI/gte-tiny |
-                                                        💾22.9Mb
-                                                        📥1752 ❤️102</option>
-                                                    <option value="Supabase/gte-small">Supabase/gte-small | 💾34Mb
-                                                        📥2625 ❤️14</option>
-                                                    <option value="WhereIsAI/UAE-Large-V1">WhereIsAI/UAE-Large-V1 | 💾334Mb
-                                                        📥54.200 ❤️40</option>
-                                                    <option value="Xenova/all-MiniLM-L6-v2">Xenova/all-MiniLM-L6-v2 |
-                                                        💾23Mb 📥31 ❤️11</option>
-                                                    <option value="Xenova/bge-large-en-v1.5">Xenova/bge-large-en-v1.5 |
-                                                        💾337Mb 📥18 ❤️1</option>
-                                                    <option value="Supabase/bge-small-en">Supabase/bge-small-en | 💾34Mb
-                                                        📥12 ❤️1</option>
-                                                    <option value="Xenova/gte-small">Xenova/gte-small | 💾34Mb 📥9 ❤️3
-                                                    </option>
-                                                    <option value="Xenova/all-mpnet-base-v2">Xenova/all-mpnet-base-v2 |
-                                                        💾110Mb 📥7 ❤️0</option>
-                                                    <option value="Xenova/paraphrase-mpnet-base-v2">
-                                                        Xenova/paraphrase-mpnet-base-v2 | 💾110Mb 📥7 ❤️0</option>
-                                                    <option value="Xenova/all-MiniLM-L12-v2">Xenova/all-MiniLM-L12-v2 |
-                                                        💾34Mb 📥7 ❤️1</option>
-                                                    <option value="Xenova/multilingual-e5-small">
-                                                        Xenova/multilingual-e5-small | 💾118Mb 📥5 ❤️0</option>
-                                                    <option value="Xenova/gte-large">Xenova/gte-large | 💾337Mb 📥5 ❤️1
-                                                    </option>
-                                                    <option value="Xenova/bge-base-en-v1.5">Xenova/bge-base-en-v1.5 |
-                                                        💾110Mb 📥4 ❤️1</option>
-                                                    <option value="Xenova/all-roberta-large-v1">
-                                                        Xenova/all-roberta-large-v1 | 💾357Mb 📥2 ❤️0</option>
-                                                    <option value="Xenova/distiluse-base-multilingual-cased-v2">
-                                                        Xenova/distiluse-base-multilingual-cased-v2 | 💾135Mb 📥2 ❤️1
-                                                    </option>
-                                                    <option value="Xenova/paraphrase-multilingual-mpnet-base-v2">
-                                                        Xenova/paraphrase-multilingual-mpnet-base-v2 | 💾279Mb 📥2 ❤️1
-                                                    </option>
-                                                    <option value="Xenova/bge-large-zh">Xenova/bge-large-zh | 💾327Mb
-                                                        📥2 ❤️0</option>
-                                                    <option value="Xenova/multilingual-e5-base">
-                                                        Xenova/multilingual-e5-base | 💾279Mb 📥1 ❤️0</option>
-                                                    <option value="Xenova/bge-small-en-v1.5">Xenova/bge-small-en-v1.5 |
-                                                        💾34Mb 📥1 ❤️1</option>
-                                                    <option value="Xenova/paraphrase-albert-small-v2">
-                                                        Xenova/paraphrase-albert-small-v2 | 💾39.7Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/paraphrase-albert-base-v2">
-                                                        Xenova/paraphrase-albert-base-v2 | 💾40Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/squeezebert-uncased">
-                                                        Xenova/squeezebert-uncased | 💾51.2Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/squeezebert-mnli">Xenova/squeezebert-mnli |
-                                                        💾51.3Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/vit-base-patch16-224-in21k">
-                                                        Xenova/vit-base-patch16-224-in21k | 💾87.5Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/all-distilroberta-v1">
-                                                        Xenova/all-distilroberta-v1 | 💾82.1Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/paraphrase-multilingual-MiniLM-L12-v2">
-                                                        Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 💾118Mb 📥0 ❤️1
-                                                    </option>
-                                                    <option value="Xenova/paraphrase-MiniLM-L6-v2">
-                                                        Xenova/paraphrase-MiniLM-L6-v2 | 💾23Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/bert-base-nli-mean-tokens">
-                                                        Xenova/bert-base-nli-mean-tokens | 💾110Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/distilbert-base-nli-mean-tokens">
-                                                        Xenova/distilbert-base-nli-mean-tokens | 💾66.9Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/distilbert-base-nli-stsb-mean-tokens">
-                                                        Xenova/distilbert-base-nli-stsb-mean-tokens | 💾66.9Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/distiluse-base-multilingual-cased-v1">
-                                                        Xenova/distiluse-base-multilingual-cased-v1 | 💾135Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/msmarco-distilbert-base-v4">
-                                                        Xenova/msmarco-distilbert-base-v4 | 💾66.9Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/multi-qa-MiniLM-L6-cos-v1">
-                                                        Xenova/multi-qa-MiniLM-L6-cos-v1 | 💾23Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/multi-qa-distilbert-cos-v1">
-                                                        Xenova/multi-qa-distilbert-cos-v1 | 💾66.9Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/multi-qa-mpnet-base-cos-v1">
-                                                        Xenova/multi-qa-mpnet-base-cos-v1 | 💾110Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/multi-qa-mpnet-base-dot-v1">
-                                                        Xenova/multi-qa-mpnet-base-dot-v1 | 💾110Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/nli-mpnet-base-v2">Xenova/nli-mpnet-base-v2 |
-                                                        💾110Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/paraphrase-MiniLM-L3-v2">
-                                                        Xenova/paraphrase-MiniLM-L3-v2 | 💾17.5Mb 📥0 ❤️0</option>
-                                                    <option
-                                                        value="Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens">
-                                                        Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens | 💾279Mb
-                                                        📥0 ❤️0</option>
-                                                    <option value="Xenova/dino-vitb16">Xenova/dino-vitb16 | 💾87.5Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/dino-vits8">Xenova/dino-vits8 | 💾23.4Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/dino-vitb8">Xenova/dino-vitb8 | 💾88.8Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/dino-vits16">Xenova/dino-vits16 | 💾22.7Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/scibert_scivocab_uncased">
-                                                        Xenova/scibert_scivocab_uncased | 💾111Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/spanbert-large-cased">
-                                                        Xenova/spanbert-large-cased | 💾335Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/spanbert-base-cased">
-                                                        Xenova/spanbert-base-cased | 💾109Mb 📥0 ❤️0</option>
-                                                    <option value="sdan/simple-embeddings">sdan/simple-embeddings |
-                                                        💾23Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/sentence_bert">Xenova/sentence_bert | 💾110Mb
-                                                        📥0 ❤️0</option>
-                                                    <option value="Xenova/e5-small-v2">Xenova/e5-small-v2 | 💾34Mb 📥0
-                                                        ❤️3</option>
-                                                    <option value="Xenova/SapBERT-from-PubMedBERT-fulltext">
-                                                        Xenova/SapBERT-from-PubMedBERT-fulltext | 💾110Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/indobert-base-p1">Xenova/indobert-base-p1 |
-                                                        💾125Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/UMLSBert_ENG">Xenova/UMLSBert_ENG | 💾110Mb
-                                                        📥0 ❤️1</option>
-                                                    <option value="Xenova/rubert-base-cased">Xenova/rubert-base-cased |
-                                                        💾178Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/kobert">Xenova/kobert | 💾92.8Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/e5-small">Xenova/e5-small | 💾34Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/e5-large">Xenova/e5-large | 💾337Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/e5-large-v2">Xenova/e5-large-v2 | 💾337Mb 📥0
-                                                        ❤️5</option>
-                                                    <option value="Xenova/e5-base">Xenova/e5-base | 💾110Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/e5-base-v2">Xenova/e5-base-v2 | 💾110Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/instructor-base">Xenova/instructor-base |
-                                                        💾110Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/instructor-large">Xenova/instructor-large |
-                                                        💾337Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/sentence-t5-large">Xenova/sentence-t5-large |
-                                                        💾337Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/multilingual-e5-large">
-                                                        Xenova/multilingual-e5-large | 💾562Mb 📥0 ❤️1</option>
-                                                    <option value="Xenova/mms-300m">Xenova/mms-300m | 💾318Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/mms-1b">Xenova/mms-1b | 💾969Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Supabase/e5-small-v2">Supabase/e5-small-v2 | 💾34Mb
-                                                        📥0 ❤️1</option>
-                                                    <option value="Supabase/all-MiniLM-L6-v2">Supabase/all-MiniLM-L6-v2
-                                                        | 💾23Mb 📥0 ❤️1</option>
-                                                    <option value="Xenova/gte-base">Xenova/gte-base | 💾110Mb 📥0 ❤️0
-                                                    </option>
-                                                    <option value="Xenova/bge-small-en">Xenova/bge-small-en | 💾34Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/bge-base-en">Xenova/bge-base-en | 💾110Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/bge-large-en">Xenova/bge-large-en | 💾337Mb
-                                                        📥0 ❤️0</option>
-                                                    <option value="ggrn/bge-small-en">ggrn/bge-small-en | 💾34Mb 📥0 ❤️1
-                                                    </option>
-                                                    <option value="Xenova/bge-base-zh">Xenova/bge-base-zh | 💾103Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/bge-large-zh-noinstruct">
-                                                        Xenova/bge-large-zh-noinstruct | 💾327Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/bge-small-zh">Xenova/bge-small-zh | 💾24Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/ClinicalBERT">Xenova/ClinicalBERT | 💾229Mb
-                                                        📥0 ❤️0</option>
-                                                    <option value="Xenova/LaBSE">Xenova/LaBSE | 💾472Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/wavlm-base">Xenova/wavlm-base | 💾95.8Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/wavlm-base-plus">Xenova/wavlm-base-plus |
-                                                        💾95.8Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/wavlm-large">Xenova/wavlm-large | 💾319Mb 📥0
-                                                        ❤️0</option>
-                                                    <option value="Xenova/sentence-camembert-large">
-                                                        Xenova/sentence-camembert-large | 💾339Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/herbert-base-cased">Xenova/herbert-base-cased
-                                                        | 💾125Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/herbert-large-cased">
-                                                        Xenova/herbert-large-cased | 💾357Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/bge-large-zh-v1.5">Xenova/bge-large-zh-v1.5 |
-                                                        💾327Mb 📥0 ❤️1</option>
-                                                    <option value="Xenova/bge-base-zh-v1.5">Xenova/bge-base-zh-v1.5 |
-                                                        💾103Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/bge-small-zh-v1.5">Xenova/bge-small-zh-v1.5 |
-                                                        💾24Mb 📥0 ❤️0</option>
-                                                    <option value="leolee9086/text2vec-base-chinese">
-                                                        leolee9086/text2vec-base-chinese | 💾103Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/long-t5-encodec-tglobal-base">
-                                                        Xenova/long-t5-encodec-tglobal-base | 💾291Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/jina-embeddings-v2-small-en">
-                                                        Xenova/jina-embeddings-v2-small-en | 💾28.5Mb 📥0 ❤️0</option>
-                                                    <option value="Xenova/jina-embeddings-v2-base-en">
-                                                        Xenova/jina-embeddings-v2-base-en | 💾109Mb 📥0 ❤️0</option>
-                                                    <option value="do-me/jina-embeddings-v2-small-en">
-                                                        do-me/jina-embeddings-v2-small-en (test)</option>
-                                                    <option value="do-me/jina-embeddings-v2-base-en">
-                                                        do-me/jina-embeddings-v2-base-en (test)</option>
-                                                    <option value="do-me/test">
-                                                        do-me/test (internal tests only)</option>
-                                                </select>
-                                                <label for="model-name">Model:</label>
+                                <div class="card">
+                                    <!-- <div class="card-header">
+                                        <h5 class="card-title">Settings</h5>
+                                    </div>-->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <h6>Model Selection</h6>
+                                            <div class="col-md-8">
+                                                <div class="form-floating mb-2">
+                                                    <!-- all models from https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js + gte-tiny -->
+                                                    <select class="form-select form-control " id="model-name">
+                                                        <option selected value="TaylorAI/gte-tiny">TaylorAI/gte-tiny |
+                                                            💾22.9Mb
+                                                            📥1752 ❤️102</option>
+                                                        <option value="Supabase/gte-small">Supabase/gte-small | 💾34Mb
+                                                            📥2625 ❤️14</option>
+                                                        <option value="WhereIsAI/UAE-Large-V1">WhereIsAI/UAE-Large-V1 |
+                                                            💾334Mb
+                                                            📥54.200 ❤️40</option>
+                                                        <option value="Xenova/all-MiniLM-L6-v2">Xenova/all-MiniLM-L6-v2
+                                                            |
+                                                            💾23Mb 📥31 ❤️11</option>
+                                                        <option value="Xenova/bge-large-en-v1.5">
+                                                            Xenova/bge-large-en-v1.5 |
+                                                            💾337Mb 📥18 ❤️1</option>
+                                                        <option value="Supabase/bge-small-en">Supabase/bge-small-en |
+                                                            💾34Mb
+                                                            📥12 ❤️1</option>
+                                                        <option value="Xenova/gte-small">Xenova/gte-small | 💾34Mb 📥9
+                                                            ❤️3
+                                                        </option>
+                                                        <option value="Xenova/all-mpnet-base-v2">
+                                                            Xenova/all-mpnet-base-v2 |
+                                                            💾110Mb 📥7 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-mpnet-base-v2">
+                                                            Xenova/paraphrase-mpnet-base-v2 | 💾110Mb 📥7 ❤️0</option>
+                                                        <option value="Xenova/all-MiniLM-L12-v2">
+                                                            Xenova/all-MiniLM-L12-v2 |
+                                                            💾34Mb 📥7 ❤️1</option>
+                                                        <option value="Xenova/multilingual-e5-small">
+                                                            Xenova/multilingual-e5-small | 💾118Mb 📥5 ❤️0</option>
+                                                        <option value="Xenova/gte-large">Xenova/gte-large | 💾337Mb 📥5
+                                                            ❤️1
+                                                        </option>
+                                                        <option value="Xenova/bge-base-en-v1.5">Xenova/bge-base-en-v1.5
+                                                            |
+                                                            💾110Mb 📥4 ❤️1</option>
+                                                        <option value="Xenova/all-roberta-large-v1">
+                                                            Xenova/all-roberta-large-v1 | 💾357Mb 📥2 ❤️0</option>
+                                                        <option value="Xenova/distiluse-base-multilingual-cased-v2">
+                                                            Xenova/distiluse-base-multilingual-cased-v2 | 💾135Mb 📥2
+                                                            ❤️1
+                                                        </option>
+                                                        <option value="Xenova/paraphrase-multilingual-mpnet-base-v2">
+                                                            Xenova/paraphrase-multilingual-mpnet-base-v2 | 💾279Mb 📥2
+                                                            ❤️1
+                                                        </option>
+                                                        <option value="Xenova/bge-large-zh">Xenova/bge-large-zh |
+                                                            💾327Mb
+                                                            📥2 ❤️0</option>
+                                                        <option value="Xenova/multilingual-e5-base">
+                                                            Xenova/multilingual-e5-base | 💾279Mb 📥1 ❤️0</option>
+                                                        <option value="Xenova/bge-small-en-v1.5">
+                                                            Xenova/bge-small-en-v1.5 |
+                                                            💾34Mb 📥1 ❤️1</option>
+                                                        <option value="Xenova/paraphrase-albert-small-v2">
+                                                            Xenova/paraphrase-albert-small-v2 | 💾39.7Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/paraphrase-albert-base-v2">
+                                                            Xenova/paraphrase-albert-base-v2 | 💾40Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/squeezebert-uncased">
+                                                            Xenova/squeezebert-uncased | 💾51.2Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/squeezebert-mnli">Xenova/squeezebert-mnli
+                                                            |
+                                                            💾51.3Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/vit-base-patch16-224-in21k">
+                                                            Xenova/vit-base-patch16-224-in21k | 💾87.5Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/all-distilroberta-v1">
+                                                            Xenova/all-distilroberta-v1 | 💾82.1Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-multilingual-MiniLM-L12-v2">
+                                                            Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 💾118Mb 📥0
+                                                            ❤️1
+                                                        </option>
+                                                        <option value="Xenova/paraphrase-MiniLM-L6-v2">
+                                                            Xenova/paraphrase-MiniLM-L6-v2 | 💾23Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/bert-base-nli-mean-tokens">
+                                                            Xenova/bert-base-nli-mean-tokens | 💾110Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/distilbert-base-nli-mean-tokens">
+                                                            Xenova/distilbert-base-nli-mean-tokens | 💾66.9Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/distilbert-base-nli-stsb-mean-tokens">
+                                                            Xenova/distilbert-base-nli-stsb-mean-tokens | 💾66.9Mb 📥0
+                                                            ❤️0
+                                                        </option>
+                                                        <option value="Xenova/distiluse-base-multilingual-cased-v1">
+                                                            Xenova/distiluse-base-multilingual-cased-v1 | 💾135Mb 📥0
+                                                            ❤️0
+                                                        </option>
+                                                        <option value="Xenova/msmarco-distilbert-base-v4">
+                                                            Xenova/msmarco-distilbert-base-v4 | 💾66.9Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/multi-qa-MiniLM-L6-cos-v1">
+                                                            Xenova/multi-qa-MiniLM-L6-cos-v1 | 💾23Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/multi-qa-distilbert-cos-v1">
+                                                            Xenova/multi-qa-distilbert-cos-v1 | 💾66.9Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/multi-qa-mpnet-base-cos-v1">
+                                                            Xenova/multi-qa-mpnet-base-cos-v1 | 💾110Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/multi-qa-mpnet-base-dot-v1">
+                                                            Xenova/multi-qa-mpnet-base-dot-v1 | 💾110Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/nli-mpnet-base-v2">
+                                                            Xenova/nli-mpnet-base-v2 |
+                                                            💾110Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-MiniLM-L3-v2">
+                                                            Xenova/paraphrase-MiniLM-L3-v2 | 💾17.5Mb 📥0 ❤️0</option>
+                                                        <option
+                                                            value="Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens">
+                                                            Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens |
+                                                            💾279Mb
+                                                            📥0 ❤️0</option>
+                                                        <option value="Xenova/dino-vitb16">Xenova/dino-vitb16 | 💾87.5Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/dino-vits8">Xenova/dino-vits8 | 💾23.4Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/dino-vitb8">Xenova/dino-vitb8 | 💾88.8Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/dino-vits16">Xenova/dino-vits16 | 💾22.7Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/scibert_scivocab_uncased">
+                                                            Xenova/scibert_scivocab_uncased | 💾111Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/spanbert-large-cased">
+                                                            Xenova/spanbert-large-cased | 💾335Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/spanbert-base-cased">
+                                                            Xenova/spanbert-base-cased | 💾109Mb 📥0 ❤️0</option>
+                                                        <option value="sdan/simple-embeddings">sdan/simple-embeddings |
+                                                            💾23Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/sentence_bert">Xenova/sentence_bert |
+                                                            💾110Mb
+                                                            📥0 ❤️0</option>
+                                                        <option value="Xenova/e5-small-v2">Xenova/e5-small-v2 | 💾34Mb
+                                                            📥0
+                                                            ❤️3</option>
+                                                        <option value="Xenova/SapBERT-from-PubMedBERT-fulltext">
+                                                            Xenova/SapBERT-from-PubMedBERT-fulltext | 💾110Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/indobert-base-p1">Xenova/indobert-base-p1
+                                                            |
+                                                            💾125Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/UMLSBert_ENG">Xenova/UMLSBert_ENG |
+                                                            💾110Mb
+                                                            📥0 ❤️1</option>
+                                                        <option value="Xenova/rubert-base-cased">
+                                                            Xenova/rubert-base-cased |
+                                                            💾178Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/kobert">Xenova/kobert | 💾92.8Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/e5-small">Xenova/e5-small | 💾34Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/e5-large">Xenova/e5-large | 💾337Mb 📥0
+                                                            ❤️0
+                                                        </option>
+                                                        <option value="Xenova/e5-large-v2">Xenova/e5-large-v2 | 💾337Mb
+                                                            📥0
+                                                            ❤️5</option>
+                                                        <option value="Xenova/e5-base">Xenova/e5-base | 💾110Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/e5-base-v2">Xenova/e5-base-v2 | 💾110Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/instructor-base">Xenova/instructor-base |
+                                                            💾110Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/instructor-large">Xenova/instructor-large
+                                                            |
+                                                            💾337Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/sentence-t5-large">
+                                                            Xenova/sentence-t5-large |
+                                                            💾337Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/multilingual-e5-large">
+                                                            Xenova/multilingual-e5-large | 💾562Mb 📥0 ❤️1</option>
+                                                        <option value="Xenova/mms-300m">Xenova/mms-300m | 💾318Mb 📥0
+                                                            ❤️0
+                                                        </option>
+                                                        <option value="Xenova/mms-1b">Xenova/mms-1b | 💾969Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Supabase/e5-small-v2">Supabase/e5-small-v2 |
+                                                            💾34Mb
+                                                            📥0 ❤️1</option>
+                                                        <option value="Supabase/all-MiniLM-L6-v2">
+                                                            Supabase/all-MiniLM-L6-v2
+                                                            | 💾23Mb 📥0 ❤️1</option>
+                                                        <option value="Xenova/gte-base">Xenova/gte-base | 💾110Mb 📥0
+                                                            ❤️0
+                                                        </option>
+                                                        <option value="Xenova/bge-small-en">Xenova/bge-small-en | 💾34Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/bge-base-en">Xenova/bge-base-en | 💾110Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/bge-large-en">Xenova/bge-large-en |
+                                                            💾337Mb
+                                                            📥0 ❤️0</option>
+                                                        <option value="ggrn/bge-small-en">ggrn/bge-small-en | 💾34Mb 📥0
+                                                            ❤️1
+                                                        </option>
+                                                        <option value="Xenova/bge-base-zh">Xenova/bge-base-zh | 💾103Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/bge-large-zh-noinstruct">
+                                                            Xenova/bge-large-zh-noinstruct | 💾327Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/bge-small-zh">Xenova/bge-small-zh | 💾24Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/ClinicalBERT">Xenova/ClinicalBERT |
+                                                            💾229Mb
+                                                            📥0 ❤️0</option>
+                                                        <option value="Xenova/LaBSE">Xenova/LaBSE | 💾472Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/wavlm-base">Xenova/wavlm-base | 💾95.8Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/wavlm-base-plus">Xenova/wavlm-base-plus |
+                                                            💾95.8Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/wavlm-large">Xenova/wavlm-large | 💾319Mb
+                                                            📥0
+                                                            ❤️0</option>
+                                                        <option value="Xenova/sentence-camembert-large">
+                                                            Xenova/sentence-camembert-large | 💾339Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/herbert-base-cased">
+                                                            Xenova/herbert-base-cased
+                                                            | 💾125Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/herbert-large-cased">
+                                                            Xenova/herbert-large-cased | 💾357Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/bge-large-zh-v1.5">
+                                                            Xenova/bge-large-zh-v1.5 |
+                                                            💾327Mb 📥0 ❤️1</option>
+                                                        <option value="Xenova/bge-base-zh-v1.5">Xenova/bge-base-zh-v1.5
+                                                            |
+                                                            💾103Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/bge-small-zh-v1.5">
+                                                            Xenova/bge-small-zh-v1.5 |
+                                                            💾24Mb 📥0 ❤️0</option>
+                                                        <option value="leolee9086/text2vec-base-chinese">
+                                                            leolee9086/text2vec-base-chinese | 💾103Mb 📥0 ❤️0</option>
+                                                        <option value="Xenova/long-t5-encodec-tglobal-base">
+                                                            Xenova/long-t5-encodec-tglobal-base | 💾291Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/jina-embeddings-v2-small-en">
+                                                            Xenova/jina-embeddings-v2-small-en | 💾28.5Mb 📥0 ❤️0
+                                                        </option>
+                                                        <option value="Xenova/jina-embeddings-v2-base-en">
+                                                            Xenova/jina-embeddings-v2-base-en | 💾109Mb 📥0 ❤️0</option>
+                                                        <option value="do-me/jina-embeddings-v2-small-en">
+                                                            do-me/jina-embeddings-v2-small-en (test)</option>
+                                                        <option value="do-me/jina-embeddings-v2-base-en">
+                                                            do-me/jina-embeddings-v2-base-en (test)</option>
+                                                        <option value="do-me/test">
+                                                            do-me/test (internal tests only)</option>
+                                                    </select>
+                                                    <label for="model-name">Model:</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-floating mb-3">
-                                                <input type="number" id="threshold" class="form-control w-100" value="5"
-                                                    min="1" step="1" />
-                                                <label for="threshold"># Results</label>
+                                            <div class="col-md-2">
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        id="quantized" checked>
+                                                    <label class="form-check-label" for="quantized"
+                                                        title="Use ~4x smaller & faster quantized but less accurate models (good for low bandwidth)">quantized</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-floating">
-                                                <select class="form-select form-control " id="split-type">
-                                                    <option value="Sentence">Sentence</option>
-                                                    <option value="Chars" selected># Chars</option>
-                                                    <option value="Words"># Words</option>
-                                                    <option value="Tokens"># Tokens</option>
-                                                    <option value="Regex">Regex</option>
-                                                </select>
-                                                <label for="split-type">split by</label>
+                                            <div class="col-md-6">
+                                                <h6>Chunking Settings</h6>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-floating">
+                                                                <select class="form-select form-control"
+                                                                    id="split-type">
+                                                                    <option value="Sentence">Sentence</option>
+                                                                    <option value="Chars" selected># Chars</option>
+                                                                    <option value="Words"># Words</option>
+                                                                    <option value="Tokens"># Tokens</option>
+                                                                    <option value="Regex">Regex</option>
+                                                                </select>
+                                                                <label for="split-type">Split by</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-floating mb-2">
+                                                                <input id="split-param" class="form-control"
+                                                                    type="number" min="1" value="100" />
+                                                                <label for="split-param"># Chars</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-floating mb-3">
-                                                <input id="split-param" class="form-control w-100" type="number" min="1"
-                                                    value="100" />
-                                                <label for="split-param"># Chars</label>
+                                            <div class="col-md-6">
+                                                <h6>App Settings</h6>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-floating mb-2">
+                                                                <input type="number" id="threshold" class="form-control"
+                                                                    value="7" min="1" step="1" />
+                                                                <label for="threshold"># Results</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="form-floating mb-2">
+                                                                <input id="update-rate" class="form-control"
+                                                                    type="number" min="1" value="5" />
+                                                                <label for="update-rate"># Updates</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    id="quantized" checked>
-                                                <label class="form-check-label" for="quantized" title="Use ~4x smaller & faster quantized but less accurate models (good for low bandwidth)">quantized</label>
+
+                                            <div class="col-md-6">
+                                                <h6>Import Local Index File</h6>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="d-flex mb-2 align-items-center">
+                                                            <!-- Added 'align-items-center' class -->
+                                                            <input type="file" class="form-control mr-2"
+                                                                id="file-upload" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="d-flex mb-2 align-items-center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="confirm-upload">⬆️
+                                                                Upload</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-4" title="Monospace | Calibri | Open Sans | Arial | Arial | Arial Black | Comic Sans MS | Courier New | Georgia | Impact | Times New Roman | Trebuchet MS | Verdana | Tahoma | Lucida Console | Lucida Sans Unicode | Palatino Linotype | Book Antiqua | Palatino | Symbol | Wingdings">
-                                            <div class="form-floating mb-3">
-                                                <input id="font-family" class="form-control w-100" type="text" value="Open Sans" />
-                                                <label for="font-family">Font-Family</label>
+
+                                            <div class="col-md-6" hidden>
+                                                <h6>Import Remote Index File</h6>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="form-floating mb-2">
+                                                            <input id="importURL" class="form-control w-100" type="text"
+                                                                value="https://github.com/somewhere/" />
+                                                            <label for="importURL"># Import URL</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="d-flex mb-2 align-items-center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="confirm-remote-upload">⬆️
+                                                                Upload</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-floating mb-3">
-                                                <input id="font-size" class="form-control w-100" type="number" min="1" value="15" />
-                                                <label for="font-size"># Font-Size</label>
+
+                                            <h6>Export Index File</h6>
+                                            <div class="col-md-2">
+                                                <div class="form-floating mb-2">
+                                                    <input id="exportDecimals" class="form-control w-100" type="number"
+                                                        min="1" value="5" />
+                                                    <label for="exportDecimals"># Decimals</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-floating mb-3">
-                                                <input id="update-rate" class="form-control w-100" type="number" min="1" value="5" />
-                                                <label for="update-rate"># Updates</label>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-2">
+                                                    <input id="exportFilename" class="form-control w-100" type="text"
+                                                        value="index.json.gz" />
+                                                    <label for="exportFilename"># Filename</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <div class="mb-3">
-                                                <input type="file" class="form-control" id="file-upload" />
+                                            <!-- Button for downloading only the index. However, considering
+                                                         that the index makes up for 99% file size, I don't see a good use case yet...-->
+                                            <div class="col-md-3" hidden>
+                                                <button type="button" id="exportEmbeddingsDict"
+                                                    class="btn btn-primary w-100">Index only</button>
                                             </div>
-                                            <button type="button" class="btn btn-primary w-100" id="confirm-upload">Import Index</button>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <button type="button" id="exportEmbeddingsDict" class="btn btn-primary w-100">Export Index</button>
+
+                                            <div class="col-md-3">
+                                                <div class="d-flex mb-2 align-items-center">
+                                                    <button type="button" class="btn btn-primary"
+                                                        id="exportEmbeddingsDictWithText">⬇️
+                                                        Download</button>
+                                                </div>
+                                            </div>
+
+                                            <h6>Style Preferences</h6>
+                                            <div class="col-md-4"
+                                                title="Monospace | Calibri | Open Sans | Arial | Arial | Arial Black | Comic Sans MS | Courier New | Georgia | Impact | Times New Roman | Trebuchet MS | Verdana | Tahoma | Lucida Console | Lucida Sans Unicode | Palatino Linotype | Book Antiqua | Palatino | Symbol | Wingdings">
+                                                <div class="form-floating mb-2">
+                                                    <input id="font-family" class="form-control w-100" type="text"
+                                                        value="Open Sans" />
+                                                    <label for="font-family">Font-Family</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-floating mb-2">
+                                                    <input id="font-size" class="form-control w-100" type="number"
+                                                        min="1" value="15" />
+                                                    <label for="font-size"># Font-Size</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -412,7 +562,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 target="_blank">Falcon & Mistral/Zephyr models</a> will probably become available
                             here.<br><b>Attention</b>: Loads very large models with
                             more than 1.5Gb (!) of resources.</p>
-                        <div class="form-floating input-group mb-3">
+                        <div class="form-floating input-group mb-2">
                             <input id="chat_query" class="form-control"
                                 value="What do these paragraphs have in common?">
                             <label for="query-text">Chat Query</label>
@@ -422,7 +572,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                             <button id="get_chat" class="btn btn-md btn-primary mb-2 nav-button" disabled>Chat</button>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
+                                    <div class="form-floating mb-2">
                                         <select class="form-select form-control" id="chat-model-name">
                                             <option selected value="Xenova/LaMini-Flan-T5-783M">
                                                 Xenova/LaMini-Flan-T5-783M | 💾1.65Gb 📥17 ❤️20</option>
@@ -458,7 +608,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
+                                    <div class="form-floating mb-2">
                                         <input type="number" id="chat_max_new_tokens" class="form-control" value="100"
                                             min="1" step="1" />
                                         <label for="max_new_tokens"># max new tokens</label>
@@ -499,7 +649,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 disabled>Summarize</button>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
+                                    <div class="form-floating mb-2">
                                         <select class="form-select form-control" id="summary-model-name">
 
                                             <option value="Xenova/distilbart-cnn-6-6">Xenova/distilbart-cnn-6-6</option>
@@ -526,7 +676,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
+                                    <div class="form-floating mb-2">
                                         <input type="number" id="summary_max_new_tokens" class="form-control"
                                             value="100" min="1" step="1" />
                                         <label for="max_new_tokens"># max new tokens</label>
