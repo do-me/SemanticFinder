@@ -172,3 +172,13 @@ PRs welcome!
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=do-me/SemanticFinder&type=Timeline)](https://star-history.com/#do-me/SemanticFinder&Timeline)
+
+## Gource Map 
+
+![image](SemanticFinder_gource.png)
+
+Gource image created with: 
+
+```bash 
+gource -1280x720 --title "SemanticFinder" --seconds-per-day 0.03 --auto-skip-seconds 0.03 --bloom-intensity 0.5 --max-user-speed 500 --highlight-dirs --multi-sampling --highlight-colour 00FF00  
+```

@@ -124,7 +124,7 @@ async function onSubmit() {
     }
 }
 
-function resetResults() {
+async function resetResults() {
     removeHighlights();
 
     // Get results list element
@@ -251,17 +251,52 @@ async function CoderMirrorFindAndScrollIntoView(CM_text) {
     editor.scrollIntoView(CM_text.find())
 }
 
+let cachedQueryValues = 
+    {"text" : "",
+    "splitType": "",
+    "splitParam":"",
+    "inputTexts":"",
+    "inputQuery":""
+
+    }
+
 async function semanticHighlight(callback) {
     deactivateScrollButtons();
     resetResults();
     setProgressBarValue(0);
 
     // query input embedding
-    const text = editor.getValue('');
     const inputQuery = document.getElementById('query-text').value;
+
+    // chunk vals
+    const text = editor.getValue('');
     const splitType = document.getElementById('split-type').value;
     const splitParam = document.getElementById('split-param').value;
-    let inputTexts = await splitText(text, splitType, splitParam);
+
+    // avoid executing the chunking logic if params are the same
+    const chunkValuesEqual = (
+        text === cachedQueryValues.text &&
+        splitType === cachedQueryValues.splitType &&
+        splitParam === cachedQueryValues.splitParam
+    );
+    
+    let inputTexts;
+
+    if (chunkValuesEqual) {
+        inputTexts = cachedQueryValues.inputTexts
+    } else {
+        inputTexts = await splitText(text, splitType, splitParam);
+    
+        //inputTexts = await splitText(text, splitType, splitParam);
+        // update cache var
+        cachedQueryValues.text = text;
+        cachedQueryValues.splitType = splitType;
+        cachedQueryValues.splitParam = splitParam;
+        cachedQueryValues.inputTexts = inputTexts;
+
+    }
+
+    //let inputTexts = await splitText(text, splitType, splitParam);
     // Initialize inputTexts dictionary with 0 as similarity
     inputTexts = inputTexts.reduce((acc, text) => {
         acc[text] = 0;
@@ -276,32 +311,58 @@ async function semanticHighlight(callback) {
     const interval = Math.ceil(N / Math.min(numUpdates, N));
     const progressBarInterval = Math.ceil(N / Math.min(100, N));
 
+    // this part here is still a performance bottleneck and responsible for ~50% of the processing time 
+    // it performs a lookup in a dictionary where key-value pairs (text-embeddings) are stored
+    // if the value has an embedding already, it's appended to the results dict 
+    // if not, it needs to be calculated 
+    // the logic has the advantage that when e.g. one sentence is appended to a book, 99% of the index 
+    // can be reused and it is super fast. On the other hand it slows down other user cases where you know 
+    // in advance, that the text:embeddings won't change.
+    // will need to add a cache for inputTexts in the future
+
     let i = 0;
-    for (const inputText in inputTexts) {
+    let lastProgressBarUpdate = 0;
+    const inputTextPromises = Object.keys(inputTexts).map(async (inputText, i) => {
         if (!isProcessing) {
-            break;
+          return Promise.resolve();
         }
-
+      
         const cosineSimilarity = await similarity(inputText);
+
         inputTexts[inputText] = cosineSimilarity;
-
+      
         if (i % progressBarInterval === 0 || i === N - 1) {
+            const currentTime = Date.now();
+            const timeSinceLastUpdate = currentTime - lastProgressBarUpdate;
+            
+            // update the porgress bar only every 100ms to avoid slowing down on consecutive calls
+            // makes ~0.3s difference with 23k embeddings!
+            if (timeSinceLastUpdate >= 100) {
+              const progress = Math.round(((i + 1) * 100) / N);
+              setProgressBarValue(progress);
+          
+              lastProgressBarUpdate = currentTime;
+            }
+          }
+        
+        if (i === N - 1) {
             const progress = Math.round(((i + 1) * 100) / N);
-            setProgressBarValue(progress);
+              setProgressBarValue(progress);
         }
-
+      
         if (i !== 0 && (i % interval === 0 || i === N - 1)) {
             const sortedResults = Object.entries(inputTexts).sort((a, b) => b[1] - a[1]);
             updateResults(sortedResults);
-
-            if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
-                CoderMirrorFindAndScrollIntoView(markers[0])
-            }
+          if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+            CoderMirrorFindAndScrollIntoView(markers[0]);
+          }
         }
-
-        i++;
-    }
-
+      
+        return Promise.resolve();
+      });
+      
+      await Promise.all(inputTextPromises);
+      
     callback();
 }
 
@@ -439,6 +500,51 @@ function handleFileUpload() {
 
     alert('Index loaded');
 }
+
+function handleRemoteFileUpload() {
+    const urlInput = document.getElementById('importURL');
+    const fileURL = urlInput.value;
+    console.log(fileURL)
+
+    if (!fileURL) {
+        alert('Please enter a valid URL.');
+        return;
+    }
+
+    // Make a fetch request to get the remote file
+    fetch(fileURL)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch file (${response.status} ${response.statusText})`);
+            }
+            return response.arrayBuffer();
+        })
+        .then(arrayBuffer => {
+            // Use pako.js to decompress the gzip data
+            const inflatedData = pako.inflate(arrayBuffer, { to: 'string' });
+
+            // Convert the JSON string to a JavaScript object
+            const jsonData = JSON.parse(inflatedData);
+
+            setValuesFromMetaJSON(jsonData.meta);
+
+            if (jsonData && jsonData.text !== "") {
+                editor.setValue(jsonData.text);
+            }
+
+            reloadModel(jsonData.meta.modelName);
+
+            // Post the data to the semanticWorker
+            semanticWorker.postMessage({ type: 'importEmbeddingsDict', data: jsonData.index });
+
+            alert('Index loaded from remote file.');
+        })
+        .catch(error => {
+            alert(`Error: ${error.message}`);
+        });
+}
+
+
 
 /**
  * Setup the application when the page loads.
@@ -627,6 +733,10 @@ window.onload = async function () {
 
     document.getElementById('confirm-upload').addEventListener('click', function (event) {
         handleFileUpload();
+    });
+
+    document.getElementById('confirm-remote-upload').addEventListener('click', function (event) {
+        handleRemoteFileUpload();
     });
 
 };
