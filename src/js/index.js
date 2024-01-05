@@ -7,7 +7,7 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
 import { loadSemantic, loadChat, loadSummary, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
-import { splitText } from './utils.js';
+import { splitText, showToast } from './utils.js';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -247,6 +247,47 @@ async function setProgressBarValue(value, progressBar = progressBarEmbeddings) {
     }
 }
 
+
+function updateSplitParam() {
+    const splitParam = document.getElementById('split-param');
+
+    switch (document.getElementById('split-type').value) {
+        case 'Words':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Words';
+            splitParam.type = 'number';
+            splitParam.value = 7;
+            splitParam.min = 1;
+            break;
+        case 'Tokens':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Tokens';
+            splitParam.type = 'number';
+            splitParam.value = 15;
+            splitParam.min = 1;
+            splitParam.max = 512;
+            break;
+        case 'Chars':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Chars';
+            splitParam.type = 'number';
+            splitParam.value = 40;
+            splitParam.min = 1;
+            break;
+        case 'Regex':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = 'Regex';
+            splitParam.type = 'text';
+            splitParam.value = '[.,]\\s';
+            break;
+        default:
+            splitParam.value = null;
+            splitParam.disabled = true;
+            document.querySelector("label[for='split-param']").textContent = '';
+            splitParam.placeholder = '';
+    }
+}
+
 async function CoderMirrorFindAndScrollIntoView(CM_text) {
     editor.scrollIntoView(CM_text.find())
 }
@@ -348,6 +389,7 @@ async function semanticHighlight(callback) {
         if (i === N - 1) {
             const progress = Math.round(((i + 1) * 100) / N);
               setProgressBarValue(progress);
+              console.log(markers)
         }
       
         if (i !== 0 && (i % interval === 0 || i === N - 1)) {
@@ -426,35 +468,58 @@ async function chatTopResults() {
 
 function createMetaJSON() {
 
-    var modelName = document.getElementById("model-name").value;
-    var quantized = document.getElementById("quantized").checked;
-    var splitType = document.getElementById("split-type").value;
-    var splitParam = document.getElementById("split-param").value;
-    var exportDecimals = document.getElementById("exportDecimals").value;
-    var exportFilename = document.getElementById("exportFilename").value;
-
-    // Create "meta" JSON structure
-    var metaJSON = {
-        "modelName": modelName,
-        "quantized": quantized,
-        "splitType": splitType,
-        "splitParam": splitParam,
-        "exportDecimals": exportDecimals,
-        "exportFilename": exportFilename
+    const modelName = document.getElementById("model-name").value;
+    const quantized = document.getElementById("quantized").checked;
+    const splitType = document.getElementById("split-type").value;
+    const splitParam = parseInt(document.getElementById("split-param").value);
+    const exportDecimals = parseInt(document.getElementById("exportDecimals").value);
+    const textTitle = document.getElementById("textTitle").value;
+    const textAuthor = document.getElementById("textAuthor").value;
+    const textYear = parseInt(document.getElementById("textYear").value, 10);
+    const textSourceURL = document.getElementById("textSourceURL").value;
+    const textNotes = document.getElementById("textNotes").value;
+    const textLanguage = document.getElementById("textLanguage").value;
+    
+    const lines = editor.lineCount();
+    const characters = editor.getValue().length;
+    
+    // shorthand property names
+    const metaJSON = {
+        textTitle,
+        textAuthor,
+        textYear,
+        textLanguage,
+        textSourceURL,
+        textNotes,
+        modelName,
+        quantized,
+        splitType,
+        splitParam,
+        exportDecimals,
+        lines,
+        characters
     };
-
+    
     return metaJSON
 }
 
 function setValuesFromMetaJSON(jsonObject) {
     // Set values based on the provided JSON object
-    document.getElementById("model-name").value = jsonObject.modelName;
+    document.getElementById("model-name").value = jsonObject.modelName || "";
     document.getElementById("quantized").checked = jsonObject.quantized;
-    document.getElementById("split-type").value = jsonObject.splitType;
-    document.getElementById("split-param").value = jsonObject.splitParam;
-    document.getElementById("exportDecimals").value = jsonObject.exportDecimals;
-    document.getElementById("exportFilename").value = jsonObject.exportFilename;
+    document.getElementById("split-type").value = jsonObject.splitType || "";
+    document.getElementById("split-param").value = jsonObject.splitParam || "";
+    document.getElementById("exportDecimals").value = jsonObject.exportDecimals || "";
+    document.getElementById("textTitle").value = jsonObject.textTitle || "";
+    document.getElementById("textAuthor").value = jsonObject.textAuthor || "";
+    document.getElementById("textYear").value = jsonObject.textYear || "";
+    document.getElementById("textSourceURL").value = jsonObject.textSourceURL || "";
+    document.getElementById("textNotes").value = jsonObject.textNotes || "";
+    document.getElementById("textLanguage").value = jsonObject.textLanguage || "";
+    updateSplitParam();
 }
+
+
 
 async function reloadModel(modelName){
     deactivateSubmitButton();
@@ -464,6 +529,8 @@ async function reloadModel(modelName){
 }
 
 function handleFileUpload() {
+    console.log("⌛ File upload started...")
+    showToast("⌛ File upload started...");
     const fileInput = document.getElementById('file-upload');
     const file = fileInput.files[0];
 
@@ -497,13 +564,14 @@ function handleFileUpload() {
 
     // Read the file as an ArrayBuffer
     reader.readAsArrayBuffer(file);
+    //submitButton.click(); // dont click as the model must load first!
 
-    alert('Index loaded');
+    showToast("Index loaded ✅");
+    console.log('Index loaded ✅');
 }
 
-function handleRemoteFileUpload() {
-    const urlInput = document.getElementById('importURL');
-    const fileURL = urlInput.value;
+function handleRemoteFileUpload(fileURL ) {
+    showToast("⌛ Loading file...");
     console.log(fileURL)
 
     if (!fileURL) {
@@ -537,7 +605,7 @@ function handleRemoteFileUpload() {
             // Post the data to the semanticWorker
             semanticWorker.postMessage({ type: 'importEmbeddingsDict', data: jsonData.index });
 
-            alert('Index loaded from remote file.');
+            showToast("Index loaded ✅");
         })
         .catch(error => {
             alert(`Error: ${error.message}`);
@@ -609,47 +677,13 @@ window.onload = async function () {
         await loadChat(modelName);
         activateSubmitButton(chatButton, "Chat");
     });
-
-    document.getElementById('split-type').addEventListener('change', function () {
-        // Get the selected option value
-        const splitParam = document.getElementById('split-param');
-
-        switch (this.value) {
-            case 'Words':
-                splitParam.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = '# Words';
-                splitParam.type = 'number';
-                splitParam.value = 7;
-                splitParam.min = 1;
-                break;
-            case 'Tokens':
-                splitParam.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = '# Tokens';
-                splitParam.type = 'number';
-                splitParam.value = 15;
-                splitParam.min = 1;
-                splitParam.max = 512;
-                break;
-            case 'Chars':
-                splitParam.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = '# Chars';
-                splitParam.type = 'number';
-                splitParam.value = 40;
-                splitParam.min = 1;
-                break;
-            case 'Regex':
-                splitParam.disabled = false;
-                document.querySelector("label[for='split-param']").textContent = 'Regex';
-                splitParam.type = 'text';
-                splitParam.value = '[.,]\\s';
-                break;
-            default:
-                splitParam.value = null;
-                splitParam.disabled = true;
-                document.querySelector("label[for='split-param']").textContent = '';
-                splitParam.placeholder = '';
-        }
-    });
+    
+    // Call the function manually or bind it to an event
+    document.getElementById('split-type').addEventListener('change', updateSplitParam);
+    
+    // Example of calling the function manually
+    // updateSplitParam();
+    
 
 
     // Dynamically load/overwrite existing options from JSON. Useful for different sorting or updates.
@@ -732,11 +766,26 @@ window.onload = async function () {
     });
 
     document.getElementById('confirm-upload').addEventListener('click', function (event) {
+        document.getElementById('update-rate').value = 1;
         handleFileUpload();
     });
 
     document.getElementById('confirm-remote-upload').addEventListener('click', function (event) {
-        handleRemoteFileUpload();
+        document.getElementById('update-rate').value = 1;
+        handleRemoteFileUpload(document.getElementById('importURL').value);
     });
 
+    // initialize loading
+    // read url params and load from Hf or from remote 
+    const getUrlParameters = () => new URLSearchParams(window.location.search);
+    const urlParams = getUrlParameters();
+
+    if (urlParams.has('url')) {
+        handleRemoteFileUpload(urlParams.get('url'));
+
+    } else if (urlParams.has('hf')) {
+        handleRemoteFileUpload(
+            `https://huggingface.co/datasets/do-me/SemanticFinder/resolve/main/${urlParams.get('hf')}.json.gz`);
+
+    } 
 };

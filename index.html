@@ -9,6 +9,10 @@
 </head>
 
 <body>
+    <div class="toast" id="toastMessage">
+        <span id="toastText"></span>
+        <span id="closeToastButton" class="close-button">X</span>
+    </div>
     <div class="container mt-1">
         <div class="row justify-content-left">
             <div id="introContainer" class="col-sm-9">
@@ -431,13 +435,13 @@
                                                         <div class="form-floating mb-2">
                                                             <input id="importURL" class="form-control w-100" type="text"
                                                                 value="https://huggingface.co/datasets/do-me/SemanticFinder/resolve/main/king-james-bible_gte-tiny_q_200-chars_2-dec.json.gz" />
-                                                            <label for="importURL"># Import URL</label>
+                                                            <label for="importURL">Import URL</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="d-flex mb-2 align-items-center">
                                                             <button type="button" class="btn btn-primary"
-                                                                id="confirm-remote-upload">⬆️
+                                                                id="confirm-remote-upload">⬇️
                                                                 Load</button>
                                                         </div>
                                                     </div>
@@ -445,18 +449,56 @@
                                             </div>
 
                                             <h6>Export Index File</h6>
+
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-2">
+                                                    <input id="textTitle" class="form-control w-100" type="text"
+                                                        value="Hansel and Gretel" />
+                                                    <label for="textTitle">Title</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-2">
+                                                    <input id="textAuthor" class="form-control w-100" type="text"
+                                                        value="Brothers Grimm" />
+                                                    <label for="textAuthor">Author</label>
+                                                </div>
+                                            </div>
                                             <div class="col-md-2">
                                                 <div class="form-floating mb-2">
-                                                    <input id="exportDecimals" class="form-control w-100" type="number"
-                                                        min="1" value="5" />
-                                                    <label for="exportDecimals"># Decimals</label>
+                                                    <input id="textYear" class="form-control w-100" type="number"
+                                                    min="1" value="1812"/>
+                                                    <label for="textYear"># Year</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-floating mb-2">
+                                                    <input id="textLanguage" class="form-control w-100" type="text"
+                                                        value="en" />
+                                                    <label for="textLanguage">Language (en)</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-2">
-                                                    <input id="exportFilename" class="form-control w-100" type="text"
-                                                        value="index.json.gz" />
-                                                    <label for="exportFilename"># Filename</label>
+                                                    <input id="textSourceURL" class="form-control w-100" type="text"
+                                                        value="https://www.grimmstories.com/en/grimm_fairy-tales/hansel_and_gretel" />
+                                                    <label for="textSourceURL">Source URL</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-2">
+                                                    <input id="textNotes" class="form-control w-100" type="text"
+                                                        value="" />
+                                                    <label for="textNotes">Notes</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-floating mb-2">
+                                                    <input id="exportDecimals" class="form-control w-100" type="number"
+                                                        min="1" value="5" />
+                                                    <label for="exportDecimals"># Emb. Decimals</label>
                                                 </div>
                                             </div>
                                             <!-- Button for downloading only the index. However, considering
@@ -466,11 +508,10 @@
                                                     class="btn btn-primary w-100">Index only</button>
                                             </div>
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="d-flex mb-2 align-items-center">
                                                     <button type="button" class="btn btn-primary"
-                                                        id="exportEmbeddingsDictWithText">⬇️
-                                                        Download</button>
+                                                        id="exportEmbeddingsDictWithText">💾 Save</button>
                                                 </div>
                                             </div>
 

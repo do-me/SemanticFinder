@@ -253,3 +253,28 @@ Original code took 166.69999999925494 milliseconds
 Heap-based solution took 60.5 milliseconds
 
 */
+
+const toastMessage = document.getElementById("toastMessage");
+const toastText = document.getElementById("toastText");
+const closeToastButton = document.getElementById("closeToastButton");
+const soundToggle = document.querySelector('#toggle-sound')
+
+export function showToast(message) {
+    toastText.textContent = message;
+    toastMessage.style.display = "block";
+
+    setTimeout(() => {
+        hideToast();
+    }, 2500);
+}
+
+function hideToast() {
+    toastMessage.style.display = "none";
+}
+
+closeToastButton.addEventListener("click", () => {
+    hideToast();
+});
+
+
+  
