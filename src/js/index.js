@@ -516,7 +516,7 @@ function setValuesFromMetaJSON(jsonObject) {
     document.getElementById("textSourceURL").value = jsonObject.textSourceURL || "";
     document.getElementById("textNotes").value = jsonObject.textNotes || "";
     document.getElementById("textLanguage").value = jsonObject.textLanguage || "";
-    updateSplitParam();
+    //updateSplitParam(); // causing a bug, needs fix
 }
 
 
