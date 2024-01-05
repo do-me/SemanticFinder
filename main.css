@@ -181,6 +181,27 @@ td {
   }
 }
 
+.toast {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white !important;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  width: 250px !important;
+  font-size: 20px !important;
+}
+
+
+#closeToastButton{
+  cursor: pointer;
+  right: -47px;
+  position: relative;
+}
 /*!*****************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/bootstrap/dist/css/bootstrap.min.css ***!
   \*****************************************************************************************************/
