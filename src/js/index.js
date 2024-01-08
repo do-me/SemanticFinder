@@ -248,10 +248,10 @@ async function setProgressBarValue(value, progressBar = progressBarEmbeddings) {
 }
 
 
-function updateSplitParam() {
+function updateSplitParam(splitParamValue) {
     const splitParam = document.getElementById('split-param');
 
-    switch (document.getElementById('split-type').value) {
+    switch (splitParamValue) {
         case 'Words':
             splitParam.disabled = false;
             document.querySelector("label[for='split-param']").textContent = '# Words';
@@ -337,6 +337,52 @@ async function semanticHighlight(callback) {
 
     }
 
+
+// full text search NULL CHECKS !
+ 
+  // Example usage:
+  const wordsToCheckAnyInput = document.getElementById("wordsToCheckAny");
+  const wordsToCheckAllInput = document.getElementById("wordsToCheckAll");
+  const wordsToAvoidAnyInput = document.getElementById("wordsToAvoidAny");
+  const wordsToAvoidAllInput = document.getElementById("wordsToAvoidAll");
+  
+  const wordsToCheckAny = wordsToCheckAnyInput.value.trim() ? wordsToCheckAnyInput.value.split(',').map(word => word.trim()) : [];
+  const wordsToCheckAll = wordsToCheckAllInput.value.trim() ? wordsToCheckAllInput.value.split(',').map(word => word.trim()) : [];
+  const wordsToAvoidAny = wordsToAvoidAnyInput.value.trim() ? wordsToAvoidAnyInput.value.split(',').map(word => word.trim()) : [];
+  const wordsToAvoidAll = wordsToAvoidAllInput.value.trim() ? wordsToAvoidAllInput.value.split(',').map(word => word.trim()) : [];
+  
+  
+  const filterTexts = (inputTexts, wordsToCheckAny, wordsToCheckAll, wordsToAvoidAny, wordsToAvoidAll) => {
+    return inputTexts.reduce((result, text) => {
+      // Skip empty fields or fields containing only an empty string
+      if (text.trim() === "") {
+        return result;
+      }
+  
+      const shouldInclude =
+        (isEmptyArray(wordsToCheckAny) || wordsToCheckAny.some(word => text.includes(word))) &&
+        (isEmptyArray(wordsToAvoidAny) || !wordsToAvoidAny.some(word => text.includes(word))) &&
+        (isEmptyArray(wordsToCheckAll) || wordsToCheckAll.every(word => text.includes(word))) &&
+        (isEmptyArray(wordsToAvoidAll) || !wordsToAvoidAll.every(word => text.includes(word)));
+  
+      if (shouldInclude) {
+        result.push(text);
+      }
+  
+      return result;
+    }, []);
+  };
+  
+  const isEmptyArray = (arr) => arr.length === 0 || (arr.length === 1 && arr[0] === "");
+  
+  // Example usage:
+
+  inputTexts = filterTexts(inputTexts, wordsToCheckAny, wordsToCheckAll, wordsToAvoidAny, wordsToAvoidAll);
+
+  // full text search
+  
+    //console.log(inputTexts)
+
     //let inputTexts = await splitText(text, splitType, splitParam);
     // Initialize inputTexts dictionary with 0 as similarity
     inputTexts = inputTexts.reduce((acc, text) => {
@@ -389,7 +435,6 @@ async function semanticHighlight(callback) {
         if (i === N - 1) {
             const progress = Math.round(((i + 1) * 100) / N);
               setProgressBarValue(progress);
-              console.log(markers)
         }
       
         if (i !== 0 && (i % interval === 0 || i === N - 1)) {
@@ -471,7 +516,7 @@ function createMetaJSON() {
     const modelName = document.getElementById("model-name").value;
     const quantized = document.getElementById("quantized").checked;
     const splitType = document.getElementById("split-type").value;
-    const splitParam = parseInt(document.getElementById("split-param").value);
+    const splitParam = document.getElementById("split-param").value;
     const exportDecimals = parseInt(document.getElementById("exportDecimals").value);
     const textTitle = document.getElementById("textTitle").value;
     const textAuthor = document.getElementById("textAuthor").value;
@@ -479,7 +524,11 @@ function createMetaJSON() {
     const textSourceURL = document.getElementById("textSourceURL").value;
     const textNotes = document.getElementById("textNotes").value;
     const textLanguage = document.getElementById("textLanguage").value;
-    
+    const wordsToCheckAny = document.getElementById("wordsToCheckAny").value;
+    const wordsToCheckAll = document.getElementById("wordsToCheckAll").value;
+    const wordsToAvoidAny = document.getElementById("wordsToAvoidAny").value;
+    const wordsToAvoidAll = document.getElementById("wordsToAvoidAll").value;
+  
     const lines = editor.lineCount();
     const characters = editor.getValue().length;
     
@@ -497,7 +546,12 @@ function createMetaJSON() {
         splitParam,
         exportDecimals,
         lines,
-        characters
+        characters,
+        wordsToCheckAny,
+        wordsToCheckAll,
+        wordsToAvoidAny,
+        wordsToAvoidAll
+
     };
     
     return metaJSON
@@ -508,7 +562,7 @@ function setValuesFromMetaJSON(jsonObject) {
     document.getElementById("model-name").value = jsonObject.modelName || "";
     document.getElementById("quantized").checked = jsonObject.quantized;
     document.getElementById("split-type").value = jsonObject.splitType || "";
-    document.getElementById("split-param").value = jsonObject.splitParam || "";
+
     document.getElementById("exportDecimals").value = jsonObject.exportDecimals || "";
     document.getElementById("textTitle").value = jsonObject.textTitle || "";
     document.getElementById("textAuthor").value = jsonObject.textAuthor || "";
@@ -516,7 +570,13 @@ function setValuesFromMetaJSON(jsonObject) {
     document.getElementById("textSourceURL").value = jsonObject.textSourceURL || "";
     document.getElementById("textNotes").value = jsonObject.textNotes || "";
     document.getElementById("textLanguage").value = jsonObject.textLanguage || "";
-    //updateSplitParam(); // causing a bug, needs fix
+    document.getElementById("wordsToCheckAny").value = jsonObject.wordsToCheckAny || "";
+    document.getElementById("wordsToCheckAll").value = jsonObject.wordsToCheckAll || "";
+    document.getElementById("wordsToAvoidAny").value = jsonObject.wordsToAvoidAny || "";
+    document.getElementById("wordsToAvoidAll").value = jsonObject.wordsToAvoidAll || "";
+
+    updateSplitParam(jsonObject.splitType); // causing a bug, needs fix
+    document.getElementById("split-param").value = jsonObject.splitParam || "";
 }
 
 
@@ -571,6 +631,7 @@ function handleFileUpload() {
 }
 
 function handleRemoteFileUpload(fileURL ) {
+    editor.setValue("");
     showToast("⌛ Loading file...");
     console.log(fileURL)
 
@@ -679,8 +740,10 @@ window.onload = async function () {
     });
     
     // Call the function manually or bind it to an event
-    document.getElementById('split-type').addEventListener('change', updateSplitParam);
-    
+    document.getElementById('split-type').addEventListener('change', function() {
+        updateSplitParam(document.getElementById('split-type').value);
+    });
+
     // Example of calling the function manually
     // updateSplitParam();
     
@@ -700,10 +763,6 @@ window.onload = async function () {
     //    .catch(err => {
     //        console.error('Error:', err);
     //    });
-
-    const modelName = document.getElementById('model-name').value;
-    await loadSemantic(modelName);
-    activateSubmitButton();
 
     let summary_is_loaded = true; // Flag to track the first click
     document.getElementById('get_summary').addEventListener('click', async function (event) {
@@ -788,4 +847,9 @@ window.onload = async function () {
             `https://huggingface.co/datasets/do-me/SemanticFinder/resolve/main/${urlParams.get('hf')}.json.gz`);
 
     } 
+    else {
+        const modelName = document.getElementById('model-name').value;
+        await loadSemantic(modelName);
+        activateSubmitButton();
+    }
 };
