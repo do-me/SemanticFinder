@@ -11,6 +11,28 @@
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
+## Catalogue 
+You can use super fast pre-indexed examples for **really* large books like the Bible or Les Misérables with hundreds of pages. Try one of these and convince yourself
+
+| filesize | textTitle | textAuthor | textYear | textLanguage | URL | modelName | quantized | splitParam | splitType | characters | chunks | wordsToAvoidAll | wordsToCheckAll | wordsToAvoidAny | wordsToCheckAny | exportDecimals | lines | textNotes | textSourceURL | filename |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 4.78 | Das Kapital | Karl Marx | 1867 | de | https://do-me.github.io/SemanticFinder/?hf=Das_Kapital_c1a84fba | Xenova/multilingual-e5-small | True | 80 | Words | 2003807 | 3164 |  |  |  |  | 5 | 28673 |  | https://ia601605.us.archive.org/13/items/KarlMarxDasKapitalpdf/KAPITAL1.pdf | Das_Kapital_c1a84fba.json.gz |
+| 2.58 | Divina Commedia | Dante | 1321 | it | https://do-me.github.io/SemanticFinder/?hf=Divina_Commedia_d5a0fa67 | Xenova/multilingual-e5-base | True | 50 | Words | 383782 | 1179 |  |  |  |  | 5 | 6225 |  | http://www.letteratura-italiana.com/pdf/divina%20commedia/08%20Inferno%20in%20versione%20italiana.pdf | Divina_Commedia_d5a0fa67.json.gz |
+| 11.92 | Don Quijote | Miguel de Cervantes | 1605 | es | https://do-me.github.io/SemanticFinder/?hf=Don_Quijote_14a0b44 | Xenova/multilingual-e5-base | True | 25 | Words | 1047150 | 7186 |  |  |  |  | 4 | 12005 |  | https://parnaseo.uv.es/lemir/revista/revista19/textos/quijote_1.pdf | Don_Quijote_14a0b44.json.gz |
+| 0.06 | Hansel and Gretel | Brothers Grimm | 1812 | en | https://do-me.github.io/SemanticFinder/?hf=Hansel_and_Gretel_4de079eb | TaylorAI/gte-tiny | True | 100 | Chars | 5304 | 55 |  |  |  |  | 5 | 9 |  | https://www.grimmstories.com/en/grimm_fairy-tales/hansel_and_gretel | Hansel_and_Gretel_4de079eb.json.gz |
+| 1.74 | IPCC Report 2023 | IPCC | 2023 | en | https://do-me.github.io/SemanticFinder/?hf=IPCC_Report_2023_2b260928 | Supabase/bge-small-en | True | 200 | Chars | 307811 | 1566 |  |  |  |  | 5 | 3230 | state of knowledge of climate change | https://report.ipcc.ch/ar6syr/pdf/IPCC_AR6_SYR_LongerReport.pdf | IPCC_Report_2023_2b260928.json.gz |
+| 25.56 | King James Bible |  | None | en | https://do-me.github.io/SemanticFinder/?hf=King_James_Bible_24f6dc4c | TaylorAI/gte-tiny | True | 200 | Chars | 4556163 | 23056 |  |  |  |  | 5 | 80496 |  | https://www.holybooks.com/wp-content/uploads/2010/05/The-Holy-Bible-King-James-Version.pdf | King_James_Bible_24f6dc4c.json.gz |
+| 11.45 | King James Bible |  | None | en | https://do-me.github.io/SemanticFinder/?hf=King_James_Bible_6434a78d | TaylorAI/gte-tiny | True | 200 | Chars | 4556163 | 23056 |  |  |  |  | 2 | 80496 |  | https://www.holybooks.com/wp-content/uploads/2010/05/The-Holy-Bible-King-James-Version.pdf | King_James_Bible_6434a78d.json.gz |
+| 39.32 | Les Misérables | Victor Hugo | 1862 | fr | https://do-me.github.io/SemanticFinder/?hf=Les_Misérables_2239df51 | Xenova/multilingual-e5-base | True | 25 | Words | 3236941 | 19463 |  |  |  |  | 5 | 74491 | All five acts included | https://beq.ebooksgratuits.com/vents/Hugo-miserables-1.pdf | Les_Misérables_2239df51.json.gz |
+| 0.46 | REGULATION (EU) 2023/138 | European Commission | 2022 | en | https://do-me.github.io/SemanticFinder/?hf=REGULATION_(EU)_2023_138_c00e7ff6 | Supabase/bge-small-en | True | 25 | Words | 76809 | 424 |  |  |  |  | 5 | 1323 |  | https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32023R0138&qid=1704492501351 | REGULATION_(EU)_2023_138_c00e7ff6.json.gz |
+| 0.07 | Universal Declaration of Human Rights | United Nations | 1948 | en | https://do-me.github.io/SemanticFinder/?hf=Universal_Declaration_of_Human_Rights_0a7da79a | TaylorAI/gte-tiny | True | \nArticle  | Regex | 8623 | 63 |  |  |  |  | 5 | 109 | 30 articles | https://www.un.org/en/about-us/universal-declaration-of-human-rights | Universal_Declaration_of_Human_Rights_0a7da79a.json.gz |
+
+## Import & Export 
+
+You can create indices yourself with one two clicks and save them. If it's something private, keep it for yourself, if it's a classic book or something you think other's might be interested in consider a PR on the [Huggingface Repo](https://huggingface.co/datasets/do-me/SemanticFinder) or get in touch with us. Book requests are happily met if you provide us a good source link where we can do copy & paste. Simply open an issue here with [Book Request] or similar or contact us. 
+
+It goes without saying that no discriminating content will be tolerated.
+
 ## Installation 
 
 Clone the repository and install dependencies with 
@@ -45,7 +67,7 @@ If you want to build the browser extension locally, clone the repo and cd in `ex
 
 ## Speed 
 Tested on the entire book of [Moby Dick](https://archive.org/stream/mobydickorwhale01melvuoft/mobydickorwhale01melvuoft_djvu.txt) with 660.000 characters ~13.000 lines or ~111.000 words. 
-Initial embedding generation takes **1-2 mins** on my old i7-8550U CPU with 1000 characters as segment size. Following queries take only 20-30 seconds! 
+Initial embedding generation takes **1-2 mins** on my old i7-8550U CPU with 1000 characters as segment size. Following queries take only ~2 seconds! 
 If you want to query larger text instead or keep an entire library of books indexed use a [proper vector database instead](https://geo.rocks/post/qdrant-transformers-js-semantic-search/). 
 
 ## Features
@@ -53,6 +75,7 @@ If you want to query larger text instead or keep an entire library of books inde
 You can customize everything!
 
 - Input text & search term(s)
+- Hybrid search (semantic search & full-text search)
 - Segment length (the bigger the faster, the smaller the slower)
 - Highlight colors (currently hard-coded)
 - Number of highlights are based on the threshold value. The lower, the more results.
@@ -108,43 +131,6 @@ You can customize everything!
 7. The embeddings are cached in the dictionary so that subsequent queries are quite fast. The calculation of the cosine similarity is fairly speedy in comparison to the embedding generation. 
 8. **Only if the user changes the segment length**, the embeddings must be recalculated.  
 
-## Pre-index files for rapid search
-For larger documents that many people might be interested in it's worth considering pre-indexing.
-
-You can run the indexing (= embedding calculation) once and override the `inputTextsEmbeddings` variable to the source code. Then, either copy the original text **exactly** as you pasted it before in the textarea input field or use a function to restore the original text from the `inputTextsEmbeddings` variable. Pay attention that you use the same segment length (700 chars in the IPCC examples).
-
-![image](https://user-images.githubusercontent.com/47481567/232425929-c439db22-664a-4b0d-8fd6-cf7b440cb481.png)
-
-You can also host the embeddings somewhere else, e.g. on GitHub and load it on runtime. See the example source code in the IPCC exapmles:
-
-- 𝗟𝗼𝗻𝗴𝗲𝗿 𝗥𝗲𝗽𝗼𝗿𝘁: https://geo.rocks/semanticfinder/ipcc/
-- 𝗦𝘂𝗺𝗺𝗮𝗿𝘆 𝗳𝗼𝗿 𝗣𝗼𝗹𝗶𝗰𝘆𝗺𝗮𝗸𝗲𝗿𝘀: https://geo.rocks/semanticfinder/ipcc-summary/
-
-Function example loading an external embeddings file, overriding the `inputTextsEmbeddings` variable, setting the textarea value and updating CodeMirror:
-
-```JS
-var inputTextsEmbeddings;
-var url = "https://raw.githubusercontent.com/do-me/SemanticFinder-IPCC/main/ipcc-embeddings.json";
-$.ajax({
-    url: url,
-    dataType: 'json',
-    error: function(jqXHR, textStatus, errorThrown) {
-        console.log('failed to load embeddings');
-    },
-    success:function(results) { 
-        inputTextsEmbeddings = results
-        const textarea = document.getElementById('input-text');
-        textarea.value = Object.keys(inputTextsEmbeddings).join(' ')
-        editor = CodeMirror.fromTextArea(document.getElementById('input-text'), {
-                lineNumbers: true,
-                mode: 'text/plain',
-                matchBrackets: true,
-                lineWrapping: true,
-            });
-    }
-});
-```
-
 ## Collaboration 
 PRs welcome!
 
@@ -156,8 +142,8 @@ PRs welcome!
 - [x] create a demo without CDNs
 - [x] separate one html properly in html, js, css
 - [x] add npm installation 
-- [ ] option for loading embeddings from file or generally allow sharing embeddings in some way
-- [ ] simplify chunking function so the original text can be loaded without issues
+- [x] option for loading embeddings from file or generally allow sharing embeddings in some way
+- [x] simplify chunking function so the original text can be loaded without issues
 - [ ] improve the color range
 - [ ] rewrite the cosine similarity function in Rust, port to WASM and load as a module for possible speedup (experimental)
 - [ ] UI overhaul

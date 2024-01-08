@@ -632,6 +632,7 @@ function handleFileUpload() {
 
 function handleRemoteFileUpload(fileURL ) {
     editor.setValue("");
+    document.getElementById('update-rate').value = 1;
     showToast("⌛ Loading file...");
     console.log(fileURL)
 
