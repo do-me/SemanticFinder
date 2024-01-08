@@ -12,7 +12,7 @@
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
 ## Catalogue 
-You can use super fast pre-indexed examples for **really* large books like the Bible or Les Misérables with hundreds of pages. Try one of these and convince yourself
+You can use super fast pre-indexed examples for *really* large books like the Bible or Les Misérables with hundreds of pages and search the content in less than 2 seconds 🚀. Try one of these and convince yourself:
 
 | filesize | textTitle | textAuthor | textYear | textLanguage | URL | modelName | quantized | splitParam | splitType | characters | chunks | wordsToAvoidAll | wordsToCheckAll | wordsToAvoidAny | wordsToCheckAny | exportDecimals | lines | textNotes | textSourceURL | filename |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
