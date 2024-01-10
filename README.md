@@ -9,10 +9,10 @@
 
 ## [Try the web app](https://do-me.github.io/SemanticFinder/), [install the Chrome extension](#browser-extension) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
 
-Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and any model from Huggingface.
+Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and a quantized version of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
 ## Catalogue 
-You can use super fast pre-indexed examples for *really* large books like the Bible or Les Misérables with hundreds of pages. Try one of these and convince yourself!
+You can use super fast pre-indexed examples for *really* large books like the Bible or Les Misérables with hundreds of pages and search the content in less than 2 seconds 🚀. Try one of these and convince yourself:
 
 | filesize | textTitle | textAuthor | textYear | textLanguage | URL | modelName | quantized | splitParam | splitType | characters | chunks | wordsToAvoidAll | wordsToCheckAll | wordsToAvoidAny | wordsToCheckAny | exportDecimals | lines | textNotes | textSourceURL | filename |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -145,7 +145,7 @@ PRs welcome!
 - [x] option for loading embeddings from file or generally allow sharing embeddings in some way
 - [x] simplify chunking function so the original text can be loaded without issues
 - [ ] improve the color range
-- [ ] rewrite the core logic and cosine similarity function in Rust, port to WASM and load as a module for possible speedup (experimental)
+- [ ] rewrite the cosine similarity function in Rust, port to WASM and load as a module for possible speedup (experimental)
 - [ ] UI overhaul
 - [ ] polish code 
 - [x]   - jQuery/vanilla JS mixed
@@ -154,7 +154,6 @@ PRs welcome!
 - [ ] add possible use cases
 - [ ] package as a standalone application (maybe with custom model choice; to be downloaded once from HF hub, then saved locally)
 - [ ] possible integration as example in [transformers.js homepage](https://github.com/xenova/transformers.js/issues/84)
-- [ ] add [bhtSNE](https://github.com/Lv-291/wasm-bhtsne) vector dimensionality reduction for massively reduced index file sizes and possible 2D visualizations
 
 ## Star History
 
