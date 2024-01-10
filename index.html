@@ -18,27 +18,26 @@
             <div id="introContainer" class="col-sm-9">
 
                 <img id="SemanticFinderLogo" src="./SemanticFinder.svg" alt="SemanticFinder Logo">
-                <div class="content">
+                <div class="content" id="introContentDiv">
                     <br>
                     <h4>Frontend-only live semantic search with <a href="https://xenova.github.io/transformers.js/"
                             target="_blank">transformers.js</a>. <a
                             href="https://github.com/do-me/SemanticFinder">GitHub</a></h4>
                     <p>
-                        Semantic search right in your browser! Calculates the embeddings and cosine similarity
-                        client-side
-                        without server-side inferencing.<br>
-                        <a href="https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/">Intro
-                            blog
-                            post</a>, building on two former ones <a
-                            href="https://geo.rocks/post/qdrant-transformers-js-semantic-search//">[1]</a>, <a
-                            href="https://geo.rocks/post/geospatial-vector-search-qdrant/">[2]</a> about vector search.
-                        See
-                        other fast (pre-index) examples: <a href="https://geo.rocks/semanticfinder/ipcc">IPCC Report
-                            2023
-                            (85 pages)</a>, <a href="https://geo.rocks/semanticfinder/ipcc-summary">IPCC Summary 2023
-                            (35
-                            pages)</a>.<br>For a more refined search, enter a low character count; for a coarser search,
-                        enter a high one. Simply copy and paste any text and hit <b>Find</b>.
+                        <p>Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing.
+                             Your <b>data is private</b> and stays in your browser.<br>
+                             Just copy & paste any text in the text area and hit <b>Find</b>. Set a different chunk size for finer or coarser search.<br>
+                             <b>Large books</b> can be indexed too and searched in less than 2 seconds!<br> Examples: 
+                            <a href="/?hf=King_James_Bible_24f6dc4c">The Bible (en)</a>, 
+                            <a href="/?hf=Les_Misérables_2239df51">Les Misérables (fr)</a>, 
+                            <a href="/?hf=Das_Kapital_c1a84fba">Das Kapital (de)</a>, 
+                            <a href="/?hf=Don_Quijote_14a0b44">Don Quijote (es)</a>, 
+                            <a href="/?hf=Divina_Commedia_d5a0fa67">Divina Commedia (it)</a>, 
+                            <a href="/?hf=IPCC_Report_2023_2b260928">IPCC Report 2023 (en)</a>.
+                            Full catalogue with pre-indexed examples on <a href="https://huggingface.co/datasets/do-me/SemanticFinder">Huggingface</a>.
+                            <a href="https://huggingface.co/datasets/do-me/SemanticFinder#create-semanticfinder-files" target="_blank">Contribute the indices of the documents you indexed</a>
+                             or open a <a href="https://github.com/do-me/SemanticFinder/issues/new" target="_blank">request on GitHub</a> with a source URL.
+                          </p>
                     </p>
                 </div>
             </div>
@@ -415,7 +414,7 @@
                                                             <div class="form-floating mb-2">
                                                                 <input id="wordsToCheckAny" class="form-control"
                                                                     type="text" value="" />
-                                                                <label for="wordsToCheckAny"># Any of</label>
+                                                                <label for="wordsToCheckAny">Any of</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -424,7 +423,7 @@
                                                             <div class="form-floating mb-2">
                                                                 <input id="wordsToCheckAll" class="form-control"
                                                                     type="text" value="" />
-                                                                <label for="wordsToCheckAll"># All of</label>
+                                                                <label for="wordsToCheckAll">All of</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -438,7 +437,7 @@
                                                             <div class="form-floating mb-2">
                                                                 <input id="wordsToAvoidAny" class="form-control"
                                                                     type="text" value="" />
-                                                                <label for="wordsToAvoidAny"># Any of</label>
+                                                                <label for="wordsToAvoidAny">Any of</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -447,7 +446,7 @@
                                                             <div class="form-floating mb-2">
                                                                 <input id="wordsToAvoidAll" class="form-control"
                                                                     type="text" value="" />
-                                                                <label for="wordsToAvoidAll"># All of</label>
+                                                                <label for="wordsToAvoidAll">All of</label>
                                                             </div>
                                                         </div>
                                                     </div>
