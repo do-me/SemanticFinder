@@ -511,6 +511,16 @@ async function chatTopResults() {
     const currentChat = await chatText(topResultsString, max_new_tokens);
 }
 
+function resetMetadata() {
+    document.getElementById("textTitle").value = "";
+    document.getElementById("textAuthor").value = "";
+    document.getElementById("textYear").value = "";
+    document.getElementById("textSourceURL").value = "";
+    document.getElementById("textNotes").value = "";
+    document.getElementById("textLanguage").value = "";
+}
+
+
 function createMetaJSON() {
 
     const modelName = document.getElementById("model-name").value;
@@ -819,6 +829,11 @@ window.onload = async function () {
     document.getElementById('exportEmbeddingsDict').addEventListener('click', function (event) {
         exportEmbeddings('exportEmbeddingsDict');
     });
+
+    document.getElementById('resetMetadata').addEventListener('click', function (event) {
+        resetMetadata();
+    });
+
 
     document.getElementById('exportEmbeddingsDictWithText').addEventListener('click', function (event) {
         const currentEditorText = editor.getValue('');
