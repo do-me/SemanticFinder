@@ -7,7 +7,7 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
 import { loadSemantic, loadChat, loadSummary, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
-import { splitText, showToast } from './utils.js';
+import { splitText, showToast} from './utils.js';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -103,7 +103,7 @@ function finishCallback() {
     isProcessing = false;
     const processTime = new Date().getTime() - submitTime;
     console.log(`Finished ${processTime}ms`);
-
+    //tsne(); // for development perform tsne right after finishing
     activateScrollButtons();
 }
 
@@ -684,7 +684,36 @@ function handleRemoteFileUpload(fileURL ) {
         });
 }
 
+// Function to generate random points with labels and colors
+function generateRandomPoints(numPoints) {
+    const points = [];
+    for (let i = 0; i < numPoints; i++) {
+        const point = {
+            x: Math.random() * 500, // Adjust the range as needed
+            y: Math.random() * 500,
+            label: generateRandomString(),
+            color: Math.random() // Random value between 0 and 1 for shades of green
+        };
+        points.push(point);
+    }
+    return points;
+}
 
+// Function to generate a random string
+function generateRandomString() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < 5; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+
+async function tsne() {
+    semanticWorker.postMessage({
+        type: "tsne",
+    });
+}
 
 /**
  * Setup the application when the page loads.
@@ -834,6 +863,9 @@ window.onload = async function () {
         resetMetadata();
     });
 
+    document.getElementById('dimensionalityReduction').addEventListener('click', function (event) {
+        tsne();
+    });
 
     document.getElementById('exportEmbeddingsDictWithText').addEventListener('click', function (event) {
         const currentEditorText = editor.getValue('');

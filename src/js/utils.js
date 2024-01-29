@@ -1,5 +1,5 @@
 import { getTokens } from './semantic';
-
+import * as d3 from "d3";
 /**
  * @param {string} text
  * @param {string} splitType
@@ -8,19 +8,19 @@ import { getTokens } from './semantic';
  */
 export async function splitText(text, splitType, splitParam) {
     switch (splitType) {
-    case 'Regex':
-        return splitByRegex(text, splitParam);
-    case 'Sentence':
-        return splitBySentences(text);
-    case 'Words':
-        return splitByWords(text, parseInt(splitParam));
-    case 'Chars':
-        return splitByChars(text, parseInt(splitParam));
-    case 'Tokens':
-        return await splitByTokens(text, parseInt(splitParam));
-    default:
-        console.error('Invalid split type');
-        return null;
+        case 'Regex':
+            return splitByRegex(text, splitParam);
+        case 'Sentence':
+            return splitBySentences(text);
+        case 'Words':
+            return splitByWords(text, parseInt(splitParam));
+        case 'Chars':
+            return splitByChars(text, parseInt(splitParam));
+        case 'Tokens':
+            return await splitByTokens(text, parseInt(splitParam));
+        default:
+            console.error('Invalid split type');
+            return null;
     }
 }
 
@@ -276,5 +276,104 @@ closeToastButton.addEventListener("click", () => {
     hideToast();
 });
 
+export async function loadD3Plot(data) {
+    // a very buggy d3 plot, should be replaced with something that works better out of the box with zooming, panning etc. 
+    // maybe bokeh js (but immature), plotly js might work too 
+    // tested deck.gl but there is a weird label positioning bug
+    // three.js might be a good choice for an eventual 2D/3D toggle in the future
+    // other options available?
 
-  
+    removeD3Plot();
+    // Create an SVG container
+    const svg = d3.select("#plot-container")
+        .append("svg")
+        .attr("width", "100%")
+        .attr("height", 600);
+
+    // Create a group for the circles
+    // Create a group for the circles
+    const circleGroup = svg.append("g")
+        //.attr("transform")//, `translate(${svg.attr("width") / 2}, ${svg.attr("height") / 2})`);
+
+
+    // Define a color scale for shades of green
+    const colorScale = d3.scaleSequential(d3.interpolateGreens);
+
+    // Generate random points
+    //const data = generateRandomPoints(1000);
+
+    // Create circles for each point
+    const circles = circleGroup.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y)
+        //.attr("r", 5) // Adjust the initial radius as needed
+        .attr("fill", d => colorScale(d.color)) // Use the color scale for shades of green
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut);
+
+    //const dataExtent = calculateExtent(data);
+
+    const zoomBehavior = d3.zoom()
+        //.scaleExtent([1, 10]) // Set the zoom level limits
+        //.translateExtent([[xScale.domain()[0], yScale.domain()[0]], [xScale.domain()[1], yScale.domain()[1]]]) // Set the pan limits
+        .on('zoom', zoomed)
+    
+    svg.call(zoomBehavior);
+
+    // Function to handle mouseover event
+    function handleMouseOver(event, d) {
+        const hoveredCircle = d3.select(this);
+        //hoveredCircle.attr("r", 8); // Adjust the size when hovering
+        hoveredCircle.attr("opacity", 0.6);
+
+        // Show tooltip
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("left", event.pageX + 20 + "px")
+            .style("top", event.pageY - 20 + "px");
+
+        tooltip.append("p")
+            .text(`${d.label}`); // ${d.x} ${d.y}` );
+    }
+
+    // Function to handle mouseout event
+    function handleMouseOut() {
+        const hoveredCircle = d3.select(this);
+
+        // Get the radius value of an unhovered point
+        //const unhoveredCircle = d3.selectAll("circle:not(:hover)").node();
+        //const unhoveredRadius = d3.select(unhoveredCircle).attr("r");
+
+        // Set the radius of the hovered point to the radius of the unhovered point
+        hoveredCircle.attr("opacity", 1);
+
+        // Hide tooltip
+        d3.select(".tooltip").remove();
+    }
+
+
+    // Function to handle zoomed events
+    function zoomed(event) {
+        // Update the radius of the circles based on the current zoom level
+        const newRadius = 5 / event.transform.k; // Adjust the factor as needed
+        circles.attr("r", newRadius);
+
+        // Update the font size of the tooltip text based on the current zoom level
+        const tooltipFontSize = 14 / event.transform.k; // Adjust the factor as needed
+        d3.select(".tooltip").style("font-size", tooltipFontSize + "px");
+
+        // Update the position of the circles
+        circleGroup.attr("transform", event.transform);
+    }
+}
+
+export function removeD3Plot() {
+    // Select the SVG container and remove it
+    d3.select("#plot-container svg").remove();
+
+    // Remove any tooltips
+    d3.select(".tooltip").remove();
+}

@@ -14,7 +14,9 @@
     "@xenova/transformers": "^2.9.0",
     "bootstrap": "^5.3.2",
     "codemirror": "^5.52.2",
-    "pako": "^2.1.0"
+    "d3": "^7.8.5",
+    "pako": "^2.1.0",
+    "wasm-bhtsne": "^0.3.3"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

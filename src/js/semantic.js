@@ -1,4 +1,5 @@
 import {env} from '@xenova/transformers';
+import {loadD3Plot, removeD3Plot} from './utils.js';
 
 // @ts-ignore
 env.allowLocalModels = false;
@@ -137,6 +138,11 @@ worker.onmessage = function (event) {
             resolve(message.tokens);
             delete tokensResolveMap[message.text];
             break;
+        case 'tsne':
+            console.log(message.d3Array)
+            loadD3Plot(message.d3Array);
+            
+            break
         default:
             console.error('Unknown message type: ' + message.type);
     }

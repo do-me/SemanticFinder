@@ -204,3 +204,38 @@ td {
   right: -47px;
   position: relative;
 }
+
+/* Style for the point labels */
+.point-label {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  padding: 8px;
+  border: 2px solid #4a90e2;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #333333;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 100000000000000000000;
+  opacity: 1 !important;
+}
+
+/* Style for the tooltip */
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: 36px;
+  padding: 6px;
+  font-family: 'Open Sans', sans-serif;
+  background: #4a90e2;
+  color: #ffffff;
+  border: 0px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 100000000000000000000;
+  opacity: 1 !important;
+}
