@@ -387,6 +387,25 @@ export async function loadScatterplot(data) {
                         tooltip.style.display = 'none';
                     }
                 },
+                onClick: info => {
+                    const tooltip = document.getElementById('tooltip');
+            
+                    if (info.object) {
+                        const canvas = document.getElementById('deckgl');
+                        const rect = canvas.getBoundingClientRect();
+            
+                        // Calculate the correct position by subtracting the canvas offset and adding the scroll position
+                        const left = window.scrollX + info.x + rect.left + 30;
+                        const top = window.scrollY + info.y + rect.top + -50;
+            
+                        tooltip.innerHTML = `${info.object.label} <br>Similarity: ${info.object.similarity.toFixed(2)}`;
+                        tooltip.style.left = `${left}px`;
+                        tooltip.style.top = `${top}px`;
+                        tooltip.style.display = 'block';
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                }
 
             })
         ]
