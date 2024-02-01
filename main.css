@@ -208,7 +208,7 @@ td {
   position: relative;
 }
 
-/* Style for the point labels */
+/* Style for the point labels 
 .point-label {
   display: none;
   position: absolute;
@@ -225,7 +225,7 @@ td {
   opacity: 1 !important;
 }
 
-/* Style for the tooltip */
+/* Style for the tooltip 
 .tooltip {
   position: absolute;
   text-align: center;
@@ -241,6 +241,26 @@ td {
   pointer-events: none;
   z-index: 100000000000000000000;
   opacity: 1 !important;
+}*/
+
+#plot-container {
+  max-height: 700px;
+  height: 0;
+}
+
+#deckgl {
+  position: relative !important;
+}
+
+#tooltip {
+  position: absolute;
+  opacity: 1000;
+  font-size: 20px;
+  border-radius: var(--bs-border-radius);
+  background-color: #f5f8ffcf;
+  outline: 2px solid #dfebff;
+  padding: 8px;
+  max-width: 500px;
 }
 /*!*****************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/bootstrap/dist/css/bootstrap.min.css ***!

@@ -588,6 +588,20 @@
                                                         id="dimensionalityReduction">🌌 Dim-Reduction</button>
                                                 </div>
                                             </div>
+                                            <div class="col-md-2">
+                                                <div class="form-floating mb-2">
+                                                    <input id="dimReductionIterations" class="form-control w-100" type="number"
+                                                        min="1" value="1000" />
+                                                    <label for="dimReductionIterations"># Iterations</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-floating mb-2">
+                                                    <input id="scatterplotRadius" class="form-control w-100" type="number"
+                                                        min="1" value="16000" />
+                                                    <label for="scatterplotRadius"># Radius</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -643,9 +657,20 @@ Not very long after that there was again great scarcity in those parts, and the 
                     <ul id="results-list"></ul>
                 </div>
             </div>
-            <div class="row">
-                <div id="plot-container"></div>
+
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div>
+                        <hr />
+                        <h4>Dimensionality Reduction (New🔥) </h4>
+                        <p>Run a search as usual or load an index. Then hit "Dim-Reduction" in the advanced settings. More iterations yield better results but take more time to compute. If the points are too small increase the radius. Using a fast wasm implementation of Barnes-Hut tSNE (<a href="https://github.com/Lv-291/wasm-bhtsne" target="_blank">wasm-bhtSNE</a>).</p>
+                    <div id="plot-container">
+                        <canvas id="deckgl"></canvas>
+                    </div>
+                    </div>
+                </div>
             </div>
+
             <div class="row justify-content-center">
                 <div class="col-12">
                     <div>
@@ -810,7 +835,7 @@ Not very long after that there was again great scarcity in those parts, and the 
             <br>
         </div>
     </div>
-
+    <div id="tooltip" class="tooltip"></div>
 </body>
 
 </html>
