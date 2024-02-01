@@ -712,6 +712,10 @@ function generateRandomString() {
 async function tsne() {
     semanticWorker.postMessage({
         type: "tsne",
+        data: {
+            "iterations": document.getElementById("dimReductionIterations").value        
+        }
+
     });
 }
 

@@ -24,6 +24,8 @@ let chat_tokenizer;
 let summary_generator;
 let summary_tokenizer;
 
+let queryEmbedding
+
 function minimalEightCharHash(str) {
     let hash = 5381;
 
@@ -204,15 +206,30 @@ const updateEmbeddingsDict = (newData) => {
 
 function convertFloat32ArraysToArrays(arrayOfFloat32Arrays) {
     return arrayOfFloat32Arrays.reduce((accumulator, currentFloat32Array) => {
-      // Convert Float32Array to a regular JavaScript array using Array.from
-      const jsArray = Array.from(currentFloat32Array);
-      
-      // Add the converted array to the accumulator
-      accumulator.push(jsArray);
-      
-      return accumulator;
+        // Convert Float32Array to a regular JavaScript array using Array.from
+        const jsArray = Array.from(currentFloat32Array);
+
+        // Add the converted array to the accumulator
+        accumulator.push(jsArray);
+
+        return accumulator;
     }, []);
-  }
+}
+
+function calculateCosineSimilarity(embedding) {
+    let dotProduct = 0;
+    let queryMagnitude = 0;
+    let embeddingMagnitude = 0;
+    const queryEmbeddingLength = queryEmbedding.length;
+
+    for (let i = 0; i < queryEmbeddingLength; i++) {
+        dotProduct += queryEmbedding[i] * embedding[i];
+        queryMagnitude += queryEmbedding[i] ** 2;
+        embeddingMagnitude += embedding[i] ** 2;
+    }
+
+    return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
+}
 
 // Expose a function to manually update embeddingsDict
 self.updateEmbeddingsDictManually = updateEmbeddingsDict;
@@ -254,11 +271,11 @@ self.onmessage = async (event) => {
                 }
 
                 const tsne_encoder = new tSNE(valuesArray);
-                compressed_vectors = tsne_encoder.barnes_hut(1000).slice(0,valuesArrayLength);//,theta=0.1);
+                compressed_vectors = tsne_encoder.barnes_hut(message.data.iterations).slice(0, valuesArrayLength);//,theta=0.1);
             }
             else {
                 const tsne_encoder = new tSNE(valuesArray);
-                compressed_vectors = tsne_encoder.barnes_hut(1000);
+                compressed_vectors = tsne_encoder.barnes_hut(message.data.iterations);
 
             }
 
@@ -270,24 +287,25 @@ self.onmessage = async (event) => {
             //embedding = await embed(text);
 
             const originalKeys = Object.keys(embeddingsDict);
+            const originalEmbeddings = Object.values(embeddingsDict)
 
             // Assuming compressed_vectors is now an array of arrays
-            let d3Array = [] ;
+            let plotDataArray = [];
 
             for (let i = 0; i < originalKeys.length; i++) {
                 //reconstructedDict[originalKeys[i]] = compressed_vectors[i];
                 let thisVec = compressed_vectors[i];
-                d3Array.push({"x": thisVec[0] , "y": thisVec[1], "label": originalKeys[i], "color": 1 })
+                plotDataArray.push({ "x": thisVec[0], "y": thisVec[1], "label": originalKeys[i], "similarity": calculateCosineSimilarity(originalEmbeddings[i]) })
             }
 
             // Now reconstructedDict will have the original format
-            //console.log(reconstructedDict);
+            //console.log(plotDataArray);
 
-            //loadD3Plot(d3Array);
-            
+            //loadScatterplot(plotDataArray);
+
             self.postMessage({
                 type: 'tsne',
-                d3Array
+                plotDataArray
             });
             break
 
@@ -366,6 +384,7 @@ self.onmessage = async (event) => {
         case 'query':
             text = message.text;
             embedding = await embed(text);
+            queryEmbedding = embedding
             self.postMessage({
                 type: 'query',
                 embedding

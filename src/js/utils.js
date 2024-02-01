@@ -1,5 +1,7 @@
 import { getTokens } from './semantic';
-import * as d3 from "d3";
+import { Deck } from '@deck.gl/core';
+import { ScatterplotLayer, LineLayer } from '@deck.gl/layers';
+//import {ScatterplotLayer} from '@deck.gl/layers';
 /**
  * @param {string} text
  * @param {string} splitType
@@ -276,104 +278,121 @@ closeToastButton.addEventListener("click", () => {
     hideToast();
 });
 
-export async function loadD3Plot(data) {
-    // a very buggy d3 plot, should be replaced with something that works better out of the box with zooming, panning etc. 
-    // maybe bokeh js (but immature), plotly js might work too 
-    // tested deck.gl but there is a weird label positioning bug
-    // three.js might be a good choice for an eventual 2D/3D toggle in the future
-    // other options available?
+function generateGridData(gridSize = 20) {
+    const gridData = [];
 
-    removeD3Plot();
-    // Create an SVG container
-    const svg = d3.select("#plot-container")
-        .append("svg")
-        .attr("width", "100%")
-        .attr("height", 600);
-
-    // Create a group for the circles
-    // Create a group for the circles
-    const circleGroup = svg.append("g")
-        //.attr("transform")//, `translate(${svg.attr("width") / 2}, ${svg.attr("height") / 2})`);
-
-
-    // Define a color scale for shades of green
-    const colorScale = d3.scaleSequential(d3.interpolateGreens);
-
-    // Generate random points
-    //const data = generateRandomPoints(1000);
-
-    // Create circles for each point
-    const circles = circleGroup.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y)
-        //.attr("r", 5) // Adjust the initial radius as needed
-        .attr("fill", d => colorScale(d.color)) // Use the color scale for shades of green
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut);
-
-    //const dataExtent = calculateExtent(data);
-
-    const zoomBehavior = d3.zoom()
-        //.scaleExtent([1, 10]) // Set the zoom level limits
-        //.translateExtent([[xScale.domain()[0], yScale.domain()[0]], [xScale.domain()[1], yScale.domain()[1]]]) // Set the pan limits
-        .on('zoom', zoomed)
-    
-    svg.call(zoomBehavior);
-
-    // Function to handle mouseover event
-    function handleMouseOver(event, d) {
-        const hoveredCircle = d3.select(this);
-        //hoveredCircle.attr("r", 8); // Adjust the size when hovering
-        hoveredCircle.attr("opacity", 0.6);
-
-        // Show tooltip
-        const tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("left", event.pageX + 20 + "px")
-            .style("top", event.pageY - 20 + "px");
-
-        tooltip.append("p")
-            .text(`${d.label}`); // ${d.x} ${d.y}` );
+    // Create vertical lines
+    for (let i = -gridSize; i <= gridSize; i++) {
+        gridData.push({
+            sourcePosition: [i, -gridSize],
+            targetPosition: [i, gridSize],
+            color: [169, 169, 169],
+        });
     }
 
-    // Function to handle mouseout event
-    function handleMouseOut() {
-        const hoveredCircle = d3.select(this);
-
-        // Get the radius value of an unhovered point
-        //const unhoveredCircle = d3.selectAll("circle:not(:hover)").node();
-        //const unhoveredRadius = d3.select(unhoveredCircle).attr("r");
-
-        // Set the radius of the hovered point to the radius of the unhovered point
-        hoveredCircle.attr("opacity", 1);
-
-        // Hide tooltip
-        d3.select(".tooltip").remove();
+    // Create horizontal lines
+    for (let j = -gridSize; j <= gridSize; j++) {
+        gridData.push({
+            sourcePosition: [-gridSize, j],
+            targetPosition: [gridSize, j],
+            color: [169, 169, 169],
+        });
     }
 
-
-    // Function to handle zoomed events
-    function zoomed(event) {
-        // Update the radius of the circles based on the current zoom level
-        const newRadius = 5 / event.transform.k; // Adjust the factor as needed
-        circles.attr("r", newRadius);
-
-        // Update the font size of the tooltip text based on the current zoom level
-        const tooltipFontSize = 14 / event.transform.k; // Adjust the factor as needed
-        d3.select(".tooltip").style("font-size", tooltipFontSize + "px");
-
-        // Update the position of the circles
-        circleGroup.attr("transform", event.transform);
-    }
+    return gridData;
 }
 
-export function removeD3Plot() {
-    // Select the SVG container and remove it
-    d3.select("#plot-container svg").remove();
+let deckgl;
+export async function loadScatterplot(data) {
 
-    // Remove any tooltips
-    d3.select(".tooltip").remove();
+    // Find the minimum and maximum similarity values in the data array
+    const minSimilarity = Math.min(...data.map(item => item.similarity));
+    const maxSimilarity = Math.max(...data.map(item => item.similarity));
+
+    data = data.map(item => {
+        // Normalize similarity values to the range [0, 1]
+        const normalizedSimilarity = (item.similarity - minSimilarity) / (maxSimilarity - minSimilarity);
+
+        // Use the normalized similarity value as alpha (opacity)
+        const alpha = Math.min(1, Math.max(0, normalizedSimilarity));
+
+        // Map the alpha value to the entire opacity spectrum
+        const color = [0, 0, 255, alpha * 255]; // RGBA format with alpha value
+
+        return {
+            coordinates: [item.x, item.y],
+            color: color,
+            similarity: item.similarity,
+            label: item.label,
+        };
+    });
+
+    // Calculate the bounding box of the data
+    const bounds = data.reduce(
+        (acc, point) => ({
+            minX: Math.min(acc.minX, point.coordinates[0]),
+            minY: Math.min(acc.minY, point.coordinates[1]),
+            maxX: Math.max(acc.maxX, point.coordinates[0]),
+            maxY: Math.max(acc.maxY, point.coordinates[1]),
+        }),
+        { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
+    );
+
+    deckgl = new Deck({
+        canvas: 'deckgl',
+        container: 'plot-container',
+        initialViewState: {
+            latitude: (bounds.minY + bounds.maxY) / 2,
+            longitude: (bounds.minX + bounds.maxX) / 2,
+            zoom: 6
+        },
+        controller: true,
+        pickingRadius: 25,
+        layers: [
+            // Add a new LineLayer for the coordinate system
+            /*new LineLayer({
+                id: 'coordinate-system',
+                data: generateGridData(20),
+                getSourcePosition: d => d.sourcePosition,
+                getTargetPosition: d => d.targetPosition,
+                getColor: d => d.color,
+                getWidth: 1,
+                pickable: false
+            }),
+            */
+            // ScatterplotLayer with all points added right away
+            new ScatterplotLayer({
+                id: 'scatterplot',
+                data: data,
+                getPosition: d => d.coordinates,
+                getRadius: parseInt(document.getElementById("scatterplotRadius").value), // Adjust the radius to fit the new range
+                getFillColor: d => d.color,
+                pickable: true, // Enable picking for on-hover interaction
+                onHover: info => {
+                    const tooltip = document.getElementById('tooltip');
+
+                    if (info.object) {
+                        const canvas = document.getElementById('deckgl');
+                        const rect = canvas.getBoundingClientRect();
+
+                        // Calculate the correct position by subtracting the canvas offset and adding the scroll position
+                        const left = window.scrollX + info.x + rect.left + 30;
+                        const top = window.scrollY + info.y + rect.top + -50;
+
+                        tooltip.innerHTML = `${info.object.label} <br>Similarity: ${info.object.similarity.toFixed(2)}`;
+                        tooltip.style.left = `${left}px`;
+                        tooltip.style.top = `${top}px`;
+                        tooltip.style.display = 'block';
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                },
+
+            })
+        ]
+    });
+
+    document.getElementById("plot-container").style.height = "700px";
 }
+
+

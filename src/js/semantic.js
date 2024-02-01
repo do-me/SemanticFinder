@@ -1,5 +1,5 @@
 import {env} from '@xenova/transformers';
-import {loadD3Plot, removeD3Plot} from './utils.js';
+import {loadScatterplot, removeD3Plot} from './utils.js';
 
 // @ts-ignore
 env.allowLocalModels = false;
@@ -139,8 +139,8 @@ worker.onmessage = function (event) {
             delete tokensResolveMap[message.text];
             break;
         case 'tsne':
-            console.log(message.d3Array)
-            loadD3Plot(message.d3Array);
+            console.log(message.plotDataArray)
+            loadScatterplot(message.plotDataArray);
             
             break
         default:
