@@ -24,21 +24,26 @@
                             target="_blank">transformers.js</a>. <a
                             href="https://github.com/do-me/SemanticFinder">GitHub</a></h4>
                     <p>
-                        <p>Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing.
-                             Your <b>data is private</b> and stays in your browser.<br>
-                             Just copy & paste any text in the text area and hit <b>Find</b>. Set a different chunk size for finer or coarser search.<br>
-                             <b>Large books</b> can be indexed too and searched in less than 2 seconds!<br> Examples: 
-                            <a href="?hf=King_James_Bible_24f6dc4c">The Bible (en)</a>, 
-                            <a href="?hf=Les_Misérables_2239df51">Les Misérables (fr)</a>, 
-                            <a href="?hf=Das_Kapital_c1a84fba">Das Kapital (de)</a>, 
-                            <a href="?hf=Don_Quijote_14a0b44">Don Quijote (es)</a>, 
-                            <a href="?hf=Divina_Commedia_d5a0fa67">Divina Commedia (it)</a>,
-                            <a href="?hf=Iliad_8de5d1ea">Iliad (gr)</a>,                  
-                            <a href="?hf=IPCC_Report_2023_2b260928">IPCC Report 2023 (en)</a>.
-                            Full catalogue with pre-indexed examples on <a href="https://huggingface.co/datasets/do-me/SemanticFinder">Huggingface</a>.
-                            <a href="https://huggingface.co/datasets/do-me/SemanticFinder#create-semanticfinder-files" target="_blank">Contribute the indices of the documents you indexed</a>
-                             or open a <a href="https://github.com/do-me/SemanticFinder/issues/new" target="_blank">request on GitHub</a> with a source URL.
-                          </p>
+                    <p>Semantic search right in your browser! Calculates the embeddings and cosine similarity
+                        client-side without server-side inferencing.
+                        Your <b>data is private</b> and stays in your browser.<br>
+                        Just copy & paste any text in the text area and hit <b>Find</b>. Set a different chunk size for
+                        finer or coarser search.<br>
+                        <b>Large books</b> can be indexed too and searched in less than 2 seconds!<br> Examples:
+                        <a href="?hf=King_James_Bible_24f6dc4c">The Bible (en)</a>,
+                        <a href="?hf=Les_Misérables_2239df51">Les Misérables (fr)</a>,
+                        <a href="?hf=Das_Kapital_c1a84fba">Das Kapital (de)</a>,
+                        <a href="?hf=Don_Quijote_14a0b44">Don Quijote (es)</a>,
+                        <a href="?hf=Divina_Commedia_d5a0fa67">Divina Commedia (it)</a>,
+                        <a href="?hf=Iliad_8de5d1ea">Iliad (gr)</a>,
+                        <a href="?hf=IPCC_Report_2023_2b260928">IPCC Report 2023 (en)</a>.
+                        Full catalogue with pre-indexed examples on <a
+                            href="https://huggingface.co/datasets/do-me/SemanticFinder">Huggingface</a>.
+                        <a href="https://huggingface.co/datasets/do-me/SemanticFinder#create-semanticfinder-files"
+                            target="_blank">Contribute the indices of the documents you indexed</a>
+                        or open a <a href="https://github.com/do-me/SemanticFinder/issues/new" target="_blank">request
+                            on GitHub</a> with a source URL.
+                    </p>
                     </p>
                 </div>
             </div>
@@ -132,6 +137,9 @@
                                                         <option value="Xenova/bge-base-en-v1.5">Xenova/bge-base-en-v1.5
                                                             |
                                                             💾110Mb 📥4 ❤️1</option>
+                                                        <option value="nomic-ai/nomic-embed-text-v1">nomic-ai/nomic-embed-text-v1
+                                                                |
+                                                                💾138Mb 📥9892 ❤️139</option>
                                                         <option value="Xenova/all-roberta-large-v1">
                                                             Xenova/all-roberta-large-v1 | 💾357Mb 📥2 ❤️0</option>
                                                         <option value="Xenova/distiluse-base-multilingual-cased-v2">
@@ -525,8 +533,8 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="d-flex mb-2 align-items-center">
-                                                    <button type="button" class="btn btn-primary"
-                                                        id="resetMetadata">🔄 Metadata</button>
+                                                    <button type="button" class="btn btn-primary" id="resetMetadata">🔄
+                                                        Metadata</button>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -580,26 +588,6 @@
                                                     <input id="font-size" class="form-control w-100" type="number"
                                                         min="1" value="15" />
                                                     <label for="font-size"># Font-Size</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="d-flex mb-2 align-items-center">
-                                                    <button type="button" class="btn btn-primary"
-                                                        id="dimensionalityReduction">🌌 Dim-Reduction</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mb-2">
-                                                    <input id="dimReductionIterations" class="form-control w-100" type="number"
-                                                        min="1" value="1000" />
-                                                    <label for="dimReductionIterations"># Iterations</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mb-2">
-                                                    <input id="scatterplotRadius" class="form-control w-100" type="number"
-                                                        min="1" value="16000" />
-                                                    <label for="scatterplotRadius"># Radius</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -663,10 +651,43 @@ Not very long after that there was again great scarcity in those parts, and the 
                     <div>
                         <hr />
                         <h4>Dimensionality Reduction (New🔥) </h4>
-                        <p>Run a search as usual or load an index. Then hit "Dim-Reduction" in the advanced settings. More iterations yield better results but take more time to compute. If the points are too small increase the radius. Using a fast wasm implementation of Barnes-Hut tSNE (<a href="https://github.com/Lv-291/wasm-bhtsne" target="_blank">wasm-bhtSNE</a>).</p>
-                    <div id="plot-container">
-                        <canvas id="deckgl"></canvas>
-                    </div>
+                        <p>Run a search as usual or load an index. Then hit "Dim-Reduction" in the advanced settings.
+                            More iterations yield better results but take more time to compute. If the points are too
+                            small increase the radius. Using a fast wasm implementation of Barnes-Hut tSNE (<a
+                                href="https://github.com/Lv-291/wasm-bhtsne" target="_blank">wasm-bhtSNE</a>).</p>
+
+                        <div class="d-flex flex-row">
+                            <button type="button" class="btn btn-md btn-primary mb-2 nav-button"
+                                id="dimensionalityReduction" disabled>🌌 Dim-Reduction</button>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-2">
+                                        <input id="dimReductionIterations" class="form-control w-100" type="number"
+                                            min="1" value="1000" />
+                                        <label for="dimReductionIterations"># Iterations</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-2">
+                                        <input id="scatterplotRadius" class="form-control w-100" type="number" min="1"
+                                            value="800" />
+                                        <label for="scatterplotRadius"># Radius</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-2">
+                                        <input id="dimensionalityReductionSimilarityThreshold" class="form-control w-100" type="number" min="0" max="1" step="0.01" value="0" />
+                                        <label for="dimensionalityReductionSimilarityThreshold"># Similarity Threshold</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div id="plot-container">
+                            <canvas id="deckgl"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -695,9 +716,9 @@ Not very long after that there was again great scarcity in those parts, and the 
                         </div>
 
                         <div class="d-flex flex-row">
-                            <button id="get_chat" class="btn btn-md btn-primary mb-2 nav-button" disabled>Chat</button>
+                            <button id="get_chat" class="btn btn-md btn-primary mb-2 nav-button" disabled>💬 Chat</button>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="form-floating mb-2">
                                         <select class="form-select form-control" id="chat-model-name">
                                             <option selected value="Xenova/LaMini-Flan-T5-783M">
@@ -733,7 +754,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                         <label for="model-name">Model:</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating mb-2">
                                         <input type="number" id="chat_max_new_tokens" class="form-control" value="100"
                                             min="1" step="1" />
@@ -772,9 +793,9 @@ Not very long after that there was again great scarcity in those parts, and the 
                         <br>
                         <div class="d-flex flex-row">
                             <button id="get_summary" class="btn btn-md btn-primary mb-2 nav-button"
-                                disabled>Summarize</button>
+                                disabled>📝 Summarize</button>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="form-floating mb-2">
                                         <select class="form-select form-control" id="summary-model-name">
 
@@ -801,7 +822,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                         <label for="model-name">Model:</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating mb-2">
                                         <input type="number" id="summary_max_new_tokens" class="form-control"
                                             value="100" min="1" step="1" />
