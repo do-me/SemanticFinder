@@ -1,5 +1,5 @@
 import {env} from '@xenova/transformers';
-import {loadScatterplot, removeD3Plot} from './utils.js';
+import {loadScatterplot} from './utils.js';
 
 // @ts-ignore
 env.allowLocalModels = false;

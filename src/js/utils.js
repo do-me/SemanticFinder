@@ -259,7 +259,6 @@ Heap-based solution took 60.5 milliseconds
 const toastMessage = document.getElementById("toastMessage");
 const toastText = document.getElementById("toastText");
 const closeToastButton = document.getElementById("closeToastButton");
-const soundToggle = document.querySelector('#toggle-sound')
 
 export function showToast(message) {
     toastText.textContent = message;
@@ -302,25 +301,37 @@ function generateGridData(gridSize = 20) {
     return gridData;
 }
 
+const plotContainer = document.getElementById("plot-container");
 let deckgl;
 export async function loadScatterplot(data) {
 
-    // Find the minimum and maximum similarity values in the data array
+    removeScatterplot();
+    // Find the minimum and maximum similarity values, x values, and y values in the data array
     const minSimilarity = Math.min(...data.map(item => item.similarity));
     const maxSimilarity = Math.max(...data.map(item => item.similarity));
+
+    const minX = Math.min(...data.map(item => item.x));
+    const maxX = Math.max(...data.map(item => item.x));
+
+    const minY = Math.min(...data.map(item => item.y));
+    const maxY = Math.max(...data.map(item => item.y));
 
     data = data.map(item => {
         // Normalize similarity values to the range [0, 1]
         const normalizedSimilarity = (item.similarity - minSimilarity) / (maxSimilarity - minSimilarity);
 
+        // Normalize x and y coordinates to the range [0, 1]
+        const normalizedX = (item.x - minX) / (maxX - minX);
+        const normalizedY = (item.y - minY) / (maxY - minY);
+
         // Use the normalized similarity value as alpha (opacity)
         const alpha = Math.min(1, Math.max(0, normalizedSimilarity));
 
         // Map the alpha value to the entire opacity spectrum
-        const color = [0, 0, 255, alpha * 255]; // RGBA format with alpha value
+        const color = [0, 0, 255, Math.floor(alpha * 255)]; // RGBA format with alpha value
 
         return {
-            coordinates: [item.x, item.y],
+            coordinates: [normalizedX, normalizedY],
             color: color,
             similarity: item.similarity,
             label: item.label,
@@ -344,7 +355,7 @@ export async function loadScatterplot(data) {
         initialViewState: {
             latitude: (bounds.minY + bounds.maxY) / 2,
             longitude: (bounds.minX + bounds.maxX) / 2,
-            zoom: 6
+            zoom: 9
         },
         controller: true,
         pickingRadius: 25,
@@ -411,7 +422,12 @@ export async function loadScatterplot(data) {
         ]
     });
 
-    document.getElementById("plot-container").style.height = "700px";
+    plotContainer.style.height = "700px";
 }
 
-
+export function removeScatterplot() {
+    if (deckgl) {
+        deckgl.finalize();
+        deckgl = null;
+    }
+}

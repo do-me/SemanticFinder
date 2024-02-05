@@ -293,10 +293,15 @@ self.onmessage = async (event) => {
             let plotDataArray = [];
 
             for (let i = 0; i < originalKeys.length; i++) {
-                //reconstructedDict[originalKeys[i]] = compressed_vectors[i];
                 let thisVec = compressed_vectors[i];
-                plotDataArray.push({ "x": thisVec[0], "y": thisVec[1], "label": originalKeys[i], "similarity": calculateCosineSimilarity(originalEmbeddings[i]) })
+                let similarity = calculateCosineSimilarity(originalEmbeddings[i]);
+            
+                if (similarity >= message.data.dimensionalityReductionSimilarityThreshold) {
+                    plotDataArray.push({ "x": thisVec[0], "y": thisVec[1], "label": originalKeys[i], "similarity": similarity });
+                }
             }
+
+            console.log(plotDataArray)
 
             // Now reconstructedDict will have the original format
             //console.log(plotDataArray);

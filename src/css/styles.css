@@ -17,7 +17,7 @@
   font-weight: 700;
 }
 
-#get_chat, #get_summary{
+#get_chat, #get_summary, #dimensionalityReduction{
  height: calc(3.5rem + calc(var(--bs-border-width) * 2));
  width: 110px;
  margin-right: 20px;
