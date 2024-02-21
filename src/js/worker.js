@@ -19,6 +19,7 @@ let tokenizer;
 // chat model
 let chat_generator;
 let chat_tokenizer;
+let chat_model_name;
 
 // summary model
 let summary_generator;
@@ -79,24 +80,64 @@ async function getTokens(text) {
 
 async function chat(text, max_new_tokens = 100) {
     return new Promise(async (resolve, reject) => {
-        try {
-            const thisChat = await chat_generator(text, {
-                max_new_tokens: max_new_tokens,
-                return_prompt: false,
-                callback_function: async function (beams) {
-                    const decodedText = await token_to_text(beams, chat_tokenizer);
-                    //console.log(decodedText);
+        // hier Weiche einbauen für Qwen da tokenizer anders
+        console.log(chat_model_name);
 
-                    self.postMessage({
-                        type: 'chat',
-                        chat_text: decodedText,
-                    });
+        if (chat_model_name.includes("Qwen")) {
+            try {
 
-                    resolve(decodedText); // Resolve the main promise with chat text
-                },
-            });
-        } catch (error) {
-            reject(error);
+                // Define the prompt and list of messages
+                
+                const messages = [
+                    { "role": "system", "content": "You are a helpful assistant." },
+                    { "role": "user", "content": text }
+                ]
+
+                const generatorText = chat_generator.tokenizer.apply_chat_template(messages, {
+                    tokenize: false,
+                    add_generation_prompt: true,
+                });
+
+                const thisChat = await chat_generator(generatorText, {
+                    max_new_tokens: max_new_tokens,
+                    do_sample: false,
+                    callback_function: async function (beams) {
+                        //const decodedText = await token_to_text(beams, chat_generator.tokenizer);
+                        //console.log(decodedText);
+                        console.log(beams)
+                        self.postMessage({
+                            type: 'chat',
+                            chat_text: beams,
+                        });
+
+                        resolve(beams); // Resolve the main promise with chat text
+                    },
+                });
+            } catch (error) {
+                reject(error);
+            }
+        }
+
+        else {
+            try {
+                const thisChat = await chat_generator(text, {
+                    max_new_tokens: max_new_tokens,
+                    return_prompt: false,
+                    callback_function: async function (beams) {
+                        const decodedText = await token_to_text(beams, chat_tokenizer);
+                        //console.log(decodedText);
+
+                        self.postMessage({
+                            type: 'chat',
+                            chat_text: decodedText,
+                        });
+
+                        resolve(decodedText); // Resolve the main promise with chat text
+                    },
+                });
+            } catch (error) {
+                reject(error);
+            }
         }
     });
 }
@@ -295,7 +336,7 @@ self.onmessage = async (event) => {
             for (let i = 0; i < originalKeys.length; i++) {
                 let thisVec = compressed_vectors[i];
                 let similarity = calculateCosineSimilarity(originalEmbeddings[i]);
-            
+
                 if (similarity >= message.data.dimensionalityReductionSimilarityThreshold) {
                     plotDataArray.push({ "x": thisVec[0], "y": thisVec[1], "label": originalKeys[i], "similarity": similarity });
                 }
@@ -372,9 +413,10 @@ self.onmessage = async (event) => {
                     //quantized: message.quantized // currently not possible, models unquantized way too large!
                 });
             break;
-        case 'load_chat':
-            console.log("loading chat")
-            chat_tokenizer = await AutoTokenizer.from_pretrained(message.model_name) // no progress callbacks -- assume its quick
+        case 'load_text2text-generation':
+            console.log("loading chat");
+            chat_model_name = message.model_name;
+            chat_tokenizer = await AutoTokenizer.from_pretrained(message.model_name); // no progress callbacks -- assume its quick
             chat_generator = await pipeline('text2text-generation', message.model_name,
                 {
                     progress_callback: data => {
@@ -385,6 +427,22 @@ self.onmessage = async (event) => {
                     }
                     //quantized: message.quantized // currently not possible, models unquantized way too large!
                 });
+            break;
+        case 'load_text-generation':
+            console.log("loading chat");
+            chat_model_name = message.model_name;
+            chat_tokenizer = await AutoTokenizer.from_pretrained(message.model_name) // no progress callbacks -- assume its quick
+            chat_generator = await pipeline('text-generation', message.model_name,
+                {
+                    progress_callback: data => {
+                        self.postMessage({
+                            type: 'chat_download',
+                            data
+                        });
+                    }
+                    //quantized: message.quantized // currently not possible, models unquantized way too large!
+                });
+            console.log("chat loaded");
             break;
         case 'query':
             text = message.text;
