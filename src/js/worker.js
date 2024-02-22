@@ -1,6 +1,8 @@
 import { pipeline, AutoTokenizer } from '@xenova/transformers';
 import pako from 'pako';
 import init, { tSNE } from "wasm-bhtsne";
+import { marked } from 'marked';
+
 init();
 // env.useBrowserCache = false; // for testing
 
@@ -81,13 +83,12 @@ async function getTokens(text) {
 async function chat(text, max_new_tokens = 100) {
     return new Promise(async (resolve, reject) => {
         // hier Weiche einbauen für Qwen da tokenizer anders
-        console.log(chat_model_name);
+        console.log(chat_model_name, max_new_tokens);
 
         if (chat_model_name.includes("Qwen")) {
             try {
 
                 // Define the prompt and list of messages
-                
                 const messages = [
                     { "role": "system", "content": "You are a helpful assistant." },
                     { "role": "user", "content": text }
@@ -95,7 +96,7 @@ async function chat(text, max_new_tokens = 100) {
 
                 const generatorText = chat_generator.tokenizer.apply_chat_template(messages, {
                     tokenize: false,
-                    add_generation_prompt: true,
+                    add_generation_prompt: false,
                 });
 
                 const thisChat = await chat_generator(generatorText, {
@@ -103,14 +104,17 @@ async function chat(text, max_new_tokens = 100) {
                     do_sample: false,
                     callback_function: async function (beams) {
                         //const decodedText = await token_to_text(beams, chat_generator.tokenizer);
-                        //console.log(decodedText);
-                        console.log(beams)
+                        let decodedText = chat_generator.tokenizer.decode(beams[0].output_token_ids, { skip_special_tokens: false })
+
+                        decodedText = decodedText.split("<|im_start|>")[3].replace("<|im_end|>","") // just return the model's output
+                        decodedText = marked(decodedText)
+
                         self.postMessage({
                             type: 'chat',
-                            chat_text: beams,
+                            chat_text: decodedText
                         });
 
-                        resolve(beams); // Resolve the main promise with chat text
+                        resolve(decodedText); // Resolve the main promise with chat text
                     },
                 });
             } catch (error) {

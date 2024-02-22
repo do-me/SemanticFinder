@@ -38,7 +38,6 @@ let loadResolve;
  */
 let queryResolve;
 
-
 function downloadFile(data, filename, mimeType) {
     const blob = new Blob([data], { type: mimeType });
 

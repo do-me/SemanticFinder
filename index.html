@@ -350,8 +350,10 @@
                                                             Xenova/jina-embeddings-v2-base-de | 💾162Mb 📥0 ❤️0</option>
                                                         <option value="Xenova/jina-embeddings-v2-base-zh">
                                                             Xenova/jina-embeddings-v2-base-zh | 💾162Mb 📥0 ❤️0</option>
-                                                        <option value="jinaai/jina-embeddings-v2-base-code">
+                                                         <!--<option value="jinaai/jina-embeddings-v2-base-code">
                                                             jinaai/jina-embeddings-v2-base-code | 💾162Mb 📥0 ❤️0</option>
+                                                        <option value="jinaai/jina-embeddings-v2-base-es">
+                                                            jinaai/jina-embeddings-v2-base-es | 💾162Mb 📥0 ❤️0</option> --> <!-- access control inhibits direct loading from HF -->
                                                         <option value="do-me/jina-embeddings-v2-small-en">
                                                             do-me/jina-embeddings-v2-small-en (test)</option>
                                                         <option value="do-me/jina-embeddings-v2-base-en">
@@ -728,8 +730,10 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 <div class="col-md-8">
                                     <div class="form-floating mb-2">
                                         <select class="form-select form-control" id="chat-model-name">
-                                            <option value="Xenova/Qwen1.5-0.5B-Chat">Xenova/Qwen1.5-0.5B-Chat</option>
-                                            <option selected value="Xenova/LaMini-Flan-T5-783M">
+                                            <option selected value="Xenova/Qwen1.5-0.5B-Chat">Xenova/Qwen1.5-0.5B-Chat (0.482Gb)</option>
+                                            <option value="Xenova/Qwen1.5-1.8B-Chat">Xenova/Qwen1.5-1.8B-Chat (1.87Gb)</option>
+                                            
+                                            <option value="Xenova/LaMini-Flan-T5-783M">
                                                 Xenova/LaMini-Flan-T5-783M | 💾1.65Gb 📥17 ❤️20</option>
                                             <option value="Xenova/t5-small">Xenova/t5-small | 💾81Mb 📥2
                                                 ❤️2</option>
@@ -772,7 +776,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                             </div>
 
                         </div>
-                        <p id="chat_text" class="ml-2"></p>
+                        <div id="chat_text" class="ml-2"></div>
                         <!-- progress bar -->
                         <div class="col-12">
                             <div class="progress" role="progressbar" aria-label="Loading model" aria-valuenow="0"
