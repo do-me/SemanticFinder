@@ -706,8 +706,8 @@ Not very long after that there was again great scarcity in those parts, and the 
                 <div class="col-12">
                     <div>
                         <hr />
-                        <h4>Chat (Retrieval Augmented Generation, RAG)</h4>
-                        <p>Enter a question to be answered and use the placeholders <b>SEARCH_RESULTS</b> or <b>FULL_TEXT</b> for context.<br> If you encounter errors, the input is probably
+                        <h4>Chat</h4>
+                        <p>Enter a question to be answered and use the placeholders <b>SEARCH_RESULTS</b> or <b>FULL_TEXT</b> for context (Retrieval Augmented Generation, RAG).<br> If you encounter errors, the input is probably
                             too long (either too many or too
                             long results or too long prompt). Also, make
                             sure to check the right prompting style! Xenova/Qwen1.5-1.8B-Chat is by far the best
@@ -719,7 +719,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                         <div class="form-floating input-group mb-2">
                             <input id="chat_query" class="form-control"
                                 value="Based on the following context, answer the question: What do these paragraphs have in common? Context: SEARCH_RESULTS">
-                            <label for="query-text">Chat Query</label>
+                            <label for="chat_query">Chat Query</label>
                         </div>
 
                         <div class="d-flex flex-row">
@@ -766,7 +766,7 @@ Not very long after that there was again great scarcity in those parts, and the 
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating mb-2">
-                                        <input type="number" id="chat_max_new_tokens" class="form-control" value="100"
+                                        <input type="number" id="chat_max_new_tokens" class="form-control" value="10000"
                                             min="1" step="1" />
                                         <label for="max_new_tokens"># max new tokens</label>
                                     </div>
@@ -792,7 +792,45 @@ Not very long after that there was again great scarcity in those parts, and the 
 
                         </div>
                     </div>
+                </div>
+                <div class="col-12">
+                    <div>
+                        <hr />
+                        <h4>Ollama Chat Integration</h4>
+                        <p>Enter a question to be answered and use the placeholders <b>SEARCH_RESULTS</b> or <b>FULL_TEXT</b> for context.<br> Install <a href="https://ollama.com/" target="_blank">Ollama</a> locally on macOS, Linux or Windows and connect your server (currently only default http://localhost:11434 supported).</p>
+                        <div class="form-floating input-group mb-2">
+                            <input id="ollama_chat_query" class="form-control"
+                                value="Based on the following context, answer the question: What is this text about? Context: FULL_TEXT">
+                            <label for="ollama_chat_query">Chat Query</label>
+                        </div>
 
+                        <div class="d-flex flex-row">
+                            <button id="ollama_get_chat" class="btn btn-md btn-primary mb-2 nav-button">🦙 Chat</button>
+                            <div class="row">
+                                <div class="col-md-4" hidden>
+                                    <div class="form-floating mb-2">
+                                        <input type="text" id="ollama_chat_server" class="form-control" value="http://localhost:11434"/>
+                                        <label for="ollama_chat_server">Ollama Server</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-floating mb-8">
+                                        <input type="text" id="ollama_chat_model" class="form-control" value="llama2"/>
+                                        <label for="ollama_chat_model">Model</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" hidden>
+                                    <div class="form-floating mb-2">
+                                        <input type="number" id="ollama_chat_max_new_tokens" class="form-control" value="100"
+                                            min="1" step="1" />
+                                        <label for="ollama_chat_max_new_tokens"># max new tokens</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="ollama_chat_text" class="ml-2"></div>
+                    </div>
                 </div>
                 <div class="col-12">
                     <div>
