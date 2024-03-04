@@ -707,26 +707,23 @@ Not very long after that there was again great scarcity in those parts, and the 
                     <div>
                         <hr />
                         <h4>Chat (Retrieval Augmented Generation, RAG)</h4>
-                        <p>Enter a question to be answered. The model is automatically prompted with the top search
-                            results in the form: <br><b>"Based on the following input, answer the question: [your
-                                question] [top search results]"</b>.<br> If you encounter errors, the input is probably
+                        <p>Enter a question to be answered and use the placeholders <b>SEARCH_RESULTS</b> or <b>FULL_TEXT</b> for context.<br> If you encounter errors, the input is probably
                             too long (either too many or too
                             long results or too long prompt). Also, make
-                            sure to check the right prompting style! Xenova/LaMini-Flan-T5-783M is by far the best
+                            sure to check the right prompting style! Xenova/Qwen1.5-1.8B-Chat is by far the best
                             quantized
-                            model currently available and delivers good results while the others produce nonsense in
-                            most cases. At some point <a href="https://github.com/xenova/transformers.js/pull/379"
+                            model currently available and delivers good results. At some point <a href="https://github.com/xenova/transformers.js/pull/379"
                                 target="_blank">Falcon & Mistral/Zephyr models</a> will probably become available
                             here.<br><b>Attention</b>: Loads very large models with
                             more than 1.5Gb (!) of resources.</p>
                         <div class="form-floating input-group mb-2">
                             <input id="chat_query" class="form-control"
-                                value="What do these paragraphs have in common?">
+                                value="Based on the following context, answer the question: What do these paragraphs have in common? Context: SEARCH_RESULTS">
                             <label for="query-text">Chat Query</label>
                         </div>
 
                         <div class="d-flex flex-row">
-                            <button id="get_chat" class="btn btn-md btn-primary mb-2 nav-button" disabled>💬 Chat</button>
+                            <button id="get_chat" class="btn btn-md btn-primary mb-2 nav-button">💬 Chat</button>
                             <div class="row">
                                 <div class="col-md-8">
                                     <div class="form-floating mb-2">

@@ -506,12 +506,20 @@ async function summarizeTopResults() {
 }
 
 async function chatTopResults() {
-    document.getElementById("chat_text").innerHTML = "";
-    var chatQuery = "Based on the following input, answer the question:" + document.getElementById("chat_query").value;
-    var max_new_tokens = document.getElementById("chat_max_new_tokens").value;
+    document.getElementById("chat_text").innerHTML = ""; // progress bar
 
-    var topResultsString = chatQuery + " Context:\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
-    const currentChat = await chatText(topResultsString, max_new_tokens);
+    const chatQuery = document.getElementById("chat_query").value;
+    const search_results = "\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
+    const full_text = editor.getValue()
+    
+    const finalQuery = chatQuery.replace("SEARCH_RESULTS", `"""${search_results}"""`).replace("FULL_TEXT",`"""${full_text}"""`) // add variables in string
+    console.log(finalQuery)
+    if (finalQuery.length > 10000){
+        alert("Attention: Context might be too large (> 10.000 chars) and require too much RAM to be processed. Try working with fewer results or shorter chunks.")
+    }
+
+    var max_new_tokens = document.getElementById("chat_max_new_tokens").value;
+    const currentChat = await chatText(finalQuery, max_new_tokens);
 }
 
 function resetMetadata() {
