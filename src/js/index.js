@@ -12,6 +12,8 @@ import { splitText, showToast} from './utils.js';
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
+import ollama from "ollama/browser";
+import { marked } from 'marked';
 
 import logo from './SemanticFinder.svg';
 
@@ -505,14 +507,17 @@ async function summarizeTopResults() {
     //document.getElementById("summary_text").innerHTML = currentSummary[0].summary_text //out[0].summary_text;
 }
 
+function get_top_search_results(){
+    const search_results = "\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
+    return search_results
+    }
+
 async function chatTopResults() {
     document.getElementById("chat_text").innerHTML = ""; // progress bar
 
     const chatQuery = document.getElementById("chat_query").value;
-    const search_results = "\nParagraph: " + Array.from(document.querySelectorAll('#results-list .card-title')).map(title => title.textContent).join('\nParagraph: ');
-    const full_text = editor.getValue()
     
-    const finalQuery = chatQuery.replace("SEARCH_RESULTS", `"""${search_results}"""`).replace("FULL_TEXT",`"""${full_text}"""`) // add variables in string
+    const finalQuery = chatQuery.replace("SEARCH_RESULTS", `"""${get_top_search_results()}"""`).replace("FULL_TEXT",`"""${editor.getValue()}"""`) // add variables in string
     console.log(finalQuery)
     if (finalQuery.length > 10000){
         alert("Attention: Context might be too large (> 10.000 chars) and require too much RAM to be processed. Try working with fewer results or shorter chunks.")
@@ -731,6 +736,30 @@ async function tsne() {
     });
 }
 
+let ollama_response = ""
+async function ollama_chat(server_url = 'http://localhost:11434'){
+    //const ollama = new Ollama({ host: server_url }) // doesn't currently work
+
+    const chatQuery = document.getElementById("ollama_chat_query").value;
+    const finalQuery = chatQuery.replace("SEARCH_RESULTS", `"""${get_top_search_results()}"""`).replace("FULL_TEXT",`"""${editor.getValue()}"""`)
+    
+    console.log(finalQuery);
+    const message = { role: 'user', content: finalQuery }
+
+    ollama_response = ""
+    const ollama_chat_model = document.getElementById("ollama_chat_model").value
+
+    const response = await ollama.chat({ model: ollama_chat_model, messages: [message], stream: true })
+    for await (const part of response) {
+        const ollama_char = part.message.content
+
+        ollama_response += ollama_char
+        
+        document.getElementById("ollama_chat_text").innerHTML = marked(ollama_response)
+    }
+}
+
+
 /**
  * Setup the application when the page loads.
  */
@@ -849,7 +878,10 @@ window.onload = async function () {
         await chatTopResults(); // Execute on every click after the first one
         activateSubmitButton(chatButton, "Chat");
     });
-
+    
+    document.getElementById('ollama_get_chat').addEventListener('click', function (event) {
+        ollama_chat();
+    });
 
     document.getElementById('next').addEventListener('click', function (event) {
         event.preventDefault();

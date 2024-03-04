@@ -12,12 +12,12 @@
   font-family: 'Open Sans', sans-serif;
 }
 
-#summary_text, #chat_text {
+#summary_text, #chat_text, #ollama_chat_text {
   margin: 10px;
   font-weight: 700;
 }
 
-#get_chat, #get_summary, #dimensionalityReduction{
+#get_chat, #ollama_get_chat, #get_summary, #dimensionalityReduction{
  height: calc(3.5rem + calc(var(--bs-border-width) * 2));
  width: 110px;
  margin-right: 20px;
