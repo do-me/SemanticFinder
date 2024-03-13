@@ -396,6 +396,7 @@ async function semanticHighlight(callback) {
     }, {});
 
     const numUpdates = document.getElementById('update-rate').value;
+    const autoScrollintoViewChecked = document.getElementById('autoScrollIntoView').checked;
 
     await embedQuery(inputQuery);
 
@@ -445,7 +446,7 @@ async function semanticHighlight(callback) {
         if (i !== 0 && (i % interval === 0 || i === N - 1)) {
             const sortedResults = Object.entries(inputTexts).sort((a, b) => b[1] - a[1]);
             updateResults(sortedResults);
-          if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0)) {
+          if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0) && autoScrollintoViewChecked) {
             CoderMirrorFindAndScrollIntoView(markers[0]);
           }
         }
