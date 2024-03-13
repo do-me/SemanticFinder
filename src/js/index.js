@@ -935,8 +935,29 @@ window.onload = async function () {
         setProgressBarValue(0);
         const extractedText = await handlePdfFileUpload();
         editor.setValue(extractedText); // Assuming 'editor' is your CodeMirror instance
+
+        const fileInput = document.getElementById('pdf-upload');
+        const filesLength = fileInput.files.length; // Get all selected files
+
+        const content = editor.getValue(); // Get the content of the editor
+        const charCount = content.length;
+        const wordCount = content.split(/\s+/).length;
+        const sentenceCount = (content.match(/[.!?]/g) || []).length;
+        const paragraphCount = (content.match(/\n\n/g) || []).length + 1;
+        const lineCount = editor.lineCount();
+
+        const message = `File(s) loaded ✅
+Documents: ${filesLength}
+Characters: ${charCount}
+Words: ${wordCount}
+Sentences: ${sentenceCount}
+Paragraphs: ${paragraphCount}
+Lines: ${lineCount}`;
+
+        console.log(message)
+        // Show the toast with the formatted message
         showToast("File(s) loaded ✅");
-        console.log("File(s) loaded ✅");
+
     });
 
     document.getElementById('confirm-remote-pdf-upload').addEventListener('click', async function (event) {

@@ -265,13 +265,13 @@ const toastMessage = document.getElementById("toastMessage");
 const toastText = document.getElementById("toastText");
 const closeToastButton = document.getElementById("closeToastButton");
 
-export function showToast(message) {
+export function showToast(message, timeout=2500) {
     toastText.textContent = message;
     toastMessage.style.display = "block";
 
     setTimeout(() => {
         hideToast();
-    }, 2500);
+    }, timeout);
 }
 
 function hideToast() {
