@@ -1,6 +1,10 @@
 import { getTokens } from './semantic';
 import { Deck } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer } from '@deck.gl/layers';
+
+import * as pdfjsLib from 'pdfjs-dist/webpack.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.js';
+
 //import {ScatterplotLayer} from '@deck.gl/layers';
 /**
  * @param {string} text
@@ -430,4 +434,126 @@ export function removeScatterplot() {
         deckgl.finalize();
         deckgl = null;
     }
+}
+
+// pdf loading logic for local and remote
+
+function extractTextFromPDF(fileOrDataUri) {
+    return new Promise((resolve, reject) => {
+        // Check if the input is a File object or a data URI
+        if (fileOrDataUri instanceof File) {
+            // For local files, create a URL to use with pdfjsLib
+            const fileURL = URL.createObjectURL(fileOrDataUri);
+            pdfjsLib.getDocument(fileURL).promise.then(pdf => {
+                processPdf(pdf, resolve, reject);
+            }).catch(error => {
+                reject(error); // Reject the promise if there's an error loading the PDF
+            });
+        } else if (fileOrDataUri.startsWith('data:')) {
+            // For data URIs, directly use the data URI with pdfjsLib
+            pdfjsLib.getDocument(fileOrDataUri).promise.then(pdf => {
+                processPdf(pdf, resolve, reject);
+            }).catch(error => {
+                reject(error); // Reject the promise if there's an error loading the PDF
+            });
+        } else {
+            reject(new Error('Invalid input type'));
+        }
+    });
+}
+
+function processPdf(pdf, resolve, reject) {
+    let numPages = pdf.numPages;
+    let pageTextPromises = [];
+    for (let i = 1; i <= numPages; i++) {
+        pageTextPromises.push(pdf.getPage(i).then(page => {
+            return page.getTextContent().then(textContent => {
+                return textContent.items.map(item => item.str).join(' ');
+            });
+        }));
+    }
+    Promise.all(pageTextPromises).then(pagesText => {
+        // Concatenate text from all pages
+        let fullText = pagesText.join("\n\n");
+        resolve(fullText); // Resolve the promise with the full text
+    }).catch(error => {
+        reject(error); // Reject the promise if there's an error
+    });
+}
+
+
+export async function handlePdfFileUpload() {
+    const fileInput = document.getElementById('pdf-upload');
+    const files = fileInput.files; // Get all selected files
+    if (files.length > 0) {
+        // Map each file to a promise that resolves with its text content
+        const filePromises = Array.from(files).map(file => extractTextFromPDF(file));
+        // Wait for all files to be processed
+        const allFilesText = await Promise.all(filePromises);
+        // Concatenate text from all files
+        const fullText = allFilesText.join("\n\n");
+        return fullText; // Return the full text
+    } else {
+        console.error('No files selected');
+        return ''; // Return an empty string or handle the error as needed
+    }
+}
+
+
+////////////////////////////////////////////////////
+
+async function fetchPdfAsDataUri(url) {
+    const proxyUrl = 'https://corsproxy.io/?' + url; // cors proxy unfortunately needed for remote files :/
+    const response = await fetch(proxyUrl);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
+
+
+export async function handleRemotePdfFileUpload() {
+    const urls = document.getElementById("importPdfURL").value.split(" ");
+    let texts = [];
+
+    for (const url of urls) {
+        console.log(url);
+
+        try {
+            const dataUri = await fetchPdfAsDataUri(url);
+            const text = await extractTextFromPDF(dataUri);
+            texts.push(text);
+        } catch (error) {
+            console.error('Error handling remote PDF file upload:', error);
+        }
+    }
+
+    return texts.join("\n");
+}
+
+export async function handleMultipleRemotePdfFileUploads() {
+
+    const urls = document.getElementById("importPdfURL").value.split(" ")
+    const results = [];
+
+    for (const url of urls) {
+        console.log(url);
+
+        try {
+            const dataUri = await fetchPdfAsDataUri(url);
+            const text = await extractTextFromPDF(dataUri);
+            results.push(text);
+        } catch (error) {
+            console.error(`Error handling remote PDF file upload for URL ${url}:`, error);
+            results.push('');
+        }
+    }
+
+    return results;
 }

@@ -27,7 +27,7 @@
                     <p>Semantic search right in your browser! Calculates the embeddings and cosine similarity
                         client-side without server-side inferencing.
                         Your <b>data is private</b> and stays in your browser.<br>
-                        Just copy & paste any text in the text area and hit <b>Find</b>. Set a different chunk size for
+                        Just copy & paste any text in the text area or load one more PDFs in the advanced settings and hit <b>Find</b>. Set a different chunk size for
                         finer or coarser search.<br>
                         <b>Large books</b> can be indexed too and searched in less than 2 seconds!<br> Examples:
                         <a href="?hf=King_James_Bible_24f6dc4c">The Bible (en)</a>,
@@ -474,11 +474,49 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
+                                                <h6>Import one or multiple PDF File(s)</h6>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="d-flex mb-2 align-items-center">
+                                                            <input type="file" class="form-control mr-2"
+                                                                id="pdf-upload" multiple accept="application/pdf"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="d-flex mb-2 align-items-center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="confirm-pdf-upload">
+                                                                📂 Import</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <h6>Import Remote PDF File(s) space-separated using <a href="https://corsproxy.io/" target="_blank">corsproxy.io</a></h6>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="form-floating mb-2">
+                                                            <input id="importPdfURL" class="form-control w-100" type="text"
+                                                                value="https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf" />
+                                                            <label for="importPdfURL">Import URL(s)</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="d-flex mb-2 align-items-center">
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="confirm-remote-pdf-upload">
+                                                                ⬇️ Import</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
                                                 <h6>Import Local Index File</h6>
                                                 <div class="row">
                                                     <div class="col-md-8">
                                                         <div class="d-flex mb-2 align-items-center">
-                                                            <!-- Added 'align-items-center' class -->
                                                             <input type="file" class="form-control mr-2"
                                                                 id="file-upload" />
                                                         </div>
@@ -499,7 +537,7 @@
                                                     <div class="col-md-8">
                                                         <div class="form-floating mb-2">
                                                             <input id="importURL" class="form-control w-100" type="text"
-                                                                value="https://huggingface.co/datasets/do-me/SemanticFinder/resolve/main/king-james-bible_gte-tiny_q_200-chars_2-dec.json.gz" />
+                                                                value="https://huggingface.co/datasets/do-me/SemanticFinder/resolve/main/Hansel_and_Gretel_4de079eb.json.gz" />
                                                             <label for="importURL">Import URL</label>
                                                         </div>
                                                     </div>

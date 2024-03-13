@@ -7,7 +7,7 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/addon/search/searchcursor.js';
 
 import { loadSemantic, loadChat, loadSummary, similarity, embedQuery, summarizeText, chatText } from './semantic.js';
-import { splitText, showToast} from './utils.js';
+import { splitText, showToast, handlePdfFileUpload, handleRemotePdfFileUpload } from './utils.js';
 
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -929,6 +929,21 @@ window.onload = async function () {
         document.getElementById('update-rate').value = 1;
         handleRemoteFileUpload(document.getElementById('importURL').value);
     });
+
+    document.getElementById('confirm-pdf-upload').addEventListener('click', async function (event) {
+        const extractedText = await handlePdfFileUpload();
+        editor.setValue(extractedText); // Assuming 'editor' is your CodeMirror instance
+        showToast("File(s) loaded ✅");
+        console.log("File(s) loaded ✅");
+    });
+
+    document.getElementById('confirm-remote-pdf-upload').addEventListener('click', async function (event) {
+        const extractedText = await handleRemotePdfFileUpload();
+        editor.setValue(extractedText); // Assuming 'editor' is your CodeMirror instance
+        showToast("File(s) loaded ✅");
+        console.log("File(s) loaded ✅");
+    });
+   
 
     // initialize loading
     // read url params and load from Hf or from remote 
