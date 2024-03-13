@@ -1,6 +1,7 @@
 import { getTokens } from './semantic';
 import { Deck } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer } from '@deck.gl/layers';
+import {setProgressBarValue } from './index.js';
 
 import * as pdfjsLib from 'pdfjs-dist/webpack.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.js';
@@ -438,31 +439,7 @@ export function removeScatterplot() {
 
 // pdf loading logic for local and remote
 
-function extractTextFromPDF(fileOrDataUri) {
-    return new Promise((resolve, reject) => {
-        // Check if the input is a File object or a data URI
-        if (fileOrDataUri instanceof File) {
-            // For local files, create a URL to use with pdfjsLib
-            const fileURL = URL.createObjectURL(fileOrDataUri);
-            pdfjsLib.getDocument(fileURL).promise.then(pdf => {
-                processPdf(pdf, resolve, reject);
-            }).catch(error => {
-                reject(error); // Reject the promise if there's an error loading the PDF
-            });
-        } else if (fileOrDataUri.startsWith('data:')) {
-            // For data URIs, directly use the data URI with pdfjsLib
-            pdfjsLib.getDocument(fileOrDataUri).promise.then(pdf => {
-                processPdf(pdf, resolve, reject);
-            }).catch(error => {
-                reject(error); // Reject the promise if there's an error loading the PDF
-            });
-        } else {
-            reject(new Error('Invalid input type'));
-        }
-    });
-}
-
-function processPdf(pdf, resolve, reject) {
+function processPdf(pdf, resolve, reject, updateProgress) {
     let numPages = pdf.numPages;
     let pageTextPromises = [];
     for (let i = 1; i <= numPages; i++) {
@@ -481,13 +458,49 @@ function processPdf(pdf, resolve, reject) {
     });
 }
 
+function extractTextFromPDF(fileOrDataUri, updateProgress) {
+    return new Promise((resolve, reject) => {
+        // Check if the input is a File object or a data URI
+        if (fileOrDataUri instanceof File) {
+            // For local files, create a URL to use with pdfjsLib
+            const fileURL = URL.createObjectURL(fileOrDataUri);
+            pdfjsLib.getDocument(fileURL).promise.then(pdf => {
+                processPdf(pdf, resolve, reject, updateProgress);
+            }).catch(error => {
+                reject(error); // Reject the promise if there's an error loading the PDF
+            });
+        } else if (fileOrDataUri.startsWith('data:')) {
+            // For data URIs, directly use the data URI with pdfjsLib
+            pdfjsLib.getDocument(fileOrDataUri).promise.then(pdf => {
+                processPdf(pdf, resolve, reject, updateProgress);
+            }).catch(error => {
+                reject(error); // Reject the promise if there's an error loading the PDF
+            });
+        } else {
+            reject(new Error('Invalid input type'));
+        }
+    });
+}
+
 
 export async function handlePdfFileUpload() {
     const fileInput = document.getElementById('pdf-upload');
     const files = fileInput.files; // Get all selected files
     if (files.length > 0) {
+        const totalFiles = files.length;
+        let processedFiles = 0;
+
         // Map each file to a promise that resolves with its text content
-        const filePromises = Array.from(files).map(file => extractTextFromPDF(file));
+        const filePromises = Array.from(files).map(file => {
+            return extractTextFromPDF(file, setProgressBarValue).then(text => {
+                processedFiles++;
+                const progressPercentage = (processedFiles / totalFiles) * 100;
+                setProgressBarValue(progressPercentage.toFixed(0));
+                console.log(progressPercentage);
+                return text;
+            });
+        });
+
         // Wait for all files to be processed
         const allFilesText = await Promise.all(filePromises);
         // Concatenate text from all files
@@ -498,6 +511,9 @@ export async function handlePdfFileUpload() {
         return ''; // Return an empty string or handle the error as needed
     }
 }
+
+
+
 
 
 ////////////////////////////////////////////////////

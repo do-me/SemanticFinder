@@ -233,9 +233,9 @@ function highlightCard(index) {
     cards[index].style.backgroundColor = '#f4ac90';
 }
 
-async function setProgressBarValue(value, progressBar = progressBarEmbeddings) {
+export async function setProgressBarValue(value, progressBar = progressBarEmbeddings) {
     if (value === '' || value === '0') {
-        progressBar.style.transition = 'width .1s ease'; // Temporarily override the transition duration
+        progressBar.style.transition = 'width .01s ease'; // Temporarily override the transition duration
         progressBar.classList.add('progress-bar-animated');
         progressBar.classList.add('progress-bar-striped');
     } else {
@@ -931,6 +931,7 @@ window.onload = async function () {
     });
 
     document.getElementById('confirm-pdf-upload').addEventListener('click', async function (event) {
+        setProgressBarValue(0);
         const extractedText = await handlePdfFileUpload();
         editor.setValue(extractedText); // Assuming 'editor' is your CodeMirror instance
         showToast("File(s) loaded ✅");
