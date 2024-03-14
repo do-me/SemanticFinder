@@ -972,6 +972,7 @@ Lines: ${lineCount}`;
     // read url params and load from Hf or from remote 
     const getUrlParameters = () => new URLSearchParams(window.location.search);
     const urlParams = getUrlParameters();
+    const modelName = document.getElementById('model-name').value;
 
     if (urlParams.has('url')) {
         handleRemoteFileUpload(urlParams.get('url'));
@@ -981,8 +982,18 @@ Lines: ${lineCount}`;
             `https://huggingface.co/datasets/do-me/SemanticFinder/resolve/main/${urlParams.get('hf')}.json.gz`);
 
     } 
+    else if (urlParams.has('pdf')) {
+        editor.setValue("")
+        showToast("⌛ Loading file...");
+        document.getElementById("importPdfURL").value = urlParams.get('pdf');
+        const extractedText = await handleRemotePdfFileUpload();
+        editor.setValue(extractedText); // Assuming 'editor' is your CodeMirror instance
+        showToast("File(s) loaded ✅");
+        console.log("File(s) loaded ✅");
+        await loadSemantic(modelName);
+        activateSubmitButton();
+    } 
     else {
-        const modelName = document.getElementById('model-name').value;
         await loadSemantic(modelName);
         activateSubmitButton();
     }
