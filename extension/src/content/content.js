@@ -114,7 +114,7 @@ function highlightAndScrollToText(text, depth= 3) {
     }
     // If there's a previous highlighted text, unmark it
     if (currText) {
-        instance.unmark({"element": "span", "className": "highlight"});
+        instance.unmark({"element": "span", "className": "SemanticFinder-highlight"});
     }
 
     currText = text;
@@ -124,7 +124,7 @@ function highlightAndScrollToText(text, depth= 3) {
     instance.mark(text, {
         "element": "span",
         "separateWordSearch": false,
-        "className": "highlight",
+        "className": "SemanticFinder-highlight",
         "acrossElements": true,
         "wildcards": "enabled",
         "iframes": true,
