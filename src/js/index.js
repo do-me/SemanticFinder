@@ -165,25 +165,49 @@ async function updateResults(results) {
 function createHighlight(text, className, similarity) {
     const resultsDiv = document.getElementById('results-list');
     const cursor = editor.getSearchCursor(text);
+    const firstOnly = document.getElementById("firstOnly").checked;
 
-    while (cursor.findNext()) {
-        const marker = editor.markText(cursor.from(), cursor.to(), { className });
-        markers.push(marker);
-
-        // create card
-        const listItem = document.createElement('div');
-        listItem.classList.add('card');
-        listItem.innerHTML = createCardHTML(text, similarity);
-
-        resultsDiv.appendChild(listItem);
-
-        const index = resultsDiv.childElementCount - 1;
-
-        // Add click listener for card
-        listItem.addEventListener('click', function () {
-            editor.scrollIntoView(markers[index].find());
-            highlightSelected(index);
-        });
+    if (firstOnly){
+        if (cursor.findNext()) {
+            const marker = editor.markText(cursor.from(), cursor.to(), { className });
+            markers.push(marker);
+    
+            // create card
+            const listItem = document.createElement('div');
+            listItem.classList.add('card');
+            listItem.innerHTML = createCardHTML(text, similarity);
+    
+            resultsDiv.appendChild(listItem);
+    
+            const index = resultsDiv.childElementCount - 1;
+    
+            // Add click listener for card
+            listItem.addEventListener('click', function () {
+                editor.scrollIntoView(markers[index].find());
+                highlightSelected(index);
+            });
+        }
+    }
+    else {
+        while (cursor.findNext()) {
+            const marker = editor.markText(cursor.from(), cursor.to(), { className });
+            markers.push(marker);
+    
+            // create card
+            const listItem = document.createElement('div');
+            listItem.classList.add('card');
+            listItem.innerHTML = createCardHTML(text, similarity);
+    
+            resultsDiv.appendChild(listItem);
+    
+            const index = resultsDiv.childElementCount - 1;
+    
+            // Add click listener for card
+            listItem.addEventListener('click', function () {
+                editor.scrollIntoView(markers[index].find());
+                highlightSelected(index);
+            });
+        }
     }
 }
 
@@ -973,6 +997,10 @@ Lines: ${lineCount}`;
     const getUrlParameters = () => new URLSearchParams(window.location.search);
     const urlParams = getUrlParameters();
     const modelName = document.getElementById('model-name').value;
+
+    // set some new experimental settings to allow for new use cases like synonym finder or "unique index" as described here: https://github.com/do-me/SemanticFinder/discussions/48
+    document.getElementById("firstOnly").checked = urlParams.has('firstOnly') ? urlParams.get('firstOnly') === 'true' : false;
+    document.getElementById("inferencingActive").checked = urlParams.has('inferencingActive') ? urlParams.get('inferencingActive') === 'false' : true;
 
     if (urlParams.has('url')) {
         handleRemoteFileUpload(urlParams.get('url'));

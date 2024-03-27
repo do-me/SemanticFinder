@@ -154,6 +154,7 @@ worker.onmessage = function (event) {
 export async function similarity(text) {
     worker.postMessage({
         type: 'similarity',
+        inferencingActive: document.getElementById("inferencingActive").checked,
         text
     });
     return new Promise((resolve) => {
@@ -289,6 +290,7 @@ export async function loadSummary(modelName) {
  * @returns {number}
  */
 function calculateCosineSimilarity(embedding) {
+    //console.log(embedding);
     let dotProduct = 0;
     let queryMagnitude = 0;
     let embeddingMagnitude = 0;
@@ -298,5 +300,6 @@ function calculateCosineSimilarity(embedding) {
         queryMagnitude += queryEmbedding[i] ** 2;
         embeddingMagnitude += embedding[i] ** 2;
     }
-    return dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude));
+    const sim = dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude)); 
+    return sim
 }

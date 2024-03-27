@@ -27,7 +27,8 @@ let chat_model_name;
 let summary_generator;
 let summary_tokenizer;
 
-let queryEmbedding
+let queryEmbedding;
+let currentNullVector = [];
 
 function minimalEightCharHash(str) {
     let hash = 5381;
@@ -67,13 +68,32 @@ async function token_to_text(beams, tokenizer_type) {
  * @param {string} text
  * @returns {Promise<EmbeddingVector>}
  */
-async function embed(text) {
-    if (text in embeddingsDict) {
-        return embeddingsDict[text];
-    }
-    const e0 = await embedder(text, { pooling: 'mean', normalize: true });
-    embeddingsDict[text] = e0.data;
-    return e0.data;
+async function embed(text, embedNewText=true) {
+        if (text in embeddingsDict) {
+            return embeddingsDict[text];
+        }
+
+        if (embedNewText==false){
+            if (currentNullVector != []){
+                embeddingsDict[text] = currentNullVector;
+                return currentNullVector
+            }
+            else {
+                const tempVec = await embedder("test", { pooling: 'mean', normalize: true });
+                currentNullVector = [...tempVec.data].fill(0.00001);
+                embeddingsDict[text] = currentNullVector;
+                return currentNullVector
+            }
+        }
+
+        const e0 = await embedder(text, { pooling: 'mean', normalize: true });
+
+        const roundDecimalsDown = (num) => parseFloat(num.toFixed(3));
+
+        embeddingsDict[text] = e0.data.map(roundDecimalsDown);
+        console.log(embeddingsDict)
+        return e0.data;
+
 }
 
 async function getTokens(text) {
@@ -451,7 +471,8 @@ self.onmessage = async (event) => {
         case 'query':
             text = message.text;
             embedding = await embed(text);
-            queryEmbedding = embedding
+            queryEmbedding = embedding;
+            currentNullVector = [...Object.values(embeddingsDict)[0]].fill(0.00001);
             self.postMessage({
                 type: 'query',
                 embedding
@@ -459,7 +480,7 @@ self.onmessage = async (event) => {
             break;
         case 'similarity':
             text = message.text;
-            embedding = await embed(text);
+            embedding = await embed(text, message.inferencingActive);
             self.postMessage({
                 type: 'similarity',
                 text,
