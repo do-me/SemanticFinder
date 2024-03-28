@@ -999,8 +999,13 @@ Lines: ${lineCount}`;
     const modelName = document.getElementById('model-name').value;
 
     // set some new experimental settings to allow for new use cases like synonym finder or "unique index" as described here: https://github.com/do-me/SemanticFinder/discussions/48
-    document.getElementById("firstOnly").checked = urlParams.has('firstOnly') ? urlParams.get('firstOnly') === 'true' : false;
-    document.getElementById("inferencingActive").checked = urlParams.has('inferencingActive') ? urlParams.get('inferencingActive') === 'false' : true;
+    if (urlParams.has('firstOnly')) {
+        document.getElementById("firstOnly").checked = urlParams.get('firstOnly') === 'true';
+    }
+
+    if (urlParams.has('inferencingActive')) {
+        document.getElementById("inferencingActive").checked = urlParams.get('inferencingActive') === 'true';
+    }
 
     if (urlParams.has('url')) {
         handleRemoteFileUpload(urlParams.get('url'));
