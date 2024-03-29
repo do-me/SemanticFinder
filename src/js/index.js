@@ -999,6 +999,7 @@ Lines: ${lineCount}`;
     const modelName = document.getElementById('model-name').value;
 
     // set some new experimental settings to allow for new use cases like synonym finder or "unique index" as described here: https://github.com/do-me/SemanticFinder/discussions/48
+   
     if (urlParams.has('firstOnly')) {
         document.getElementById("firstOnly").checked = urlParams.get('firstOnly') === 'true';
     }
@@ -1029,5 +1030,12 @@ Lines: ${lineCount}`;
     else {
         await loadSemantic(modelName);
         activateSubmitButton();
+    }
+
+    if (urlParams.has('universalIndexSettingsWordLevel')) {
+        editor.setValue("");
+        document.getElementById("split-type").value = "Words";
+        updateSplitParam("Words");
+        document.getElementById("split-param").value = 1;
     }
 };
