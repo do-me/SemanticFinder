@@ -614,8 +614,6 @@ function setValuesFromMetaJSON(jsonObject) {
     // Set values based on the provided JSON object
     document.getElementById("model-name").value = jsonObject.modelName || "";
     document.getElementById("quantized").checked = jsonObject.quantized;
-    document.getElementById("split-type").value = jsonObject.splitType || "";
-
     document.getElementById("exportDecimals").value = jsonObject.exportDecimals || "";
     document.getElementById("textTitle").value = jsonObject.textTitle || "";
     document.getElementById("textAuthor").value = jsonObject.textAuthor || "";
@@ -628,8 +626,12 @@ function setValuesFromMetaJSON(jsonObject) {
     document.getElementById("wordsToAvoidAny").value = jsonObject.wordsToAvoidAny || "";
     document.getElementById("wordsToAvoidAll").value = jsonObject.wordsToAvoidAll || "";
 
-    updateSplitParam(jsonObject.splitType); // causing a bug, needs fix
-    document.getElementById("split-param").value = jsonObject.splitParam || "";
+    if (!getUrlParameters().has('universalIndexSettingsWordLevel')) {
+        document.getElementById("split-type").value = jsonObject.splitType || "";
+        updateSplitParam(jsonObject.splitType); // causing a bug, needs fix
+        document.getElementById("split-param").value = jsonObject.splitParam || "";
+    }
+
 }
 
 
