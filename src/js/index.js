@@ -40,6 +40,8 @@ const progressBarEmbeddings = document.getElementById('progressBarProgress');
 const progressBarChat = document.getElementById('progressBarChat');
 const progressBarSummary = document.getElementById('progressBarSummary');
 
+const getUrlParameters = () => new URLSearchParams(window.location.search);
+
 async function fetchModels(modelType, sortOption) {
     try {
         const filename = `models/${modelType}_${sortOption}_sizes.json`;
@@ -710,7 +712,9 @@ function handleRemoteFileUpload(fileURL ) {
             setValuesFromMetaJSON(jsonData.meta);
 
             if (jsonData && jsonData.text !== "") {
-                editor.setValue(jsonData.text);
+                if (!getUrlParameters().has('universalIndexSettingsWordLevel')) {
+                    editor.setValue(jsonData.text);
+                }
             }
 
             reloadModel(jsonData.meta.modelName);
@@ -994,7 +998,6 @@ Lines: ${lineCount}`;
 
     // initialize loading
     // read url params and load from Hf or from remote 
-    const getUrlParameters = () => new URLSearchParams(window.location.search);
     const urlParams = getUrlParameters();
     const modelName = document.getElementById('model-name').value;
 
