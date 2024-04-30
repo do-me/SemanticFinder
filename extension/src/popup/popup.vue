@@ -108,7 +108,17 @@ export default {
         chrome.runtime.onMessage.addListener(this.handleMessage);
         const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
-        chrome.tabs.sendMessage(tab.id, {type: "getText"});
+    const [res] = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        return document.contentType;
+      },
+    });
+
+    chrome.tabs.sendMessage(tab.id, {
+      type: "getText",
+      contentType: res.result,
+    });
         chrome.runtime.sendMessage({type: "load"});
 
         this.results = [];
