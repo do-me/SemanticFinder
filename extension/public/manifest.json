@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "host_permissions": ["http://*/*", "https://*/*"],
   "permissions": [
+    "scripting",
     "activeTab",
     "storage",
     "unlimitedStorage"
