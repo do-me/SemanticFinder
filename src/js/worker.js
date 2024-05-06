@@ -320,8 +320,8 @@ self.onmessage = async (event) => {
             let valuesArray = convertFloat32ArraysToArrays(valuesFloat32Array);
             const valuesArrayLength = valuesArray.length;
             //console.log(valuesArrayLength);
-            // Check if the length is below 61
-            // stupid workaround needed as the wasm module has no param for perplexity yet
+            // Check if the length is below 61 to set perplexity to a different value, needs slight refactoring to 
+            // get rid of this workaround
 
             let compressed_vectors;
             if (valuesArrayLength < 61) {
