@@ -94,277 +94,154 @@
                                             <h6>Model Selection</h6>
                                             <div class="col-md-8">
                                                 <div class="form-floating mb-2">
-                                                    <!-- all models from https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js + gte-tiny -->
+                                                    <!-- all models from https://github.com/do-me/trending-huggingface-models + gte-tiny (lacking right tag: https://huggingface.co/TaylorAI/gte-tiny/discussions/5) -->
                                                     <select class="form-select form-control " id="model-name">
-
-                                                        <option value="mixedbread-ai/mxbai-embed-large-v1">mixedbread-ai/mxbai-embed-large-v1 | 💾670Mb</option>
-                                                        <option value="Alibaba-NLP/gte-large-en-v1.5">Alibaba-NLP/gte-large-en-v1.5 | 446Mb</option>
-                                                        
-                                                        <option selected value="TaylorAI/gte-tiny">TaylorAI/gte-tiny |
-                                                            💾22.9Mb
-                                                            📥1752 ❤️102</option>
-                                                        <option value="Supabase/gte-small">Supabase/gte-small | 💾34Mb
-                                                            📥2625 ❤️14</option>
-                                                        <option value="Supabase/bge-small-en">Supabase/bge-small-en |
-                                                            💾34Mb
-                                                            📥12 ❤️1</option>
-                                                        <option value="Xenova/multilingual-e5-small">
-                                                            Xenova/multilingual-e5-small | 💾118Mb 📥5 ❤️0</option>
-                                                        <option value="Xenova/multilingual-e5-base">
-                                                            Xenova/multilingual-e5-base | 💾279Mb 📥1 ❤️0</option>
-                                                        <option value="Xenova/bge-small-en-v1.5">
-                                                            Xenova/bge-small-en-v1.5 |
-                                                            💾34Mb 📥1 ❤️1</option>
-                                                        <option value="WhereIsAI/UAE-Large-V1">WhereIsAI/UAE-Large-V1 |
-                                                            💾334Mb
-                                                            📥54.200 ❤️40</option>
-                                                        <option value="Xenova/all-MiniLM-L6-v2">Xenova/all-MiniLM-L6-v2
-                                                            |
-                                                            💾23Mb 📥31 ❤️11</option>
-                                                        <option value="Xenova/bge-large-en-v1.5">
-                                                            Xenova/bge-large-en-v1.5 |
-                                                            💾337Mb 📥18 ❤️1</option>
-                                                        <option value="Xenova/gte-small">Xenova/gte-small | 💾34Mb 📥9
-                                                            ❤️3
-                                                        </option>
-                                                        <option value="Xenova/bge-m3">Xenova/bge-m3 | 💾570Mb </option>
-                                                        <option value="Xenova/all-mpnet-base-v2">
-                                                            Xenova/all-mpnet-base-v2 |
-                                                            💾110Mb 📥7 ❤️0</option>
-                                                        <option value="Xenova/paraphrase-mpnet-base-v2">
-                                                            Xenova/paraphrase-mpnet-base-v2 | 💾110Mb 📥7 ❤️0</option>
-                                                        <option value="Xenova/all-MiniLM-L12-v2">
-                                                            Xenova/all-MiniLM-L12-v2 |
-                                                            💾34Mb 📥7 ❤️1</option>
-                                                        <option value="Xenova/gte-large">Xenova/gte-large | 💾337Mb 📥5
-                                                            ❤️1
-                                                        </option>
-                                                        <option value="Xenova/bge-base-en-v1.5">Xenova/bge-base-en-v1.5
-                                                            |
-                                                            💾110Mb 📥4 ❤️1</option>
-                                                        <option value="nomic-ai/nomic-embed-text-v1">nomic-ai/nomic-embed-text-v1
-                                                                |
-                                                                💾138Mb 📥9892 ❤️139</option>
-                                                        <option value="Xenova/all-roberta-large-v1">
-                                                            Xenova/all-roberta-large-v1 | 💾357Mb 📥2 ❤️0</option>
-                                                        <option value="Xenova/distiluse-base-multilingual-cased-v2">
-                                                            Xenova/distiluse-base-multilingual-cased-v2 | 💾135Mb 📥2
-                                                            ❤️1
-                                                        </option>
-                                                        <option value="Xenova/paraphrase-multilingual-mpnet-base-v2">
-                                                            Xenova/paraphrase-multilingual-mpnet-base-v2 | 💾279Mb 📥2
-                                                            ❤️1
-                                                        </option>
-                                                        <option value="Xenova/bge-large-zh">Xenova/bge-large-zh |
-                                                            💾327Mb
-                                                            📥2 ❤️0</option>
-                                                        <option value="Xenova/paraphrase-albert-small-v2">
-                                                            Xenova/paraphrase-albert-small-v2 | 💾39.7Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/paraphrase-albert-base-v2">
-                                                            Xenova/paraphrase-albert-base-v2 | 💾40Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/squeezebert-uncased">
-                                                            Xenova/squeezebert-uncased | 💾51.2Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/squeezebert-mnli">Xenova/squeezebert-mnli
-                                                            |
-                                                            💾51.3Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/vit-base-patch16-224-in21k">
-                                                            Xenova/vit-base-patch16-224-in21k | 💾87.5Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/all-distilroberta-v1">
-                                                            Xenova/all-distilroberta-v1 | 💾82.1Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/paraphrase-multilingual-MiniLM-L12-v2">
-                                                            Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 💾118Mb 📥0
-                                                            ❤️1
-                                                        </option>
-                                                        <option value="Xenova/paraphrase-MiniLM-L6-v2">
-                                                            Xenova/paraphrase-MiniLM-L6-v2 | 💾23Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/bert-base-nli-mean-tokens">
-                                                            Xenova/bert-base-nli-mean-tokens | 💾110Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/distilbert-base-nli-mean-tokens">
-                                                            Xenova/distilbert-base-nli-mean-tokens | 💾66.9Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/distilbert-base-nli-stsb-mean-tokens">
-                                                            Xenova/distilbert-base-nli-stsb-mean-tokens | 💾66.9Mb 📥0
-                                                            ❤️0
-                                                        </option>
-                                                        <option value="Xenova/distiluse-base-multilingual-cased-v1">
-                                                            Xenova/distiluse-base-multilingual-cased-v1 | 💾135Mb 📥0
-                                                            ❤️0
-                                                        </option>
-                                                        <option value="Xenova/msmarco-distilbert-base-v4">
-                                                            Xenova/msmarco-distilbert-base-v4 | 💾66.9Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/multi-qa-MiniLM-L6-cos-v1">
-                                                            Xenova/multi-qa-MiniLM-L6-cos-v1 | 💾23Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/multi-qa-distilbert-cos-v1">
-                                                            Xenova/multi-qa-distilbert-cos-v1 | 💾66.9Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/multi-qa-mpnet-base-cos-v1">
-                                                            Xenova/multi-qa-mpnet-base-cos-v1 | 💾110Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/multi-qa-mpnet-base-dot-v1">
-                                                            Xenova/multi-qa-mpnet-base-dot-v1 | 💾110Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/nli-mpnet-base-v2">
-                                                            Xenova/nli-mpnet-base-v2 |
-                                                            💾110Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/paraphrase-MiniLM-L3-v2">
-                                                            Xenova/paraphrase-MiniLM-L3-v2 | 💾17.5Mb 📥0 ❤️0</option>
-                                                        <option
-                                                            value="Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens">
-                                                            Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens |
-                                                            💾279Mb
-                                                            📥0 ❤️0</option>
-                                                        <option value="Xenova/dino-vitb16">Xenova/dino-vitb16 | 💾87.5Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/dino-vits8">Xenova/dino-vits8 | 💾23.4Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/dino-vitb8">Xenova/dino-vitb8 | 💾88.8Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/dino-vits16">Xenova/dino-vits16 | 💾22.7Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/scibert_scivocab_uncased">
-                                                            Xenova/scibert_scivocab_uncased | 💾111Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/spanbert-large-cased">
-                                                            Xenova/spanbert-large-cased | 💾335Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/spanbert-base-cased">
-                                                            Xenova/spanbert-base-cased | 💾109Mb 📥0 ❤️0</option>
-                                                        <option value="sdan/simple-embeddings">sdan/simple-embeddings |
-                                                            💾23Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/sentence_bert">Xenova/sentence_bert |
-                                                            💾110Mb
-                                                            📥0 ❤️0</option>
-                                                        <option value="Xenova/e5-small-v2">Xenova/e5-small-v2 | 💾34Mb
-                                                            📥0
-                                                            ❤️3</option>
-                                                        <option value="Xenova/SapBERT-from-PubMedBERT-fulltext">
-                                                            Xenova/SapBERT-from-PubMedBERT-fulltext | 💾110Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/indobert-base-p1">Xenova/indobert-base-p1
-                                                            |
-                                                            💾125Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/UMLSBert_ENG">Xenova/UMLSBert_ENG |
-                                                            💾110Mb
-                                                            📥0 ❤️1</option>
-                                                        <option value="Xenova/rubert-base-cased">
-                                                            Xenova/rubert-base-cased |
-                                                            💾178Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/kobert">Xenova/kobert | 💾92.8Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/e5-small">Xenova/e5-small | 💾34Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/e5-large">Xenova/e5-large | 💾337Mb 📥0
-                                                            ❤️0
-                                                        </option>
-                                                        <option value="Xenova/e5-large-v2">Xenova/e5-large-v2 | 💾337Mb
-                                                            📥0
-                                                            ❤️5</option>
-                                                        <option value="Xenova/e5-base">Xenova/e5-base | 💾110Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/e5-base-v2">Xenova/e5-base-v2 | 💾110Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/instructor-base">Xenova/instructor-base |
-                                                            💾110Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/instructor-large">Xenova/instructor-large
-                                                            |
-                                                            💾337Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/sentence-t5-large">
-                                                            Xenova/sentence-t5-large |
-                                                            💾337Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/multilingual-e5-large">
-                                                            Xenova/multilingual-e5-large | 💾562Mb 📥0 ❤️1</option>
-                                                        <option value="Xenova/mms-300m">Xenova/mms-300m | 💾318Mb 📥0
-                                                            ❤️0
-                                                        </option>
-                                                        <option value="Xenova/mms-1b">Xenova/mms-1b | 💾969Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Supabase/e5-small-v2">Supabase/e5-small-v2 |
-                                                            💾34Mb
-                                                            📥0 ❤️1</option>
-                                                        <option value="Supabase/all-MiniLM-L6-v2">
-                                                            Supabase/all-MiniLM-L6-v2
-                                                            | 💾23Mb 📥0 ❤️1</option>
-                                                        <option value="Xenova/gte-base">Xenova/gte-base | 💾110Mb 📥0
-                                                            ❤️0
-                                                        </option>
-                                                        <option value="Xenova/bge-small-en">Xenova/bge-small-en | 💾34Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/bge-base-en">Xenova/bge-base-en | 💾110Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/bge-large-en">Xenova/bge-large-en |
-                                                            💾337Mb
-                                                            📥0 ❤️0</option>
-                                                        <option value="ggrn/bge-small-en">ggrn/bge-small-en | 💾34Mb 📥0
-                                                            ❤️1
-                                                        </option>
-                                                        <option value="Xenova/bge-base-zh">Xenova/bge-base-zh | 💾103Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/bge-large-zh-noinstruct">
-                                                            Xenova/bge-large-zh-noinstruct | 💾327Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/bge-small-zh">Xenova/bge-small-zh | 💾24Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/ClinicalBERT">Xenova/ClinicalBERT |
-                                                            💾229Mb
-                                                            📥0 ❤️0</option>
-                                                        <option value="Xenova/LaBSE">Xenova/LaBSE | 💾472Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/wavlm-base">Xenova/wavlm-base | 💾95.8Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/wavlm-base-plus">Xenova/wavlm-base-plus |
-                                                            💾95.8Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/wavlm-large">Xenova/wavlm-large | 💾319Mb
-                                                            📥0
-                                                            ❤️0</option>
-                                                        <option value="Xenova/sentence-camembert-large">
-                                                            Xenova/sentence-camembert-large | 💾339Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/herbert-base-cased">
-                                                            Xenova/herbert-base-cased
-                                                            | 💾125Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/herbert-large-cased">
-                                                            Xenova/herbert-large-cased | 💾357Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/bge-large-zh-v1.5">
-                                                            Xenova/bge-large-zh-v1.5 |
-                                                            💾327Mb 📥0 ❤️1</option>
-                                                        <option value="Xenova/bge-base-zh-v1.5">Xenova/bge-base-zh-v1.5
-                                                            |
-                                                            💾103Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/bge-small-zh-v1.5">
-                                                            Xenova/bge-small-zh-v1.5 |
-                                                            💾24Mb 📥0 ❤️0</option>
-                                                        <option value="leolee9086/text2vec-base-chinese">
-                                                            leolee9086/text2vec-base-chinese | 💾103Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/long-t5-encodec-tglobal-base">
-                                                            Xenova/long-t5-encodec-tglobal-base | 💾291Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/jina-embeddings-v2-small-en">
-                                                            Xenova/jina-embeddings-v2-small-en | 💾28.5Mb 📥0 ❤️0
-                                                        </option>
-                                                        <option value="Xenova/jina-embeddings-v2-base-en">
-                                                            Xenova/jina-embeddings-v2-base-en | 💾109Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/jina-embeddings-v2-base-de">
-                                                            Xenova/jina-embeddings-v2-base-de | 💾162Mb 📥0 ❤️0</option>
-                                                        <option value="Xenova/jina-embeddings-v2-base-zh">
-                                                            Xenova/jina-embeddings-v2-base-zh | 💾162Mb 📥0 ❤️0</option>
-                                                         <!--<option value="jinaai/jina-embeddings-v2-base-code">
-                                                            jinaai/jina-embeddings-v2-base-code | 💾162Mb 📥0 ❤️0</option>
-                                                        <option value="jinaai/jina-embeddings-v2-base-es">
-                                                            jinaai/jina-embeddings-v2-base-es | 💾162Mb 📥0 ❤️0</option> --> <!-- access control inhibits direct loading from HF -->
-                                                        <option value="do-me/jina-embeddings-v2-small-en">
-                                                            do-me/jina-embeddings-v2-small-en (test)</option>
-                                                        <option value="do-me/jina-embeddings-v2-base-en">
-                                                            do-me/jina-embeddings-v2-base-en (test)</option>
-                                                        <option value="do-me/test">
-                                                            do-me/test (internal tests only)</option>
-                                                        <option value="do-me/twhin-bert-base">do-me/twhin-bert-base (test)</option>
+                                                        <option selected value="TaylorAI/gte-tiny">TaylorAI/gte-tiny | 💾22.9Mb 📥1752 ❤️102</option> <!--  smallest great model as default, rest based in HF trends -->
+                                                        <option value="mixedbread-ai/mxbai-embed-large-v1">mixedbread-ai/mxbai-embed-large-v1 | 💾1.34GB | 669MB | 337MB 📥1619336 ❤️305</option>
+                                                        <option value="nomic-ai/nomic-embed-text-v1.5">nomic-ai/nomic-embed-text-v1.5 | 💾548MB | 138MB 📥208454 ❤️171</option>
+                                                        <option value="nomic-ai/nomic-embed-text-v1">nomic-ai/nomic-embed-text-v1 | 💾548MB | 138MB 📥135236 ❤️365</option>
+                                                        <option value="Snowflake/snowflake-arctic-embed-m">Snowflake/snowflake-arctic-embed-m | 💾436MB | 144MB | 218MB | 110MB | 149MB | 110MB | 110MB 📥18453 ❤️63</option>
+                                                        <option value="Snowflake/snowflake-arctic-embed-l">Snowflake/snowflake-arctic-embed-l | 💾1.34GB | 299MB | 669MB | 337MB | 318MB | 337MB | 337MB 📥31704 ❤️58</option>
+                                                        <option value="Alibaba-NLP/gte-large-en-v1.5">Alibaba-NLP/gte-large-en-v1.5 | 💾1.75GB | 361MB | 873MB | 446MB | 387MB | 446MB | 446MB 📥65733 ❤️55</option>
+                                                        <option value="WhereIsAI/UAE-Large-V1">WhereIsAI/UAE-Large-V1 | 💾1.34GB | 669MB | 337MB 📥275699 ❤️176</option>
+                                                        <option value="Snowflake/snowflake-arctic-embed-s">Snowflake/snowflake-arctic-embed-s | 💾133MB | 60.1MB | 66.7MB | 34MB | 61.4MB | 34MB | 34MB 📥7391 ❤️9</option>
+                                                        <option value="jinaai/jina-embeddings-v2-base-zh">jinaai/jina-embeddings-v2-base-zh | 💾641MB | 321MB | 162MB 📥10466 ❤️107</option>
+                                                        <option value="Snowflake/snowflake-arctic-embed-m-long">Snowflake/snowflake-arctic-embed-m-long | 💾548MB | 158MB | 274MB | 138MB | 165MB | 138MB | 138MB 📥11377 ❤️21</option>
+                                                        <option value="Snowflake/snowflake-arctic-embed-xs">Snowflake/snowflake-arctic-embed-xs | 💾90.4MB | 53.9MB | 45.3MB | 23MB | 54.6MB | 23MB | 23MB 📥11864 ❤️18</option>
+                                                        <option value="Alibaba-NLP/gte-base-en-v1.5">Alibaba-NLP/gte-base-en-v1.5 | 💾556MB | 167MB | 278MB | 147MB | 174MB | 147MB | 147MB 📥96117 ❤️9</option>
+                                                        <option value="Xenova/all-MiniLM-L6-v2">Xenova/all-MiniLM-L6-v2 | 💾90.4MB | 45.3MB | 23MB | 23MB 📥100 ❤️39</option>
+                                                        <option value="Supabase/gte-small">Supabase/gte-small | 💾133MB | 66.7MB | 34MB 📥18778285 ❤️47</option>
+                                                        <option value="Xenova/larger_clap_music_and_speech">Xenova/larger_clap_music_and_speech | 💾783MB | 395MB | 205MB 📥3 ❤️2</option>
+                                                        <option value="jinaai/jina-embeddings-v2-base-de">jinaai/jina-embeddings-v2-base-de | 💾641MB | 321MB | 162MB 📥19746 ❤️50</option>
+                                                        <option value="mixedbread-ai/mxbai-embed-2d-large-v1">mixedbread-ai/mxbai-embed-2d-large-v1 | 💾1.34GB | 669MB | 337MB 📥35020 ❤️29</option>
+                                                        <option value="Xenova/text2vec-base-chinese-paraphrase">Xenova/text2vec-base-chinese-paraphrase | 💾470MB | 178MB | 235MB | 119MB | 183MB | 119MB | 119MB 📥3 ❤️1</option>
+                                                        <option value="Xenova/paraphrase-albert-small-v2">Xenova/paraphrase-albert-small-v2 | 💾44.6MB | 22.4MB | 39.7MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-albert-base-v2">Xenova/paraphrase-albert-base-v2 | 💾44.7MB | 22.7MB | 40MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/squeezebert-uncased">Xenova/squeezebert-uncased | 💾202MB | 101MB | 51.2MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/squeezebert-mnli">Xenova/squeezebert-mnli | 💾202MB | 101MB | 51.3MB 📥13 ❤️0</option>
+                                                        <option value="Xenova/all-distilroberta-v1">Xenova/all-distilroberta-v1 | 💾326MB | 163MB | 82.1MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-multilingual-MiniLM-L12-v2">Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 💾470MB | 235MB | 118MB 📥5 ❤️7</option>
+                                                        <option value="Xenova/paraphrase-MiniLM-L6-v2">Xenova/paraphrase-MiniLM-L6-v2 | 💾90.4MB | 45.3MB | 23MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/all-mpnet-base-v2">Xenova/all-mpnet-base-v2 | 💾436MB | 218MB | 110MB 📥21 ❤️1</option>
+                                                        <option value="Xenova/all-roberta-large-v1">Xenova/all-roberta-large-v1 | 💾1.42GB | 709MB | 357MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/bert-base-nli-mean-tokens">Xenova/bert-base-nli-mean-tokens | 💾436MB | 218MB | 110MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/distilbert-base-nli-mean-tokens">Xenova/distilbert-base-nli-mean-tokens | 💾266MB | 133MB | 66.9MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/distilbert-base-nli-stsb-mean-tokens">Xenova/distilbert-base-nli-stsb-mean-tokens | 💾266MB | 133MB | 66.9MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/distiluse-base-multilingual-cased-v1">Xenova/distiluse-base-multilingual-cased-v1 | 💾539MB | 270MB | 135MB 📥6 ❤️0</option>
+                                                        <option value="Xenova/distiluse-base-multilingual-cased-v2">Xenova/distiluse-base-multilingual-cased-v2 | 💾539MB | 270MB | 135MB 📥1791 ❤️2</option>
+                                                        <option value="Xenova/msmarco-distilbert-base-v4">Xenova/msmarco-distilbert-base-v4 | 💾266MB | 133MB | 66.9MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/multi-qa-MiniLM-L6-cos-v1">Xenova/multi-qa-MiniLM-L6-cos-v1 | 💾90.4MB | 45.3MB | 23MB 📥5 ❤️2</option>
+                                                        <option value="Xenova/multi-qa-distilbert-cos-v1">Xenova/multi-qa-distilbert-cos-v1 | 💾266MB | 133MB | 66.9MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/multi-qa-mpnet-base-cos-v1">Xenova/multi-qa-mpnet-base-cos-v1 | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/multi-qa-mpnet-base-dot-v1">Xenova/multi-qa-mpnet-base-dot-v1 | 💾436MB | 218MB | 110MB 📥5 ❤️1</option>
+                                                        <option value="Xenova/nli-mpnet-base-v2">Xenova/nli-mpnet-base-v2 | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-MiniLM-L3-v2">Xenova/paraphrase-MiniLM-L3-v2 | 💾69MB | 34.6MB | 17.5MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-mpnet-base-v2">Xenova/paraphrase-mpnet-base-v2 | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/paraphrase-multilingual-mpnet-base-v2">Xenova/paraphrase-multilingual-mpnet-base-v2 | 💾1.11GB | 555MB | 279MB 📥2059 ❤️2</option>
+                                                        <option value="Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens">Xenova/xlm-r-100langs-bert-base-nli-stsb-mean-tokens | 💾1.11GB | 555MB | 279MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/all-MiniLM-L12-v2">Xenova/all-MiniLM-L12-v2 | 💾133MB | 66.7MB | 34MB 📥14 ❤️3</option>
+                                                        <option value="Xenova/scibert_scivocab_uncased">Xenova/scibert_scivocab_uncased | 💾438MB | 219MB | 111MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/spanbert-large-cased">Xenova/spanbert-large-cased | 💾1.33GB | 666MB | 335MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/spanbert-base-cased">Xenova/spanbert-base-cased | 💾431MB | 216MB | 109MB 📥5 ❤️0</option>
+                                                        <option value="sdan/simple-embeddings">sdan/simple-embeddings | 💾90.4MB | 23MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/sentence_bert">Xenova/sentence_bert | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/e5-small-v2">Xenova/e5-small-v2 | 💾133MB | 66.7MB | 34MB 📥5 ❤️3</option>
+                                                        <option value="Xenova/SapBERT-from-PubMedBERT-fulltext">Xenova/SapBERT-from-PubMedBERT-fulltext | 💾436MB | 218MB | 110MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/indobert-base-p1">Xenova/indobert-base-p1 | 💾496MB | 248MB | 125MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/UMLSBert_ENG">Xenova/UMLSBert_ENG | 💾436MB | 218MB | 110MB 📥5 ❤️1</option>
+                                                        <option value="Xenova/rubert-base-cased">Xenova/rubert-base-cased | 💾709MB | 355MB | 178MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/kobert">Xenova/kobert | 💾367MB | 184MB | 92.8MB 📥6 ❤️0</option>
+                                                        <option value="Xenova/e5-small">Xenova/e5-small | 💾133MB | 66.7MB | 34MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/e5-large">Xenova/e5-large | 💾1.34GB | 669MB | 337MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/e5-large-v2">Xenova/e5-large-v2 | 💾1.34GB | 669MB | 337MB 📥6 ❤️5</option>
+                                                        <option value="Xenova/e5-base">Xenova/e5-base | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/e5-base-v2">Xenova/e5-base-v2 | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/multilingual-e5-base">Xenova/multilingual-e5-base | 💾1.11GB | 555MB | 279MB 📥8 ❤️2</option>
+                                                        <option value="Xenova/instructor-base">Xenova/instructor-base | 💾552MB | 552MB | 140MB | 139MB | 495MB | 125MB | 439MB | 110MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/instructor-large">Xenova/instructor-large | 💾1.74GB | 1.74GB | 439MB | 438MB | 1.54GB | 388MB | 1.34GB | 337MB 📥11 ❤️1</option>
+                                                        <option value="Xenova/sentence-t5-large">Xenova/sentence-t5-large | 💾1.74GB | 1.74GB | 439MB | 438MB | 1.54GB | 388MB | 1.34GB | 337MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/multilingual-e5-small">Xenova/multilingual-e5-small | 💾470MB | 235MB | 118MB 📥6 ❤️2</option>
+                                                        <option value="Xenova/multilingual-e5-large">Xenova/multilingual-e5-large | 💾546kB | 1.12GB | 562MB 📥6 ❤️4</option>
+                                                        <option value="Xenova/mms-300m">Xenova/mms-300m | 💾1.26GB | 632MB | 318MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/mms-1b">Xenova/mms-1b | 💾1.13MB | 1.93GB | 969MB 📥4 ❤️0</option>
+                                                        <option value="Supabase/e5-small-v2">Supabase/e5-small-v2 | 💾133MB | 66.7MB | 34MB 📥3 ❤️1</option>
+                                                        <option value="Supabase/all-MiniLM-L6-v2">Supabase/all-MiniLM-L6-v2 | 💾90.4MB | 45.3MB | 23MB 📥4 ❤️2</option>
+                                                        <option value="Xenova/gte-small">Xenova/gte-small | 💾133MB | 66.7MB | 34MB 📥30 ❤️11</option>
+                                                        <option value="Xenova/gte-base">Xenova/gte-base | 💾436MB | 218MB | 110MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/gte-large">Xenova/gte-large | 💾1.34GB | 669MB | 337MB 📥5 ❤️1</option>
+                                                        <option value="Xenova/bge-small-en">Xenova/bge-small-en | 💾133MB | 66.7MB | 34MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/bge-base-en">Xenova/bge-base-en | 💾436MB | 218MB | 110MB 📥17 ❤️0</option>
+                                                        <option value="Xenova/bge-large-en">Xenova/bge-large-en | 💾1.34GB | 669MB | 337MB 📥5 ❤️0</option>
+                                                        <option value="ggrn/bge-small-en">ggrn/bge-small-en | 💾133MB | 66.7MB | 34MB 📥48 ❤️1</option>
+                                                        <option value="Supabase/bge-small-en">Supabase/bge-small-en | 💾133MB | 66.7MB | 34MB 📥5 ❤️1</option>
+                                                        <option value="Xenova/bge-base-zh">Xenova/bge-base-zh | 💾407MB | 204MB | 103MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/bge-large-zh">Xenova/bge-large-zh | 💾1.3GB | 650MB | 327MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/bge-large-zh-noinstruct">Xenova/bge-large-zh-noinstruct | 💾1.3GB | 650MB | 327MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/bge-small-zh">Xenova/bge-small-zh | 💾94.9MB | 47.5MB | 24MB 📥12 ❤️1</option>
+                                                        <option value="Xenova/ClinicalBERT">Xenova/ClinicalBERT | 💾909MB | 455MB | 229MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/LaBSE">Xenova/LaBSE | 💾1.88GB | 941MB | 472MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/wavlm-base">Xenova/wavlm-base | 💾378MB | 189MB | 95.4MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/wavlm-base-plus">Xenova/wavlm-base-plus | 💾378MB | 189MB | 95.4MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/wavlm-large">Xenova/wavlm-large | 💾1.26GB | 632MB | 318MB 📥4 ❤️1</option>
+                                                        <option value="Xenova/sentence-camembert-large">Xenova/sentence-camembert-large | 💾1.34GB | 672MB | 339MB 📥25 ❤️0</option>
+                                                        <option value="Xenova/herbert-base-cased">Xenova/herbert-base-cased | 💾496MB | 248MB | 125MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/herbert-large-cased">Xenova/herbert-large-cased | 💾1.42GB | 709MB | 357MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/bge-large-en-v1.5">Xenova/bge-large-en-v1.5 | 💾1.34GB | 669MB | 337MB 📥1165 ❤️4</option>
+                                                        <option value="Xenova/bge-base-en-v1.5">Xenova/bge-base-en-v1.5 | 💾436MB | 218MB | 110MB 📥143 ❤️6</option>
+                                                        <option value="Xenova/bge-small-en-v1.5">Xenova/bge-small-en-v1.5 | 💾133MB | 66.7MB | 34MB 📥19 ❤️8</option>
+                                                        <option value="Xenova/bge-large-zh-v1.5">Xenova/bge-large-zh-v1.5 | 💾1.3GB | 650MB | 327MB 📥8 ❤️3</option>
+                                                        <option value="Xenova/bge-base-zh-v1.5">Xenova/bge-base-zh-v1.5 | 💾407MB | 204MB | 103MB 📥4 ❤️1</option>
+                                                        <option value="Xenova/bge-small-zh-v1.5">Xenova/bge-small-zh-v1.5 | 💾94.9MB | 47.5MB | 24MB 📥50 ❤️1</option>
+                                                        <option value="leolee9086/text2vec-base-chinese">leolee9086/text2vec-base-chinese | 💾103MB 📥1 ❤️0</option>
+                                                        <option value="Xenova/long-t5-encodec-tglobal-base">Xenova/long-t5-encodec-tglobal-base | 💾922MB | 463MB | 291MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/jina-embeddings-v2-small-en">Xenova/jina-embeddings-v2-small-en | 💾130MB | 65MB | 32.8MB 📥1885 ❤️1</option>
+                                                        <option value="Xenova/jina-embeddings-v2-base-en">Xenova/jina-embeddings-v2-base-en | 💾547MB | 274MB | 138MB 📥4832 ❤️7</option>
+                                                        <option value="do-me/jina-embeddings-v2-base-en">do-me/jina-embeddings-v2-base-en | 💾547MB 📥1 ❤️0</option>
+                                                        <option value="do-me/jina-embeddings-v2-small-en">do-me/jina-embeddings-v2-small-en | 💾130MB 📥1 ❤️0</option>
+                                                        <option value="jinaai/jina-embeddings-v2-base-code">jinaai/jina-embeddings-v2-base-code | 💾642MB | 321MB | 162MB 📥4893 ❤️20</option>
+                                                        <option value="ProsESportu/mpweb">ProsESportu/mpweb | 💾436MB 📥0 ❤️0</option>
+                                                        <option value="Xenova/clap-htsat-unfused">Xenova/clap-htsat-unfused | 💾619MB | 312MB | 161MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/tiny-random-ClapModel">Xenova/tiny-random-ClapModel | 💾14.8MB | 9.3MB | 6.34MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/larger_clap_general">Xenova/larger_clap_general | 💾783MB | 395MB | 205MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/conv-bert-base">Xenova/conv-bert-base | 💾423MB | 212MB | 107MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/conv-bert-medium-small">Xenova/conv-bert-medium-small | 💾70.4MB | 35.6MB | 18.6MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/electra-base-discriminator">Xenova/electra-base-discriminator | 💾436MB | 218MB | 110MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/conv-bert-small">Xenova/conv-bert-small | 💾53MB | 26.9MB | 14.1MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/electra-small-discriminator">Xenova/electra-small-discriminator | 💾54.2MB | 27.3MB | 14.2MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/nucleotide-transformer-500m-human-ref">Xenova/nucleotide-transformer-500m-human-ref | 💾1.92GB | 958MB | 482MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/nucleotide-transformer-500m-1000g">Xenova/nucleotide-transformer-500m-1000g | 💾1.92GB | 958MB | 482MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/hubert-base-ls960">Xenova/hubert-base-ls960 | 💾378MB | 189MB | 95.6MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/UAE-Large-V1">Xenova/UAE-Large-V1 | 💾1.34GB | 669MB | 337MB 📥3 ❤️2</option>
+                                                        <option value="Todai/robbert-2022-dutch-sentence-transformers-onnx">Todai/robbert-2022-dutch-sentence-transformers-onnx | 💾473MB | 119MB 📥7 ❤️0</option>
+                                                        <option value="odunola/UAE-Large-VI">odunola/UAE-Large-VI | 💾1.34GB | 337MB 📥8 ❤️0</option>
+                                                        <option value="Xenova/tiny-random-RoFormerModel">Xenova/tiny-random-RoFormerModel | 💾6.69MB | 3.47MB | 1.88MB 📥3 ❤️0</option>
+                                                        <option value="karrar-alwaili/UAE-Large-V1">karrar-alwaili/UAE-Large-V1 | 💾1.34GB | 337MB 📥49 ❤️0</option>
+                                                        <option value="Cohee/jina-embeddings-v2-base-en">Cohee/jina-embeddings-v2-base-en | 💾434MB | 217MB | 109MB 📥35 ❤️1</option>
+                                                        <option value="aurantium/clip-ViT-B-32-multilingual-v1">aurantium/clip-ViT-B-32-multilingual-v1 | 💾541MB | 136MB 📥1 ❤️1</option>
+                                                        <option value="nomic-ai/nomic-embed-text-v1-unsupervised">nomic-ai/nomic-embed-text-v1-unsupervised | 💾548MB | 138MB 📥10526 ❤️7</option>
+                                                        <option value="Xenova/w2v-bert-2.0">Xenova/w2v-bert-2.0 | 💾988kB | 1.16GB | 586MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/jina-embeddings-v2-base-zh">Xenova/jina-embeddings-v2-base-zh | 💾641MB | 321MB | 162MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/jina-embeddings-v2-base-de">Xenova/jina-embeddings-v2-base-de | 💾641MB | 321MB | 162MB 📥5 ❤️3</option>
+                                                        <option value="Xenova/nomic-embed-text-v1">Xenova/nomic-embed-text-v1 | 💾548MB | 274MB | 138MB 📥7 ❤️0</option>
+                                                        <option value="Xenova/nomic-embed-text-v1-unsupervised">Xenova/nomic-embed-text-v1-unsupervised | 💾548MB | 274MB | 138MB 📥3 ❤️0</option>
+                                                        <option value="Xenova/nomic-embed-text-v1-ablated">Xenova/nomic-embed-text-v1-ablated | 💾548MB | 274MB | 138MB 📥4 ❤️0</option>
+                                                        <option value="Xenova/bge-m3">Xenova/bge-m3 | 💾607kB | 1.13GB | 570MB 📥738 ❤️15</option>
+                                                        <option value="koxy-ai/gte-small">koxy-ai/gte-small | 💾133MB | 66.7MB | 34MB 📥1 ❤️0</option>
+                                                        <option value="Xenova/tiny-random-ErnieModel">Xenova/tiny-random-ErnieModel | 💾450kB | 343kB | 316kB | 273kB | 348kB | 273kB | 273kB 📥2 ❤️0</option>
+                                                        <option value="Xenova/ernie-2.0-large-en">Xenova/ernie-2.0-large-en | 💾1.34GB | 299MB | 669MB | 337MB | 318MB | 337MB | 337MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/ernie-2.0-base-en">Xenova/ernie-2.0-base-en | 💾436MB | 144MB | 218MB | 110MB | 149MB | 110MB | 110MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/ernie-health-zh">Xenova/ernie-health-zh | 💾411MB | 120MB | 206MB | 104MB | 125MB | 104MB | 104MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/ernie-3.0-mini-zh">Xenova/ernie-3.0-mini-zh | 💾107MB | 70.9MB | 53.8MB | 27.2MB | 71.5MB | 27.2MB | 27.2MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/ernie-3.0-nano-zh">Xenova/ernie-3.0-nano-zh | 💾71.4MB | 55.3MB | 35.8MB | 18.1MB | 55.6MB | 18.1MB | 18.1MB 📥5 ❤️0</option>
+                                                        <option value="Xenova/ernie-3.0-micro-zh">Xenova/ernie-3.0-micro-zh | 💾93.1MB | 68.8MB | 46.6MB | 23.5MB | 69.2MB | 23.5MB | 23.5MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/ernie-gram-zh">Xenova/ernie-gram-zh | 💾397MB | 105MB | 199MB | 100MB | 111MB | 100MB | 100MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/text2vec-base-chinese-sentence">Xenova/text2vec-base-chinese-sentence | 💾470MB | 178MB | 235MB | 119MB | 183MB | 119MB | 119MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/tiny-random-ErnieMModel">Xenova/tiny-random-ErnieMModel | 💾32.3MB | 32.2MB | 16.2MB | 8.23MB | 32.2MB | 8.23MB | 8.23MB 📥2 ❤️0</option>
+                                                        <option value="Xenova/GIST-small-Embedding-v0">Xenova/GIST-small-Embedding-v0 | 💾133MB | 60.1MB | 66.7MB | 34MB | 61.4MB | 34MB | 34MB 📥4 ❤️0</option>
+                                                        <option value="jinaai/jina-reranker-v1-turbo-en">jinaai/jina-reranker-v1-turbo-en | 💾151MB | 103MB | 75.8MB | 38.3MB | 104MB | 38.3MB | 38.3MB 📥7095 ❤️22</option>
+                                                        <option value="jinaai/jina-reranker-v1-tiny-en">jinaai/jina-reranker-v1-tiny-en | 💾132MB | 99.9MB | 66.3MB | 33.4MB | 101MB | 33.4MB | 33.4MB 📥3149 ❤️7</option>
+                                                        <option value="lightbird-ai/nomic">lightbird-ai/nomic | 💾548MB | 138MB 📥470 ❤️0</option>
+                                                        <option value="sirius422/multilingual-e5-large-onnx">sirius422/multilingual-e5-large-onnx | 💾546kB | 562MB 📥0 ❤️0</option>
                                                     </select>
                                                     <label for="model-name">Model:</label>
                                                 </div>
