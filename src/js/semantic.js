@@ -1,4 +1,4 @@
-import { env } from '@xenova/transformers';
+import { env, cos_sim} from '@xenova/transformers';
 import { loadScatterplot } from './utils.js';
 
 // @ts-ignore
@@ -14,7 +14,7 @@ const worker = new Worker(new URL('./worker.js', import.meta.url), {
 window.semanticWorker = worker;
 
 /**
- * @type {EmbeddingVector}
+ * @type {Array<number>}
  */
 let queryEmbedding;
 
@@ -129,7 +129,7 @@ worker.onmessage = function (event) {
             break;
         case 'similarity':
             resolve = similarityResolveMap[message.text];
-            resolve(calculateCosineSimilarity(message.embedding));
+            resolve(cos_sim(message.embedding, queryEmbedding));
             delete similarityResolveMap[message.text];
             break;
         case 'tokens':
@@ -158,7 +158,6 @@ export async function similarity(text) {
         text
     });
     return new Promise((resolve) => {
-        // needs to return calculateCosineSimilarity(queryEmbedding, textEmbedding);
         similarityResolveMap[text] = resolve;
     });
 }
@@ -181,6 +180,7 @@ export async function summarizeText(text) {
 /**
  *
  * @param {string} text
+ * @param {number} max_new_tokens
  * @returns
  */
 export async function chatText(text, max_new_tokens) {
@@ -282,24 +282,4 @@ export async function loadSummary(modelName) {
     return new Promise((resolve) => {
         loadResolve = resolve;
     });
-}
-
-/**
- * @typedef {Array<number>} EmbeddingVector
- * @param {EmbeddingVector} embedding
- * @returns {number}
- */
-function calculateCosineSimilarity(embedding) {
-    //console.log(embedding);
-    let dotProduct = 0;
-    let queryMagnitude = 0;
-    let embeddingMagnitude = 0;
-    const queryEmbeddingLength = queryEmbedding.length;
-    for (let i = 0; i < queryEmbeddingLength; i++) {
-        dotProduct += queryEmbedding[i] * embedding[i];
-        queryMagnitude += queryEmbedding[i] ** 2;
-        embeddingMagnitude += embedding[i] ** 2;
-    }
-    const sim = dotProduct / (Math.sqrt(queryMagnitude) * Math.sqrt(embeddingMagnitude)); 
-    return sim
 }
