@@ -2,7 +2,7 @@
   <a href="https://do-me.github.io/SemanticFinder/">
     <img src="https://github.com/do-me/SemanticFinder/assets/47481567/4522ab9d-08f4-4f4c-92db-dbf14ccb2b70" width="320" alt="SemanticFinder">
   </a>    
-<h1 align="center">Frontend-only live semantic search with transformers.js</h1>
+<h1 align="center">Frontend-only live semantic search and chat-with-your-documents built on transformers.js</h1>
 </p>
 
 ![](/SemanticFinder.gif?)
