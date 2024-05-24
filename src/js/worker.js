@@ -91,7 +91,7 @@ async function embed(text, embedNewText=true) {
         const roundDecimalsDown = (num) => parseFloat(num.toFixed(3));
 
         embeddingsDict[text] = e0.data.map(roundDecimalsDown);
-        console.log(embeddingsDict)
+        //console.log(embeddingsDict)
         return e0.data;
 
 }

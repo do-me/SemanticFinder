@@ -1001,10 +1001,22 @@ Lines: ${lineCount}`;
     // initialize loading
     // read url params and load from Hf or from remote 
     const urlParams = getUrlParameters();
-    const modelName = document.getElementById('model-name').value;
+    var modelName = document.getElementById('model-name').value;
 
     // set some new experimental settings to allow for new use cases like synonym finder or "unique index" as described here: https://github.com/do-me/SemanticFinder/discussions/48
    
+    if (urlParams.has('model')) {
+        modelName = urlParams.get('model'); // overwrite default html model with url param
+        document.getElementById("model-name").value = modelName;
+        console.log("Model: " + modelName)
+    }
+
+    if (urlParams.has('quantized')) {
+        const urlQuantized = urlParams.get('quantized'); // overwrite default html model with url param
+        document.getElementById("quantized").checked = JSON.parse(urlQuantized);
+        console.log("Quantized: " + urlQuantized)
+    }
+
     if (urlParams.has('firstOnly')) {
         document.getElementById("firstOnly").checked = urlParams.get('firstOnly') === 'true';
     }
