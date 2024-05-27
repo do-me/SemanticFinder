@@ -11,6 +11,9 @@
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and latest SOTA embedding models from Huggingface.
 
+## Models
+All transformers.js-compatible feature-extraction models are supported. Here is a sortable list you can go through: [daily updated list](https://do-me.github.io/trending-huggingface-models/). Download the compatible models table as xlsx, csv, json, parquet, or html here: https://github.com/do-me/trending-huggingface-models/.
+
 ## Catalogue 
 You can use super fast pre-indexed examples for *really* large books like the Bible or Les Misérables with hundreds of pages and search the content in less than 2 seconds 🚀. Try one of these and convince yourself:
 
