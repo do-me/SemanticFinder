@@ -458,7 +458,7 @@ function processPdf(pdf, filename, resolve, reject, updateProgress) {
     });
 }
 
-function extractTextFromPDF(fileOrDataUri, updateProgress) {
+function extractTextFromPDF(fileOrDataUri, updateProgress, remoteFilename = null) {
     return new Promise((resolve, reject) => {
         // Check if the input is a File object or a data URI
         if (fileOrDataUri instanceof File) {
@@ -472,8 +472,7 @@ function extractTextFromPDF(fileOrDataUri, updateProgress) {
             });
         } else if (fileOrDataUri.startsWith('data:')) {
             // For data URIs, directly use the data URI with pdfjsLib
-            // Note: For data URIs, we don't have a filename, so we'll use a placeholder
-            const filename = "RemotePDF";
+            const filename = remoteFilename || "RemotePDF";
             pdfjsLib.getDocument(fileOrDataUri).promise.then(pdf => {
                 processPdf(pdf, filename, resolve, reject, updateProgress);
             }).catch(error => {
@@ -546,7 +545,8 @@ export async function handleRemotePdfFileUpload() {
 
         try {
             const dataUri = await fetchPdfAsDataUri(url);
-            const text = await extractTextFromPDF(dataUri);
+            const filename = url.split('/').pop().split('#')[0].split('?')[0] || "RemotePDF";
+            const text = await extractTextFromPDF(dataUri, null, filename);
             texts.push(text);
         } catch (error) {
             console.error('Error handling remote PDF file upload:', error);
@@ -557,7 +557,6 @@ export async function handleRemotePdfFileUpload() {
 }
 
 export async function handleMultipleRemotePdfFileUploads() {
-
     const urls = document.getElementById("importPdfURL").value.split(" ")
     const results = [];
 
@@ -566,7 +565,8 @@ export async function handleMultipleRemotePdfFileUploads() {
 
         try {
             const dataUri = await fetchPdfAsDataUri(url);
-            const text = await extractTextFromPDF(dataUri);
+            const filename = url.split('/').pop().split('#')[0].split('?')[0] || "RemotePDF";
+            const text = await extractTextFromPDF(dataUri, null, filename);
             results.push(text);
         } catch (error) {
             console.error(`Error handling remote PDF file upload for URL ${url}:`, error);
