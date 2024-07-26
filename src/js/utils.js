@@ -450,8 +450,10 @@ function processPdf(pdf, documentIdentifier, resolve, reject, updateProgress) {
         }));
     }
     Promise.all(pageTextPromises).then(pagesText => {
-        // Concatenate text from all pages with metadata
-        let fullText = pagesText.map(pageText => `[Document: ${documentIdentifier}]\n${pageText}`).join("\n\n");
+        // Concatenate text from all pages with metadata including page number
+        let fullText = pagesText.map((pageText, index) => 
+            `[Document: ${documentIdentifier}, Page: ${index + 1}]\n${pageText}`
+        ).join("\n\n");
         resolve(fullText); // Resolve the promise with the full text including metadata
     }).catch(error => {
         reject(error); // Reject the promise if there's an error
