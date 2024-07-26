@@ -439,7 +439,7 @@ export function removeScatterplot() {
 
 // pdf loading logic for local and remote
 
-function processPdf(pdf, resolve, reject, updateProgress) {
+function processPdf(pdf, filename, resolve, reject, updateProgress) {
     let numPages = pdf.numPages;
     let pageTextPromises = [];
     for (let i = 1; i <= numPages; i++) {
@@ -450,9 +450,9 @@ function processPdf(pdf, resolve, reject, updateProgress) {
         }));
     }
     Promise.all(pageTextPromises).then(pagesText => {
-        // Concatenate text from all pages
-        let fullText = pagesText.join("\n\n");
-        resolve(fullText); // Resolve the promise with the full text
+        // Concatenate text from all pages with metadata
+        let fullText = pagesText.map(pageText => `[Document: ${filename}]\n${pageText}`).join("\n\n");
+        resolve(fullText); // Resolve the promise with the full text including metadata
     }).catch(error => {
         reject(error); // Reject the promise if there's an error
     });
@@ -464,15 +464,18 @@ function extractTextFromPDF(fileOrDataUri, updateProgress) {
         if (fileOrDataUri instanceof File) {
             // For local files, create a URL to use with pdfjsLib
             const fileURL = URL.createObjectURL(fileOrDataUri);
+            const filename = fileOrDataUri.name;
             pdfjsLib.getDocument(fileURL).promise.then(pdf => {
-                processPdf(pdf, resolve, reject, updateProgress);
+                processPdf(pdf, filename, resolve, reject, updateProgress);
             }).catch(error => {
                 reject(error); // Reject the promise if there's an error loading the PDF
             });
         } else if (fileOrDataUri.startsWith('data:')) {
             // For data URIs, directly use the data URI with pdfjsLib
+            // Note: For data URIs, we don't have a filename, so we'll use a placeholder
+            const filename = "RemotePDF";
             pdfjsLib.getDocument(fileOrDataUri).promise.then(pdf => {
-                processPdf(pdf, resolve, reject, updateProgress);
+                processPdf(pdf, filename, resolve, reject, updateProgress);
             }).catch(error => {
                 reject(error); // Reject the promise if there's an error loading the PDF
             });
