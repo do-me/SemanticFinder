@@ -439,7 +439,7 @@ export function removeScatterplot() {
 
 // pdf loading logic for local and remote
 
-function processPdf(pdf, filename, resolve, reject, updateProgress) {
+function processPdf(pdf, documentIdentifier, resolve, reject, updateProgress) {
     let numPages = pdf.numPages;
     let pageTextPromises = [];
     for (let i = 1; i <= numPages; i++) {
@@ -451,36 +451,42 @@ function processPdf(pdf, filename, resolve, reject, updateProgress) {
     }
     Promise.all(pageTextPromises).then(pagesText => {
         // Concatenate text from all pages with metadata
-        let fullText = pagesText.map(pageText => `[Document: ${filename}]\n${pageText}`).join("\n\n");
+        let fullText = pagesText.map(pageText => `[Document: ${documentIdentifier}]\n${pageText}`).join("\n\n");
         resolve(fullText); // Resolve the promise with the full text including metadata
     }).catch(error => {
         reject(error); // Reject the promise if there's an error
     });
 }
 
-function extractTextFromPDF(fileOrDataUri, updateProgress, remoteFilename = null) {
+function extractTextFromPDF(fileOrDataUri, updateProgress) {
     return new Promise((resolve, reject) => {
-        // Check if the input is a File object or a data URI
+        let documentIdentifier;
+        let pdfSource;
+
         if (fileOrDataUri instanceof File) {
-            // For local files, create a URL to use with pdfjsLib
-            const fileURL = URL.createObjectURL(fileOrDataUri);
-            const filename = fileOrDataUri.name;
-            pdfjsLib.getDocument(fileURL).promise.then(pdf => {
-                processPdf(pdf, filename, resolve, reject, updateProgress);
-            }).catch(error => {
-                reject(error); // Reject the promise if there's an error loading the PDF
-            });
-        } else if (fileOrDataUri.startsWith('data:')) {
-            // For data URIs, directly use the data URI with pdfjsLib
-            const filename = remoteFilename || "RemotePDF";
-            pdfjsLib.getDocument(fileOrDataUri).promise.then(pdf => {
-                processPdf(pdf, filename, resolve, reject, updateProgress);
-            }).catch(error => {
-                reject(error); // Reject the promise if there's an error loading the PDF
-            });
+            // For local files
+            documentIdentifier = fileOrDataUri.name;
+            pdfSource = URL.createObjectURL(fileOrDataUri);
+        } else if (typeof fileOrDataUri === 'string') {
+            if (fileOrDataUri.startsWith('data:')) {
+                // For data URIs (remote PDFs)
+                documentIdentifier = "RemotePDF";
+                pdfSource = fileOrDataUri;
+            } else {
+                // Assume it's a URL
+                documentIdentifier = fileOrDataUri;
+                pdfSource = fileOrDataUri;
+            }
         } else {
             reject(new Error('Invalid input type'));
+            return;
         }
+
+        pdfjsLib.getDocument(pdfSource).promise.then(pdf => {
+            processPdf(pdf, documentIdentifier, resolve, reject, updateProgress);
+        }).catch(error => {
+            reject(error); // Reject the promise if there's an error loading the PDF
+        });
     });
 }
 
@@ -545,8 +551,7 @@ export async function handleRemotePdfFileUpload() {
 
         try {
             const dataUri = await fetchPdfAsDataUri(url);
-            const filename = url.split('/').pop().split('#')[0].split('?')[0] || "RemotePDF";
-            const text = await extractTextFromPDF(dataUri, null, filename);
+            const text = await extractTextFromPDF(url, null);
             texts.push(text);
         } catch (error) {
             console.error('Error handling remote PDF file upload:', error);
@@ -565,8 +570,7 @@ export async function handleMultipleRemotePdfFileUploads() {
 
         try {
             const dataUri = await fetchPdfAsDataUri(url);
-            const filename = url.split('/').pop().split('#')[0].split('?')[0] || "RemotePDF";
-            const text = await extractTextFromPDF(dataUri, null, filename);
+            const text = await extractTextFromPDF(url, null);
             results.push(text);
         } catch (error) {
             console.error(`Error handling remote PDF file upload for URL ${url}:`, error);
