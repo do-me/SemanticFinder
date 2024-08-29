@@ -25,6 +25,8 @@ export async function splitText(text, splitType, splitParam) {
             return splitByChars(text, parseInt(splitParam));
         case 'Tokens':
             return await splitByTokens(text, parseInt(splitParam));
+        case 'JinaAI':
+            return await splitWithJinaAI(text, parseInt(splitParam));
         default:
             console.error('Invalid split type');
             return null;
@@ -138,6 +140,51 @@ function splitByRegex(text, r) {
 
     return chunks
 }
+
+/**
+ * @param {string} text
+ * @param {number} numChars
+ * @returns {Promise<Array<string> | null>}
+ */
+async function splitWithJinaAI(text, numChars) {
+    const data = {
+        content: text,
+        return_chunks: true,
+        max_chunk_length: numChars
+    };
+
+    try {
+        const response = await fetch('https://segment.jina.ai/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            console.error('HTTP error:', response.status, response.statusText);
+            return null;
+        }
+
+        const responseData = await response.json();
+
+        const chunks = responseData.chunks || [];  // Assuming the API returns the chunks in a property called 'chunks'
+
+        console.log("Number of chunks: " + chunks.length);
+        // console.table(chunks);  // Uncomment if you want to see the chunks in a table format
+
+        return chunks;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+    }
+}
+
+// Example usage:
+// splitWithJinaAIChars("Your text here", 1000).then(chunks => console.log(chunks));
+
+
 
 // Sorting algorithms: heap-based sorting is quite superior for 1000+ and usually less than half of the time of normal sorting
 // might be interesting to use it once indices become larger than 100k but for now not a bottleneck
@@ -556,12 +603,25 @@ export async function handleRemotePdfFileUpload() {
             const text = await extractTextFromPDF(dataUri, null);
             texts.push(text);
         } catch (error) {
-            console.error('Error handling remote PDF file upload:', error);
+            console.log('Not a pdf, trying to parse the web page');
+
+            // Fallback to extracting text from a normal webpage
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const pageText = doc.body.innerText;
+                texts.push(pageText);
+            } catch (webpageError) {
+                console.error('Error fetching or parsing webpage:', webpageError);
+            }
         }
     }
 
     return texts.join("\n");
 }
+
 
 export async function handleMultipleRemotePdfFileUploads() {
     const urls = document.getElementById("importPdfURL").value.split(" ")

@@ -311,6 +311,13 @@ function updateSplitParam(splitParamValue) {
             splitParam.type = 'text';
             splitParam.value = '[.,]\\s';
             break;
+        case 'JinaAI':
+            splitParam.disabled = false;
+            document.querySelector("label[for='split-param']").textContent = '# Chars';
+            splitParam.type = 'number';
+            splitParam.value = 1000;
+            splitParam.min = 1;
+            break;
         default:
             splitParam.value = null;
             splitParam.disabled = true;
