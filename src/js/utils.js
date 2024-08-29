@@ -553,7 +553,7 @@ export async function handleRemotePdfFileUpload() {
 
         try {
             const dataUri = await fetchPdfAsDataUri(url);
-            const text = await extractTextFromPDF(url, null);
+            const text = await extractTextFromPDF(dataUri, null);
             texts.push(text);
         } catch (error) {
             console.error('Error handling remote PDF file upload:', error);
@@ -572,7 +572,7 @@ export async function handleMultipleRemotePdfFileUploads() {
 
         try {
             const dataUri = await fetchPdfAsDataUri(url);
-            const text = await extractTextFromPDF(url, null);
+            const text = await extractTextFromPDF(dataUri, null);
             results.push(text);
         } catch (error) {
             console.error(`Error handling remote PDF file upload for URL ${url}:`, error);
