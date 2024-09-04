@@ -1,40 +1,40 @@
 name: Deploy to GitHub Pages (WebGPU)
 
-on:
-  push:
-    branches:
-      - webgpu
+#on:
+#  push:
+#    branches:
+#      - webgpu
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository (with webgpu branch)
-        uses: actions/checkout@v2
-        with:
-          # Fetch all history for the webgpu branch
-          ref: 'webgpu'
-          fetch-depth: 0 
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.4.0'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Prepare WebGPU Directory
-        run: |
-          mkdir -p ./webgpu
-          cp -r ./dist/* ./webgpu/
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./webgpu
+#jobs:
+#  deploy:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#     - name: Checkout repository (with webgpu branch)
+#        uses: actions/checkout@v2
+#        with:
+#          # Fetch all history for the webgpu branch
+#          ref: 'webgpu'
+#          fetch-depth: 0 
+#
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v2
+#        with:
+#          node-version: '22.4.0'
+#
+#      - name: Install dependencies
+#        run: npm install
+#
+#      - name: Build
+#        run: npm run build
+#
+#      - name: Prepare WebGPU Directory
+#        run: |
+#          mkdir -p ./webgpu
+#          cp -r ./dist/* ./webgpu/
+#
+#      - name: Deploy to GitHub Pages
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          personal_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: ./webgpu
