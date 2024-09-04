@@ -1,4 +1,4 @@
-import { pipeline, AutoTokenizer } from '@xenova/transformers';
+import { pipeline, AutoTokenizer } from '@huggingface/transformers';
 import pako from 'pako';
 import init, { tSNE } from "wasm-bhtsne";
 import { marked } from 'marked';
@@ -415,6 +415,8 @@ self.onmessage = async (event) => {
             embedder = await pipeline('feature-extraction', message.model_name,
                 {
                     quantized: message.quantized,
+                    device: "webgpu",
+                    dtype: "fp32",
                     progress_callback: data => {
                         self.postMessage({
                             type: 'download',

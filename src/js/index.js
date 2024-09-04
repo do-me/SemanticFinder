@@ -339,58 +339,11 @@ let cachedQueryValues =
 
     }
 
-async function semanticHighlight(callback) {
-    deactivateScrollButtons();
-    resetResults();
-    setProgressBarValue(0);
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    // query input embedding
-    const inputQuery = document.getElementById('query-text').value;
-
-    // chunk vals
-    const text = editor.getValue('');
-    const splitType = document.getElementById('split-type').value;
-    const splitParam = document.getElementById('split-param').value;
-
-    // avoid executing the chunking logic if params are the same
-    const chunkValuesEqual = (
-        text === cachedQueryValues.text &&
-        splitType === cachedQueryValues.splitType &&
-        splitParam === cachedQueryValues.splitParam
-    );
-    
-    let inputTexts;
-
-    if (chunkValuesEqual) {
-        inputTexts = cachedQueryValues.inputTexts
-    } else {
-        inputTexts = await splitText(text, splitType, splitParam);
-    
-        //inputTexts = await splitText(text, splitType, splitParam);
-        // update cache var
-        cachedQueryValues.text = text;
-        cachedQueryValues.splitType = splitType;
-        cachedQueryValues.splitParam = splitParam;
-        cachedQueryValues.inputTexts = inputTexts;
-
-    }
-
-
-// full text search NULL CHECKS !
- 
-  // Example usage:
-  const wordsToCheckAnyInput = document.getElementById("wordsToCheckAny");
-  const wordsToCheckAllInput = document.getElementById("wordsToCheckAll");
-  const wordsToAvoidAnyInput = document.getElementById("wordsToAvoidAny");
-  const wordsToAvoidAllInput = document.getElementById("wordsToAvoidAll");
-  
-  const wordsToCheckAny = wordsToCheckAnyInput.value.trim() ? wordsToCheckAnyInput.value.split(',').map(word => word.trim()) : [];
-  const wordsToCheckAll = wordsToCheckAllInput.value.trim() ? wordsToCheckAllInput.value.split(',').map(word => word.trim()) : [];
-  const wordsToAvoidAny = wordsToAvoidAnyInput.value.trim() ? wordsToAvoidAnyInput.value.split(',').map(word => word.trim()) : [];
-  const wordsToAvoidAll = wordsToAvoidAllInput.value.trim() ? wordsToAvoidAllInput.value.split(',').map(word => word.trim()) : [];
-  
-  
-  const filterTexts = (inputTexts, wordsToCheckAny, wordsToCheckAll, wordsToAvoidAny, wordsToAvoidAll) => {
+const filterTexts = (inputTexts, wordsToCheckAny, wordsToCheckAll, wordsToAvoidAny, wordsToAvoidAll) => {
     return inputTexts.reduce((result, text) => {
       // Skip empty fields or fields containing only an empty string
       if (text.trim() === "") {
@@ -411,18 +364,48 @@ async function semanticHighlight(callback) {
     }, []);
   };
   
-  const isEmptyArray = (arr) => arr.length === 0 || (arr.length === 1 && arr[0] === "");
+const isEmptyArray = (arr) => arr.length === 0 || (arr.length === 1 && arr[0] === "");
+
+async function semanticHighlight(callback) {
+    deactivateScrollButtons();
+    resetResults();
+    setProgressBarValue(0);
+
+    const inputQuery = document.getElementById('query-text').value;
+    const text = editor.getValue('');
+    const splitType = document.getElementById('split-type').value;
+    const splitParam = document.getElementById('split-param').value;
+
+    const chunkValuesEqual = (
+        text === cachedQueryValues.text &&
+        splitType === cachedQueryValues.splitType &&
+        splitParam === cachedQueryValues.splitParam
+    );
+    
+    let inputTexts;
+
+    if (chunkValuesEqual) {
+        inputTexts = cachedQueryValues.inputTexts;
+    } else {
+        inputTexts = await splitText(text, splitType, splitParam);
+        cachedQueryValues.text = text;
+        cachedQueryValues.splitType = splitType;
+        cachedQueryValues.splitParam = splitParam;
+        cachedQueryValues.inputTexts = inputTexts;
+    }
+
+    const wordsToCheckAnyInput = document.getElementById("wordsToCheckAny");
+    const wordsToCheckAllInput = document.getElementById("wordsToCheckAll");
+    const wordsToAvoidAnyInput = document.getElementById("wordsToAvoidAny");
+    const wordsToAvoidAllInput = document.getElementById("wordsToAvoidAll");
   
-  // Example usage:
+    const wordsToCheckAny = wordsToCheckAnyInput.value.trim() ? wordsToCheckAnyInput.value.split(',').map(word => word.trim()) : [];
+    const wordsToCheckAll = wordsToCheckAllInput.value.trim() ? wordsToCheckAllInput.value.split(',').map(word => word.trim()) : [];
+    const wordsToAvoidAny = wordsToAvoidAnyInput.value.trim() ? wordsToAvoidAnyInput.value.split(',').map(word => word.trim()) : [];
+    const wordsToAvoidAll = wordsToAvoidAllInput.value.trim() ? wordsToAvoidAllInput.value.split(',').map(word => word.trim()) : [];
 
-  inputTexts = filterTexts(inputTexts, wordsToCheckAny, wordsToCheckAll, wordsToAvoidAny, wordsToAvoidAll);
+    inputTexts = filterTexts(inputTexts, wordsToCheckAny, wordsToCheckAll, wordsToAvoidAny, wordsToAvoidAll);
 
-  // full text search
-  
-    //console.log(inputTexts)
-
-    //let inputTexts = await splitText(text, splitType, splitParam);
-    // Initialize inputTexts dictionary with 0 as similarity
     inputTexts = inputTexts.reduce((acc, text) => {
         acc[text] = 0;
         return acc;
@@ -437,20 +420,12 @@ async function semanticHighlight(callback) {
     const interval = Math.ceil(N / Math.min(numUpdates, N));
     const progressBarInterval = Math.ceil(N / Math.min(100, N));
 
-    // this part here is still a performance bottleneck and responsible for ~50% of the processing time 
-    // it performs a lookup in a dictionary where key-value pairs (text-embeddings) are stored
-    // if the value has an embedding already, it's appended to the results dict 
-    // if not, it needs to be calculated 
-    // the logic has the advantage that when e.g. one sentence is appended to a book, 99% of the index 
-    // can be reused and it is super fast. On the other hand it slows down other user cases where you know 
-    // in advance, that the text:embeddings won't change.
-    // will need to add a cache for inputTexts in the future
-
     let i = 0;
     let lastProgressBarUpdate = 0;
-    const inputTextPromises = Object.keys(inputTexts).map(async (inputText, i) => {
+    
+    for (const inputText of Object.keys(inputTexts)) {
         if (!isProcessing) {
-          return Promise.resolve();
+            break;
         }
       
         const cosineSimilarity = await similarity(inputText);
@@ -461,34 +436,29 @@ async function semanticHighlight(callback) {
             const currentTime = Date.now();
             const timeSinceLastUpdate = currentTime - lastProgressBarUpdate;
             
-            // update the porgress bar only every 100ms to avoid slowing down on consecutive calls
-            // makes ~0.3s difference with 23k embeddings!
             if (timeSinceLastUpdate >= 100) {
-              const progress = Math.round(((i + 1) * 100) / N);
-              setProgressBarValue(progress);
-          
-              lastProgressBarUpdate = currentTime;
+                const progress = Math.round(((i + 1) * 100) / N);
+                setProgressBarValue(progress);
+                lastProgressBarUpdate = currentTime;
             }
-          }
+        }
         
         if (i === N - 1) {
             const progress = Math.round(((i + 1) * 100) / N);
-              setProgressBarValue(progress);
+            setProgressBarValue(progress);
         }
       
         if (i !== 0 && (i % interval === 0 || i === N - 1)) {
             const sortedResults = Object.entries(inputTexts).sort((a, b) => b[1] - a[1]);
             updateResults(sortedResults);
-          if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0) && autoScrollintoViewChecked) {
-            CoderMirrorFindAndScrollIntoView(markers[0]);
-          }
+            if (markers.length > 0 && (selectedIndex === -1 || selectedIndex === 0) && autoScrollintoViewChecked) {
+                CoderMirrorFindAndScrollIntoView(markers[0]);
+            }
         }
-      
-        return Promise.resolve();
-      });
-      
-      await Promise.all(inputTextPromises);
-      
+
+        i++;
+    }
+    
     callback();
 }
 

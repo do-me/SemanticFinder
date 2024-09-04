@@ -1,4 +1,4 @@
-import { env, cos_sim} from '@xenova/transformers';
+import { env, cos_sim} from '@huggingface/transformers';
 import { loadScatterplot } from './utils.js';
 
 // @ts-ignore
