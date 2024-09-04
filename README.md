@@ -11,6 +11,9 @@
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and latest SOTA embedding models from Huggingface.
 
+## Upcoming: WebGPU support!
+Stay tuned for announcements
+
 ## Models
 All transformers.js-compatible feature-extraction models are supported. Here is a sortable list you can go through: [daily updated list](https://do-me.github.io/trending-huggingface-models/). Download the compatible models table as xlsx, csv, json, parquet, or html here: https://github.com/do-me/trending-huggingface-models/.
 
