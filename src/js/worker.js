@@ -515,3 +515,4 @@ self.onmessage = async (event) => {
         default:
     }
 };
+
