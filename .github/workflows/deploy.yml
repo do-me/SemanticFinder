@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (with webgpu branch)
         uses: actions/checkout@v2
+        with:
+          # Fetch all history for the webgpu branch
+          ref: 'webgpu'
+          fetch-depth: 0 
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
