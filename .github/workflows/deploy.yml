@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js for main
         uses: actions/setup-node@v2
         with:
-          node-version: '24'
+          node-version: '22'
 
       - name: Install dependencies for main
         run: npm install
@@ -46,7 +46,7 @@ jobs:
       - name: Set up Node.js for webgpu
         uses: actions/setup-node@v2
         with:
-          node-version: '24'
+          node-version: '22'
 
       - name: Install dependencies for webgpu
         run: npm install
