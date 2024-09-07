@@ -2,20 +2,20 @@
   <a href="https://do-me.github.io/SemanticFinder/">
     <img src="https://github.com/do-me/SemanticFinder/assets/47481567/4522ab9d-08f4-4f4c-92db-dbf14ccb2b70" width="320" alt="SemanticFinder">
   </a>    
-<h1 align="center">Frontend-only live semantic search and chat-with-your-documents built on transformers.js</h1>
+<h1 align="center">Frontend-only live semantic search and chat-with-your-documents built on transformers.js. Supports Wasm and WebGPU!</h1>
 </p>
 
 ![](/SemanticFinder.gif?)
 
 ## [Try the web app](https://do-me.github.io/SemanticFinder/), [install the Chrome extension](#browser-extension) or read the [introduction blog post](https://geo.rocks/post/semanticfinder-semantic-search-frontend-only/).
 
-Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and latest SOTA embedding models from Huggingface.
+## 🔥 For best performance try the [WebGPU Version here!](https://do-me.github.io/SemanticFinder/webgpu/) 🔥
 
-## Upcoming: WebGPU support!
-Stay tuned for announcements
+Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and latest SOTA embedding models from Huggingface.
 
 ## Models
 All transformers.js-compatible feature-extraction models are supported. Here is a sortable list you can go through: [daily updated list](https://do-me.github.io/trending-huggingface-models/). Download the compatible models table as xlsx, csv, json, parquet, or html here: https://github.com/do-me/trending-huggingface-models/.
+Note that the wasm backend in transformers.js supports all mentioned models. If you want the best performance, make sure to use a WebGPU-compatible model.
 
 ## Catalogue 
 You can use super fast pre-indexed examples for *really* large books like the Bible or Les Misérables with hundreds of pages and search the content in less than 2 seconds 🚀. Try one of these and convince yourself:
