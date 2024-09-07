@@ -4,23 +4,24 @@ on:
   push:
     branches:
       - main
-      - webgpu 
+      - webgpu
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout main branch
+      # Checkout and Deploy Main Branch
       - name: Checkout main branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: main
 
       - name: Set up Node.js for main
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies for main
         run: npm install
@@ -32,21 +33,24 @@ jobs:
           mkdir -p main_build
           mv dist/* main_build/
           echo "Deploying main branch..."
-          # Deploy using peaceiris/actions-gh-pages@v3 for main
-          npx peaceiris/actions-gh-pages@v3 \
-            --personal_token ${{ secrets.GITHUB_TOKEN }} \
-            --publish_dir ./main_build
 
-      # Checkout webgpu branch
+      - name: Deploy main to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./main_build # Deploy from your custom directory
+
+      # Checkout and Deploy webgpu Branch
       - name: Checkout webgpu branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: webgpu
 
       - name: Set up Node.js for webgpu
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '22'
+          cache: 'npm' 
 
       - name: Install dependencies for webgpu
         run: npm install
@@ -58,9 +62,11 @@ jobs:
           mkdir -p webgpu_build
           mv dist/* webgpu_build/
           echo "Deploying webgpu branch..."
-          # Deploy using peaceiris/actions-gh-pages@v3 for webgpu
-          npx peaceiris/actions-gh-pages@v3 \
-            --personal_token ${{ secrets.GITHUB_TOKEN }} \
-            --publish_dir ./webgpu_build \
-            --destination_dir webgpu \
-            --keep_files true
+
+      - name: Deploy webgpu to GitHub Pages subdirectory
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./webgpu_build 
+          destination_dir: webgpu 
+          keep_files: true
