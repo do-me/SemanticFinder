@@ -13,6 +13,9 @@
 
 Semantic search right in your browser! Calculates the embeddings and cosine similarity client-side without server-side inferencing, using [transformers.js](https://xenova.github.io/transformers.js/) and latest SOTA embedding models from Huggingface.
 
+## Intro Video
+[![SemanticFinder Introduction](https://github.com/user-attachments/assets/9febc0e7-f444-4039-8cf2-af39f3d7733f)](https://www.youtube.com/watch?v=FZsWH1J4MXo "Get started with semantic search in the browser")
+
 ## Models
 All transformers.js-compatible feature-extraction models are supported. Here is a sortable list you can go through: [daily updated list](https://do-me.github.io/trending-huggingface-models/). Download the compatible models table as xlsx, csv, json, parquet, or html here: https://github.com/do-me/trending-huggingface-models/.
 Note that the wasm backend in transformers.js supports all mentioned models. If you want the best performance, make sure to use a WebGPU-compatible model.
